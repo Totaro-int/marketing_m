@@ -1,0 +1,17 @@
+{
+  "name": "melanoir-studio",
+  "version": "1.0.0",
+  "description": "멜라누아 IG 카드뉴스(캐러셀) 골드 스탠다드 콘텐츠 엔진. 토픽 → copywriter 에이전트(Claude Code 구독, API 불요)가 카피 작성 → node-canvas 렌더(골드 대조) → 브랜드·광고법 가드 → Supabase 콘솔 검토·피드백 → 실시간 학습 루프. /melanoir-new 한 건, /melanoir-daily 하루 사이클.",
+  "author": { "name": "Melanoir" },
+  "license": "Proprietary",
+  "keywords": ["melanoir", "carousel", "instagram", "korean", "pmu", "content-engine", "supabase"],
+  "commands": [
+    "./commands/melanoir-new.md",
+    "./commands/melanoir-daily.md"
+  ],
+  "agents": [
+    "./agents/melanoir-copywriter.md",
+    "./agents/melanoir-channel-copywriter.md"
+  ],
+  "skills": []
+}

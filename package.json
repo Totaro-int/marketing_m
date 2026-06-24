@@ -1,0 +1,39 @@
+{
+  "name": "melanoir-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Melanoir IG carousel content engine — gold-standard renderer",
+  "scripts": {
+    "daily": "node scripts/daily.mjs",
+    "generate": "node engine/generate.mjs",
+    "render": "node engine/render.mjs",
+    "guard": "node engine/guard.mjs",
+    "image-assign": "node engine/image-assign.mjs",
+    "caption": "node engine/caption.mjs",
+    "insight-card": "node engine/insight-card.mjs",
+    "publish-insight": "node scripts/publish-insight.mjs",
+    "push": "node scripts/push-supabase.mjs",
+    "pull": "node scripts/pull-supabase.mjs",
+    "watch": "node scripts/watch-supabase.mjs",
+    "distill": "node scripts/distill.mjs",
+    "topic-queue": "node scripts/topic-queue.mjs",
+    "self-check": "node scripts/self-check.mjs",
+    "verify:render": "node scripts/verify-render.mjs",
+    "verify:guard": "node scripts/verify-guard.mjs",
+    "verify:image": "node scripts/verify-image-assign.mjs",
+    "verify:web": "node scripts/verify-web.mjs",
+    "verify:web-live": "node scripts/verify-web-live.mjs",
+    "verify:insight": "node scripts/verify-insight.mjs",
+    "verify:console": "node scripts/verify-console-write.mjs",
+    "e2e": "node scripts/e2e.mjs",
+    "verify": "node scripts/verify-render.mjs 1 && node scripts/verify-guard.mjs && node scripts/verify-image-assign.mjs && node scripts/self-check.mjs && node scripts/e2e.mjs",
+    "verify:live": "node scripts/verify-web-live.mjs && node scripts/verify-insight.mjs && node scripts/verify-console-write.mjs"
+  },
+  "dependencies": {
+    "canvas": "^3.2.3",
+    "pg": "^8.22.0",
+    "pixelmatch": "^6.0.0",
+    "pngjs": "^7.0.0"
+  }
+}

@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>인사이트 — 멜라누아 (preview)</title>
+<style>body{font-family:Pretendard,system-ui,sans-serif;max-width:1100px;margin:0 auto;padding:40px 20px;color:#161616;background:#fafafa}
+h1{font-size:24px;margin:0 0 24px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.insight-card{display:block;border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 1px 8px rgba(0,0,0,.08);position:relative}
+.ic-img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#111}
+.ic-datechip{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:3px 8px;border-radius:20px}</style>
+</head><body><h1>인사이트 <small style="color:#999;font-size:13px">(로컬 프리뷰 · 실서비스는 recruitment /insights)</small></h1>
+<section class="grid" id="g"></section>
+<script>fetch('cards.json',{cache:'no-store'}).then(r=>r.json()).then(cs=>{cs.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+document.getElementById('g').innerHTML=cs.map(c=>{const img=c.image?'cards/'+esc(c.image):'';return img?
+'<a class="insight-card" href="'+(c.link?esc(c.link):img)+'" target="_blank"><img class="ic-img" src="'+img+'" alt="'+esc(c.title)+'" loading="lazy"><time class="ic-datechip">'+esc(c.date)+'</time></a>'
+:'<a class="insight-card" href="#" style="background:#111;color:#fff;padding:18px;aspect-ratio:4/5"><span style="font-size:12px;opacity:.6">'+esc(c.category)+'</span><h2 style="font-size:18px;margin:8px 0">'+esc(c.title)+'</h2><p style="font-size:13px;opacity:.8">'+esc(c.subtitle)+'</p></a>';}).join('');});</script>
+</body></html>

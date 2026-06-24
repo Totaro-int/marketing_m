@@ -1,0 +1,42 @@
+{
+  "_source": "마케팅 자동화 에이전트 채널 전략(threads/linkedin strategy.md) + 멜라누아 브랜드. 채널 최적화 카피 SSoT. melanoir-channel-copywriter 가 소비.",
+  "textChannels": ["linkedin", "threads", "naver-blog"],
+  "channels": {
+    "instagram": {
+      "format": "carousel",
+      "note": "캐러셀(슬라이드 7~10장)+캡션. generate.mjs + melanoir-copywriter 가 별도 처리. 여기 textChannels 아님."
+    },
+    "linkedin": {
+      "tone": "B2B professional (브랜드 톤이 friendly여도 한 단계 보정). 전문성·인사이트·산업 맥락.",
+      "lengthChars": [800, 1500],
+      "structure": "첫 3줄에 결론·숫자·갈고리 → 단락마다 1~3줄(빽빽한 문단 금지) → 마지막 1문장은 질문(댓글 유도).",
+      "hashtags": [3, 5],
+      "hashtagStyle": "산업·역할 중심(#반영구색소 #PMU #B2B 등)",
+      "link": "본문 첫 줄 링크 금지. 본문 끝에 '링크는 댓글에' 또는 melanoir.co.kr/products/embo 1줄.",
+      "forbid": ["슬로건/광고 카피", "본문 영업 멘트(DM 주세요)", "맥락 없는 회사 자뻑"]
+    },
+    "threads": {
+      "tone": "대화·관점·짧은 통찰. 사람 목소리(1인칭 OK)지만 브랜드 페르소나 유지. 광고처럼 들리면 외면.",
+      "lengthChars": [250, 450],
+      "structure": "첫 1~2줄이 후킹(질문·단정·의외의 숫자). 한 줄 한 호흡(마침표보다 줄바꿈). CTA는 마지막 1줄 짧게.",
+      "hashtags": [1, 3],
+      "hashtagStyle": "남발 금지(인스타와 다름)",
+      "link": "허용하되 본문 가치 먼저. 첫 줄 외부 링크 금지.",
+      "forbid": ["해시태그 도배(5개+)", "광고문구('지금 신청!!!')", "첫 줄 외부 링크"]
+    },
+    "naver-blog": {
+      "tone": "정보형·친절·차분. 검색 유입 고려(자연스러운 한국어, 키워드 본문에 녹임).",
+      "lengthChars": [1000, 2000],
+      "structure": "제목 1줄 + 도입(문제 제기 2~3문장) → 소제목 3개 섹션(척도/메커니즘 · 결과/숫자 · 의미/공개) 각 2~4문장 → 마무리 + '시험 기준·데이터는 멜라누아 홈페이지에서'.",
+      "hashtags": [5, 10],
+      "hashtagStyle": "검색 키워드 + 브랜드 태그",
+      "link": "본문 말미 melanoir.co.kr/products/embo.",
+      "forbid": ["시험성적서 공개/원본 표현", "효능 단정", "과장 제목('100% 안전')"]
+    }
+  },
+  "allChannelRules": [
+    "같은 토픽 thesis에서 파생하되 채널 포맷·톤에 맞게(복붙 금지).",
+    "브랜드락·광고법·레이어 분리·용어 분리는 5채널 모두 동일하게 강제(guard 통과 필수).",
+    "facts에 없는 수치·날짜 만들지 말 것. '수치'보다 '숫자'. 멜라누아=제조사('만든다')."
+  ]
+}

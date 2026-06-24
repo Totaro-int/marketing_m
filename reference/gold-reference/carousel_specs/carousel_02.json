@@ -1,0 +1,116 @@
+{
+  "id": 2,
+  "topic": "내 몸이 가장 잘 아는 색소",
+  "thesis": "멜라닌은 낯선 화학물질이 아니라 몸이 스스로 만들고 평생 지니는 색이다. 그 색은 깊은 브라운-블랙이고, 멜라누아는 그 색 하나만 담아 인식 변수를 단순화했다.",
+  "images": [
+    "tanned_skin.png",
+    "black_powder.png",
+    "melanin_color_dilluted.png",
+    "black_granule.png",
+    "black_powder(fine).png",
+    "ink_spread_on_glass.png"
+  ],
+  "slides": [
+    {
+      "type": "cover_stmt",
+      "image": "tanned_skin.png",
+      "lines": [
+        "내 몸이",
+        "가장 잘 아는 색소."
+      ]
+    },
+    {
+      "type": "body",
+      "image": "ink_on_skin.png",
+      "mode": "C",
+      "num": "01",
+      "title": "피부에 남는 색이라면, 질문이 달라집니다.",
+      "segments": [
+        [
+          "반영구화장과 타투의 색은 피부에 수년간 남습니다. 그래서 그 색이 내 몸에 남아 있는 것이 얼마나 적절한지를 가장 먼저 묻게 됩니다.",
+          false
+        ],
+        [
+          "몸에 가장 익숙한 검정은 무엇일까요?",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "melanin_color_dilluted.png",
+      "mode": "A",
+      "num": "02",
+      "title": "답은 몸이 스스로 만드는 색이었습니다.",
+      "segments": [
+        [
+          "피부와 머리카락, 눈동자를 검게 만드는 색소가 멜라닌입니다. 어딘가에서 가져온 물질이 아니라 몸이 평생 만들고 지니는 색입니다.",
+          false
+        ],
+        [
+          "가장 익숙한 검정은 몸 안에 있습니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "black_granule.png",
+      "mode": "C",
+      "num": "03",
+      "title": "그 색은 깊은 브라운-블랙입니다.",
+      "segments": [
+        [
+          "멜라닌이 지닌 색은 인위적으로 맞춘 검정이 아니라 깊고 자연스러운 브라운-블랙입니다. 머리카락과 눈동자에서 늘 보아온 색의 결입니다.",
+          false
+        ],
+        [
+          "늘 보아온 브라운-블랙.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "black_powder(fine).png",
+      "mode": "A",
+      "num": "04",
+      "title": "그래서 그 색 하나만 담았습니다.",
+      "segments": [
+        [
+          "멜라누아 엠보는 여러 색소를 섞는 대신 멜라닌 하나로 설계했습니다. 성분이 단순할수록 무엇이 무엇을 일으키는지 흐려지지 않습니다.",
+          false
+        ],
+        [
+          "변수를 늘리지 않는 단일 성분.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "small_molecules_on_melanin.png",
+      "mode": "C",
+      "num": "05",
+      "title": "익숙하다는 건 시작입니다.",
+      "segments": [
+        [
+          "몸이 아는 색이라는 사실이 모든 걸 증명하진 않습니다. 그래서 멜라누아는 익숙함에 머물지 않고 의료용 소재에 준하는 기준을 추구하며, 숫자로 확인했습니다.",
+          false
+        ],
+        [
+          "익숙함을 숫자로 이어갑니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "closing",
+      "lines": [
+        "멜라누아는",
+        "몸이 가장 잘 아는 색에서 시작합니다."
+      ]
+    }
+  ],
+  "caption": "내 몸이 가장 잘 아는 색소.\n\n피부에 수년간 남는 색이라면, 가장 먼저 그 색이 내 몸에 얼마나 적절한지를 묻게 됩니다.\n\n피부와 머리카락을 검게 만드는 멜라닌은, 몸이 스스로 만들고 평생 지니는 색입니다. 멜라누아 엠보는 그 색 하나만 담아 안전 우려에 대한 변수를 최소화 했습니다.\n\n더 알아보기 →\nmelanoir.co.kr/products/embo\n\n#멜라누아 #MELANOIR #반영구색소 #멜라닌색소 #PMU #반영구화장 #반영구잉크 #엠보 #PMUartist"
+}

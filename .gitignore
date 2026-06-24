@@ -1,0 +1,15 @@
+# secrets — 로컬만 (PUBLIC 레포 금지)
+.env.local
+.env
+web/config.js
+
+# assets (이미지스톡·폰트 = 골드레퍼런스에서 가져옴, 무겁다)
+assets/
+
+# deps / 빌드 산출물
+node_modules/
+out/
+
+# OS
+.DS_Store
+Thumbs.db

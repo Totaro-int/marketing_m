@@ -1,0 +1,115 @@
+{
+  "id": 7,
+  "topic": "All N.D. (필수 항목 불검출)",
+  "thesis": "무엇이 들었느냐만큼 ‘무엇이 없느냐’가 중요하다. 공인기관 유해물질 자가품질검사에서 필수 항목이 모두 ‘검출되지 않음(N.D.)’ — 해석이 아니라 측정의 언어이고, 멜라누아는 그것을 공개한다.",
+  "images": [
+    "black_powder(fine).png",
+    "black_powder_on_table.png",
+    "ink_spread_on_glass.png",
+    "black_liquid_and_transparent_gel.png",
+    "small_molecules_on_melanin.png",
+    "black_powder.png"
+  ],
+  "slides": [
+    {
+      "type": "cover_data",
+      "image": "black_liquid_and_transparent_gel.png",
+      "number": "All N.D.",
+      "label": "필수 항목 불검출",
+      "hook": "반영구 잉크, 무엇이 없는지가 중요합니다."
+    },
+    {
+      "type": "body",
+      "image": "black_powder_on_table.png",
+      "mode": "C",
+      "num": "01",
+      "title": "잉크는 ‘무엇이 없는지’가 중요합니다.",
+      "segments": [
+        [
+          "색소를 고를 때 흔히 무엇이 들었는지를 봅니다. 하지만 피부에 오래 남는 색이라면, 들지 말아야 할 것이 정말 없는지가 그만큼 중요합니다.",
+          false
+        ],
+        [
+          "없어야 할 것이 정말 없을까요?",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "ink_spread_on_glass.png",
+      "mode": "A",
+      "num": "02",
+      "title": "그래서 유해물질을 검사합니다.",
+      "segments": [
+        [
+          "멜라누아는 주기적으로 유해물질 자가품질검사를 공인기관에 맡겨 제품에 유해물질이 들어있는지 철저히 확인합니다. 중금속처럼 들어가선 안 되는 필수 항목을 모두 검사합니다.",
+          false
+        ],
+        [
+          "들어가선 안 되는 항목을 검사합니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "black_powder(fine).png",
+      "mode": "C",
+      "num": "03",
+      "title": "결과는 ‘검출되지 않음(N.D.)’.",
+      "segments": [
+        [
+          "검사한 필수 항목에서 멜라누아 엠보는 유해물질이 ‘단 하나도’ 검출되지 않았습니다. 단순히 기준치를 만족하는 것이 아니라, 전혀 검출되지 않았습니다. 그래서 표기는 필수 항목 All N.D.입니다.",
+          false
+        ],
+        [
+          "필수 항목 All N.D.(불검출).",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "small_molecules_on_melanin.png",
+      "mode": "A",
+      "num": "04",
+      "title": "‘검출 안 됨’이 가장 정직한 언어입니다.",
+      "segments": [
+        [
+          "‘무해하다’는 해석이지만, ‘검출되지 않았다’는 측정된 사실입니다. 멜라누아는 해석 대신 측정 결과로 말합니다.",
+          false
+        ],
+        [
+          "해석이 아니라 측정된 결과입니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "black_powder.png",
+      "mode": "A",
+      "num": "05",
+      "title": "그래서 이 결과를 공개합니다.",
+      "segments": [
+        [
+          "무엇이 없는지는 시술자가 선택 전에 확인할 정보입니다. 검증 결과는 멜라누아 홈페이지에서 확인할 수 있습니다.",
+          false
+        ],
+        [
+          "알고 고르도록 열어 둡니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "closing",
+      "lines": [
+        "멜라누아는",
+        "없는 것까지 보여줍니다."
+      ]
+    }
+  ],
+  "caption": "필수 항목 All N.D.(불검출).\n\n반영구 잉크, 무엇으로 이루어졌는지도 중요하지만 무엇이 없는지도 중요합니다.\n무엇이 들었는지만큼, 들지 말아야 할 것이 정말 없는지도 중요합니다.\n\n그래서 멜라누아는 공인기관을 통해 유해물질 자가품질검사로 필수 항목을 모두 확인합니다.\n결과는 모두 단순 기준치 만족이 아닌 ‘검출되지 않음(N.D.)’이었습니다. ‘무해하다’는 해석 대신, 측정된 결과로 보여드립니다.\n\n검증 결과는 멜라누아 홈페이지에서 확인하실 수 있습니다.\n\n더 알아보기 →\nmelanoir.co.kr/products/embo\n\n#멜라누아 #MELANOIR #반영구색소 #PMU #반영구잉크 #자가품질검사 #유해물질 #멜라닌색소 #반영구화장 #PMUartist"
+}

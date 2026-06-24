@@ -1,0 +1,34 @@
+{
+  "_source": "IMAGE_STOCK.md + AGENT_LEARNINGS B-5/B-7/B-8 + 골드 10종 실제 배정. image-assign.mjs 가 소비.",
+  "rules": {
+    "maxReusePerCarousel": 2,
+    "highImpactMax": 1,
+    "coverNotReusedInBody": true,
+    "secondUseNeedsVariant": true,
+    "noMedicalGown": true
+  },
+  "banned": ["man_wearing_black_gown.png", "man_wearing_black_gown_2.png"],
+  "highImpact": ["[product] Embo_vertical.png", "[product] Embo_in_sterile_bag.png", "embo_needle_with_ink.png", "ink_dip_embo_needle.png", "sterile_bag.png", "moon_like.jpg"],
+  "brightBg": ["embo_needle_with_ink.png", "ink_dip_embo_needle.png", "sterile_bag.png", "[product] Embo_in_sterile_bag.png", "[product] Embo_vertical.png"],
+  "overused": ["ink_spread_on_glass.png", "ink_on_skin.png", "ink_on_skin_2.png"],
+  "dataPlates": ["PL-data-a.png", "PL-data-b.png"],
+  "fillPriority": ["texture.png", "texture_2.png", "PL-cover-dark-a.png", "space_station.png", "black_powder.png", "black_powder_on_table.png", "black_granule.png", "black_powder(fine).png"],
+  "variantPresets": [
+    { "zoom": 1.3, "fx": 0.62, "fy": 0.4, "flip": true },
+    { "zoom": 1.4, "fx": 0.6, "fy": 0.45, "flip": true },
+    { "zoom": 1.25, "fx": 0.4, "fy": 0.55, "flip": false },
+    { "zoom": 1.3, "fx": 0.55, "fy": 0.35, "flip": true }
+  ],
+  "perTopic": {
+    "1": { "cover": "black_powder(fine).png", "body": ["ink_on_skin.png", "molecular_structure.png", "tanned_skin.png", "black_granule.png", "ink_spread_on_glass.png", "black_powder.png"] },
+    "2": { "cover": "tanned_skin.png", "body": ["ink_on_skin.png", "melanin_color_dilluted.png", "black_granule.png", "black_powder(fine).png", "small_molecules_on_melanin.png"] },
+    "3": { "cover": "black_powder_on_table.png", "body": ["texture.png", "texture_2.png", "black_granule.png", "black_powder(fine).png", "ink_spread_on_glass.png"] },
+    "4": { "cover": "molecular_structure.png", "body": ["ink_on_skin_2.png", "ink_spread_on_glass.png", "PL-data-a.png", "PL-data-b.png"] },
+    "5": { "cover": "ink_on_skin.png", "body": ["ink_on_skin_2.png", "ink_spread_on_glass.png", "ink_on_skin_3.png"] },
+    "6": { "cover": "melanin_SEM_image.png", "body": ["ink_on_skin_2.png", "melanin_SEM_image_2.png", "ink_spread_on_glass.png", "ink_on_skin_3.png", "ink_on_skin.png"] },
+    "7": { "cover": "black_liquid_and_transparent_gel.png", "body": ["black_powder_on_table.png", "ink_spread_on_glass.png", "black_powder(fine).png", "small_molecules_on_melanin.png", "black_powder.png"] },
+    "8": { "cover": "moon_like.jpg", "body": ["tattooist_woman.jpg", "hand_grabbing_tattoo_machine.jpg", "[product] Embo_in_sterile_bag.png", "black_powder.png", "ink_on_skin.png"] },
+    "9": { "cover": "[product] Embo_vertical.png", "body": ["black_powder(fine).png", "tattooist_woman.jpg", "hand_grabbing_tattoo_machine.jpg", "ink_on_skin_2.png", "[product] Embo_in_sterile_bag.png"] },
+    "10": { "cover": "[product] Embo_in_sterile_bag.png", "body": ["ink_on_skin.png", "ink_dip_embo_needle.png", "sterile_bag.png", "black_liquid_and_transparent_gel.png", "embo_needle_with_ink.png"] }
+  }
+}

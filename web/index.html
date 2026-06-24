@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>마케팅 콘솔 — 발행 검토</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css" />
+<style>
+  :root{
+    --bg:#ffffff;--soft:#f7f7f6;--soft2:#f0f0ee;--line:#e8e8e5;--line2:#dadad6;
+    --ink:#161616;--dim:#6a6a68;--faint:#9b9b98;--accent:#161616;--accent-ink:#ffffff;
+    --ok:#16774a;--okbg:#e9f4ed;--warn:#875a00;--warnbg:#f8f1df;--info:#234e8a;--infobg:#eaf1fb;--danger:#9a2a2a;--dangerbg:#fbecec;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5}
+  .app{display:flex;min-height:100vh}
+  /* sidebar */
+  .side{width:208px;flex-shrink:0;border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:9px;padding:4px 8px 16px;font-weight:600;font-size:15px}
+  .brand i{font-size:20px}
+  .nav{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;font-size:13.5px;color:var(--dim);cursor:pointer;border:1px solid transparent;user-select:none}
+  .nav i{font-size:18px}
+  .nav:hover{background:var(--soft)}
+  .nav.on{background:var(--soft);color:var(--ink);font-weight:600;border-color:var(--line)}
+  .side .foot{margin-top:auto;display:flex;align-items:center;gap:7px;padding:9px 11px;font-size:12px;color:var(--ok)}
+  .side .foot.demo{color:var(--warn)}
+  /* main */
+  .main{flex:1;min-width:0;padding:26px 32px;max-width:1100px}
+  .head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
+  .head h1{margin:0;font-size:21px;font-weight:600}
+  .head .sub{margin-top:3px;color:var(--dim);font-size:13.5px}
+  .pill{font-size:12px;padding:4px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--dim);white-space:nowrap}
+  .pill.ok{background:var(--okbg);color:var(--ok);border-color:transparent}
+  .pill.warn{background:var(--warnbg);color:var(--warn);border-color:transparent}
+  .pill.info{background:var(--infobg);color:var(--info);border-color:transparent}
+  /* card */
+  .card{border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px;background:var(--bg)}
+  .card .ch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+  .card .ch .l{display:flex;align-items:center;gap:9px}
+  .card .ch i{font-size:19px}
+  .card .ch .name{font-weight:600;font-size:15px}
+  .lab{font-size:11.5px;color:var(--faint);margin:12px 0 5px}
+  textarea,input[type=text]{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;font:14px/1.6 inherit;resize:vertical}
+  textarea:focus,input:focus{outline:none;border-color:var(--ink)}
+  textarea.body{min-height:120px}
+  textarea.fb{min-height:54px}
+  .tags{color:var(--info);font-size:13px;margin-top:8px}
+  .guard{font-size:12.5px;color:var(--dim);margin-top:9px;display:flex;align-items:center;gap:6px}
+  .row{display:flex;align-items:center;gap:9px;margin-top:13px;flex-wrap:wrap}
+  button{font:14px inherit;border-radius:9px;padding:9px 15px;cursor:pointer;border:1px solid var(--line2);background:var(--bg);color:var(--ink);display:inline-flex;align-items:center;gap:7px;font-weight:500}
+  button:hover{background:var(--soft)}
+  button i{font-size:16px}
+  button.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  button.pri:hover{opacity:.9;background:var(--accent)}
+  button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button.sm{padding:6px 11px;font-size:13px}
+  .len{margin-left:auto;color:var(--faint);font-size:12.5px}
+  .imgs{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+  .thumb{width:74px;height:92px;border-radius:9px;border:1px solid var(--line);object-fit:cover;background:var(--soft)}
+  .thumb.ph{display:flex;align-items:center;justify-content:center;color:var(--faint)}
+  .fbwrap{margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+  .mini{display:flex;gap:9px;margin-top:11px}
+  .mini .it{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:13px;display:flex;align-items:center;justify-content:space-between}
+  .mini .it i{font-size:16px}
+  .grid{display:grid;gap:12px}
+  .src{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .src img{width:100%;height:120px;object-fit:cover;display:block;background:var(--soft)}
+  .src .m{padding:9px 11px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px}
+  .drop{border:1.5px dashed var(--line2);border-radius:12px;padding:26px;text-align:center;color:var(--dim);font-size:13.5px}
+  .drop i{font-size:26px;display:block;margin-bottom:8px;color:var(--faint)}
+  .kv{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .kv:last-child{border-bottom:0}
+  .kv .k{color:var(--dim);font-size:13px;display:flex;align-items:center;gap:7px}
+  .kv .v{font-weight:500}
+  .lock{font-size:11px;color:var(--warn);background:var(--warnbg);padding:2px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:4px}
+  .chip{display:inline-block;font-size:12.5px;padding:4px 10px;border:1px solid var(--line2);border-radius:999px;margin:0 6px 6px 0}
+  .chip.no{color:var(--danger);border-color:transparent;background:var(--dangerbg)}
+  .rule{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+  .rule:last-child{border-bottom:0}
+  .rule .b{font-size:11px;padding:2px 8px;border-radius:6px}
+  .rule .b.do{background:var(--okbg);color:var(--ok)} .rule .b.dont{background:var(--dangerbg);color:var(--danger)}
+  .rule .sc{color:var(--faint);font-size:12px;margin-left:auto}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+  .cal .d{border:1px solid var(--line);border-radius:9px;min-height:74px;padding:7px 8px;font-size:12px}
+  .cal .d .n{color:var(--faint);font-size:11px}
+  .cal .d .t{margin-top:4px;font-size:11.5px;line-height:1.35}
+  .cal .d.published{background:var(--okbg)} .cal .d.review{background:var(--infobg)} .cal .d.scheduled{background:var(--soft)}
+  .toggle{width:38px;height:22px;border-radius:999px;background:var(--line2);position:relative;cursor:pointer;flex-shrink:0}
+  .toggle.on{background:var(--ink)}
+  .toggle::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.15s}
+  .toggle.on::after{left:19px}
+  .note{font-size:12.5px;color:var(--dim)}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:9}
+  .toast.show{opacity:1}
+  h2.sec{font-size:16px;font-weight:600;margin:0 0 12px}
+  @media(max-width:720px){.side{width:60px}.side .brand span,.nav span,.side .foot span{display:none}.main{padding:18px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><i class="ti ti-broadcast"></i><span>마케팅 콘솔</span></div>
+    <div class="nav on" data-s="today"><i class="ti ti-clipboard-check"></i><span>오늘 발행</span></div>
+    <div class="nav" data-s="sources"><i class="ti ti-photo"></i><span>소스</span></div>
+    <div class="nav" data-s="brand"><i class="ti ti-fingerprint"></i><span>브랜드 DNA</span></div>
+    <div class="nav" data-s="learning"><i class="ti ti-bulb"></i><span>학습 · 업그레이드</span></div>
+    <div class="nav" data-s="calendar"><i class="ti ti-calendar"></i><span>캘린더</span></div>
+    <div class="nav" data-s="settings"><i class="ti ti-settings"></i><span>설정</span></div>
+    <div class="foot" id="foot"><i class="ti ti-point-filled"></i><span>연결 확인 중…</span></div>
+  </aside>
+  <main class="main" id="view"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js" onerror="window.__noconfig=1"></script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const CH = {
+  instagram:   { label:'Instagram',   icon:'ti-brand-instagram', url:'https://www.instagram.com' },
+  threads:     { label:'Threads',     icon:'ti-brand-threads',   url:'https://www.threads.net' },
+  linkedin:    { label:'LinkedIn',    icon:'ti-brand-linkedin',  url:'https://www.linkedin.com/feed/' },
+  'naver-blog':{ label:'네이버 블로그', icon:'ti-notebook',        url:'https://blog.naver.com' },
+  tistory:     { label:'티스토리',     icon:'ti-notebook',        url:'https://www.tistory.com/manage' },
+};
+const TONE = { 'relate-kr':'공감형(한국)', b2b:'B2B', informational:'정보형', friendly:'친근형', sales:'세일즈' };
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $ = id => document.getElementById(id);
+function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1600); }
+
+let sb=null, DEMO=false, DATA={};
+const URL=window.SB_URL, ANON=window.SB_ANON;
+if(URL&&ANON) sb=createClient(URL,ANON); else DEMO=true;
+
+// sources 테이블 행 → 콘솔 소스 탭 형식 {images:[],guidelines}
+function mapSources(rows){
+  const images=rows.filter(r=>r.kind==='image').map(r=>({id:r.id,url:r.url,label:r.label||'',active:r.active}));
+  const guidelines=rows.filter(r=>r.kind==='guideline'&&r.active).map(r=>r.text).filter(Boolean).join('\n');
+  return {images,guidelines};
+}
+async function loadAll(){
+  const fx = await (await fetch('./fixture.json')).json().catch(()=>({}));
+  if(DEMO){ DATA = fx; return; }
+  // 실서버: 4테이블(drafts/feedback/sources/learnings) 라이브. 비면 fixture 폴백.
+  const [drafts,sources,learnings] = await Promise.all([
+    sb.from('marketing_drafts').select('*').order('channel'),
+    sb.from('sources').select('*').order('updated_at',{ascending:false}),
+    sb.from('learnings').select('*').order('weight',{ascending:false}),
+  ]);
+  DATA = { ...fx,
+    drafts:(drafts.data&&drafts.data.length)?drafts.data:fx.drafts,
+    sources:(sources.data&&sources.data.length)?mapSources(sources.data):fx.sources,
+    learnings:(learnings.data&&learnings.data.length)?learnings.data:fx.learnings,
+  };
+}
+async function patch(id, fields){
+  if(DEMO){ toast('데모 모드 — 저장 안 됨 (config.js 연결 시 실제 저장)'); return true; }
+  const { error } = await sb.from('marketing_drafts').update(fields).eq('id',id);
+  if(error){ toast('저장 오류: '+error.message); return false; } return true;
+}
+// 피드백 → feedback 테이블 INSERT (verdict+note+edited_body) → pull/distill 학습 입력
+async function insertFeedback(d, verdict, note){
+  if(DEMO){ toast('데모 모드 — 피드백 저장 안 됨'); return false; }
+  const { error } = await sb.from('feedback').insert({
+    draft_id:d.id, campaign_slug:d.campaign_slug||(DATA.campaign||{}).slug||null,
+    channel:d.channel, verdict:verdict||null, note:note||null, edited_body:d.body||null });
+  if(error){ toast('피드백 오류: '+error.message); return false; } return true;
+}
+// 지침 → sources(kind='guideline') upsert. 기존 guideline 행 갱신, 없으면 생성.
+async function saveGuideline(text){
+  if(DEMO) return false;
+  const { data:ex } = await sb.from('sources').select('id').eq('kind','guideline').limit(1);
+  if(ex&&ex.length){ const { error } = await sb.from('sources').update({text,active:true}).eq('id',ex[0].id); return !error; }
+  const { error } = await sb.from('sources').insert({kind:'guideline',text,label:'브랜드 보이스',active:true}); return !error;
+}
+
+function fullText(d){
+  const tags=d.hashtags||[]; const body=(d.title?d.title+'\n\n':'')+(d.body||'');
+  return (tags.length && !body.includes(tags[0])) ? body+'\n\n'+tags.join(' ') : body;
+}
+const stPill = s => s==='approved'?'<span class="pill ok">승인</span>':s==='edited'?'<span class="pill info">수정됨</span>':'<span class="pill">검토 대기</span>';
+
+// ── 오늘 발행 ────────────────────────────────────────────────────────────────
+function renderToday(){
+  const c=DATA.campaign||{}; const ds=DATA.drafts||[];
+  const cards = ds.map(d=>{
+    const m=CH[d.channel]||{label:d.channel,icon:'ti-file',url:'#'};
+    const tags=d.hashtags||[];
+    const imgs=(d.image_urls||[]).map(u=>`<img class="thumb" src="${esc(u)}" loading="lazy" alt="">`).join('')
+      || '<div class="thumb ph"><i class="ti ti-photo"></i></div>';
+    return `<div class="card" data-id="${esc(d.id)}">
+      <div class="ch"><div class="l"><i class="ti ${m.icon}"></i><span class="name">${esc(m.label)}</span>${stPill(d.status)}</div>
+        <a class="pill" href="${esc(m.url)}" target="_blank" style="text-decoration:none">플랫폼 열기 <i class="ti ti-external-link" style="font-size:12px"></i></a></div>
+      <div class="lab">본문 (직접 수정 가능)</div>
+      <textarea class="body">${esc(d.body||'')}</textarea>
+      ${tags.length?`<div class="tags">${esc(tags.join(' '))}</div>`:''}
+      ${d.guardian_notes?`<div class="guard"><i class="ti ti-shield-check" style="color:var(--ok)"></i> 검수 ${esc(d.guardian_notes)}</div>`:''}
+      <div class="imgs">${imgs}</div>
+      <div class="row">
+        <button class="pri act-copy"><i class="ti ti-copy"></i> 본문 복사</button>
+        <button class="act-save"><i class="ti ti-device-floppy"></i> 수정 저장</button>
+        <button class="act-appr"><i class="ti ti-check"></i> 승인</button>
+        <span class="len"></span>
+      </div>
+      <div class="fbwrap">
+        <div class="lab" style="margin-top:0">피드백 — 다음 생성 학습에 반영</div>
+        <textarea class="fb" placeholder="예: 첫 문장 더 가볍게. 데이터 근거 한 줄 추가.">${esc(d.feedback||'')}</textarea>
+        <div class="row" style="margin-top:9px">
+          <button class="sm act-up"><i class="ti ti-thumb-up"></i> 잘됨</button>
+          <button class="sm act-down"><i class="ti ti-thumb-down"></i> 아쉬움</button>
+          <button class="sm act-fbsave" style="margin-left:auto"><i class="ti ti-send"></i> 피드백 저장</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('') || '<div class="note">아직 전송된 draft가 없습니다. 로컬에서 <code>npm run push:supabase</code> 실행 시 여기에 올라옵니다.</div>';
+
+  $('view').innerHTML = `<div class="head"><div><h1>오늘 발행</h1>
+    <div class="sub">${esc(c.date||'')} · ${esc(c.title||'')} · ${ds.length} 채널</div></div>
+    <span class="pill">${DEMO?'데모 모드':'비공개 링크'}</span></div>${cards}`;
+
+  ds.forEach(d=>{
+    const el=$('view').querySelector(`[data-id="${CSS.escape(d.id)}"]`); if(!el) return;
+    const body=el.querySelector('.body'), len=el.querySelector('.len');
+    const upd=()=>len.textContent=`${fullText({...d,body:body.value}).length}자`; upd();
+    body.addEventListener('input',upd);
+    el.querySelector('.act-copy').onclick=async e=>{
+      try{await navigator.clipboard.writeText(fullText({...d,body:body.value}))}catch{body.select();document.execCommand('copy')}
+      const b=e.currentTarget,o=b.innerHTML; b.innerHTML='<i class="ti ti-check"></i> 복사됨'; setTimeout(()=>b.innerHTML=o,1300);
+    };
+    el.querySelector('.act-save').onclick=async()=>{ if(await patch(d.id,{body:body.value,status:'edited'})){d.body=body.value;d.status='edited';toast('본문 저장됨')} };
+    el.querySelector('.act-appr').onclick=async()=>{ if(await patch(d.id,{status:'approved'})){d.status='approved';renderToday()} };
+    const fb=el.querySelector('.fb'); let sent=null;
+    el.querySelector('.act-up').onclick=e=>{sent='up';el.querySelector('.act-up').classList.add('on');el.querySelector('.act-down').classList.remove('on')};
+    el.querySelector('.act-down').onclick=e=>{sent='down';el.querySelector('.act-down').classList.add('on');el.querySelector('.act-up').classList.remove('on')};
+    el.querySelector('.act-fbsave').onclick=async()=>{
+      if(!sent && !fb.value.trim()){ toast('잘됨/아쉬움 또는 메모를 입력하세요'); return; }
+      const okFb=await insertFeedback(d,sent,fb.value);
+      if(okFb||DEMO){ await patch(d.id,{feedback:fb.value}); d.feedback=fb.value; toast('피드백 저장됨 — pull→distill 학습 반영') }
+    };
+  });
+}
+
+// ── 소스 ─────────────────────────────────────────────────────────────────────
+function renderSources(){
+  const s=DATA.sources||{images:[],guidelines:''};
+  const grid=(s.images||[]).map(im=>`<div class="src"><img src="${esc(im.url)}" alt="">
+    <div class="m"><span>${esc(im.label)}</span><div class="toggle ${im.active?'on':''}" data-id="${esc(im.id)}"></div></div></div>`).join('');
+  $('view').innerHTML=`<div class="head"><div><h1>소스</h1><div class="sub">생성 시 참고하는 이미지·지침. 켜둔 자료만 사용됩니다.</div></div></div>
+    <h2 class="sec">참고 이미지</h2>
+    <div class="drop"><i class="ti ti-upload"></i>이미지를 끌어다 놓거나 클릭해서 업로드 (배경·스타일 참고용)</div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));margin-top:14px">${grid||'<div class="note">업로드된 이미지 없음</div>'}</div>
+    <h2 class="sec" style="margin-top:26px">지침</h2>
+    <textarea class="body" id="gl" style="min-height:150px">${esc(s.guidelines||'')}</textarea>
+    <div class="row"><button class="pri" id="glsave"><i class="ti ti-device-floppy"></i> 지침 저장</button>
+      <span class="note">생성 시 <code>sourceMaterials</code> + guideline-reviewer 에 반영</span></div>`;
+  $('view').querySelectorAll('.toggle').forEach(t=>t.onclick=async()=>{
+    const on=!t.classList.contains('on'); t.classList.toggle('on'); const id=t.dataset.id;
+    if(DEMO){ toast('데모 모드 — 토글만'); return; }
+    if(!id){ toast('사용 여부 저장됨'); return; }
+    const { error } = await sb.from('sources').update({active:on}).eq('id',id);
+    toast(error?'저장 오류: '+error.message:'사용 여부 저장됨');
+  });
+  $('glsave').onclick=async()=>{
+    if(DEMO){ toast('데모 모드 — 저장 안 됨'); return; }
+    const okv=await saveGuideline($('gl').value.trim()); toast(okv?'지침 저장됨':'저장 오류');
+  };
+  $('view').querySelector('.drop').onclick=()=>toast('이미지 업로드는 service_role 필요 — 엔진(brand/image-stock)에서 관리');
+}
+
+// ── 브랜드 DNA ───────────────────────────────────────────────────────────────
+function renderBrand(){
+  const b=DATA.brandDna||{};
+  const locks=(b.locked||[]).map(l=>`<div class="kv"><div class="k"><i class="ti ti-lock"></i>${esc(l.k)}</div>
+    <div class="v">${esc(l.v)} <span class="lock"><i class="ti ti-lock" style="font-size:11px"></i>잠금</span></div></div>`).join('');
+  const tones=(b.tones||[]).map(t=>`<span class="chip" style="${t===b.tone?'border-color:var(--ink);font-weight:600':''}">${esc(TONE[t]||t)}</span>`).join('');
+  const tags=(b.hashtags||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join('');
+  const no=(b.forbidden||[]).map(t=>`<span class="chip no">${esc(t)}</span>`).join('');
+  $('view').innerHTML=`<div class="head"><div><h1>브랜드 DNA</h1><div class="sub">모든 생성의 기준. 잠금 항목은 되돌릴 수 없습니다.</div></div></div>
+    <div class="card"><div class="kv"><div class="k"><i class="ti ti-at"></i>브랜드</div><div class="v">${esc(b.name||'')}</div></div>
+      <div class="kv"><div class="k"><i class="ti ti-brand-instagram"></i>공식 핸들</div><div class="v">${esc(b.handle||'')}</div></div>${locks}</div>
+    <h2 class="sec" style="margin-top:24px">톤 <span class="note">(현재: ${esc(TONE[b.tone]||b.tone||'')})</span></h2><div>${tones}</div>
+    <h2 class="sec" style="margin-top:22px">기본 해시태그</h2><div>${tags}</div>
+    <h2 class="sec" style="margin-top:22px">금기어 <span class="note">(생성·검수에서 차단)</span></h2><div>${no}</div>`;
+}
+
+// ── 학습 · 업그레이드 ────────────────────────────────────────────────────────
+function renderLearning(){
+  const all=DATA.learnings||[];
+  const active=all.filter(r=>r.active!==false), proposed=all.filter(r=>r.active===false);
+  const rules=active.map(r=>`<div class="rule"><span class="b ${r.kind}">${r.kind==='do'?'DO':'DONT'}</span>
+    <span>${esc(r.rule)}</span><span class="sc">${esc(r.scope)} · w${r.weight}</span></div>`).join('')||'<div class="note">누적 학습 없음</div>';
+  const props=proposed.map(p=>`<div class="card" data-id="${esc(p.id)}"><div class="ch"><div class="l"><i class="ti ti-arrow-up-circle"></i>
+    <span class="name">${esc(p.rule)}</span><span class="pill warn">검토 대기</span></div></div>
+    <div class="note" style="margin:6px 0 0">${esc(p.scope)} · ${p.kind==='do'?'DO':'DONT'} · w${p.weight}${p.source?' · '+esc(p.source):''}</div>
+    <div class="row"><button class="pri prop-ok"><i class="ti ti-check"></i> 승인 · 반영</button><button class="prop-hold">보류</button></div></div>`).join('')
+    ||'<div class="note">검토할 개선안 없음</div>';
+  $('view').innerHTML=`<div class="head"><div><h1>학습 · 업그레이드</h1>
+    <div class="sub">피드백에서 누적된 규칙 + 주기적 개선안. 승인하면 다음 생성부터 자동 주입됩니다.</div></div></div>
+    <h2 class="sec">에이전트 업그레이드 제안 <span class="note">(distill → 검토 대기)</span></h2>${props}
+    <h2 class="sec" style="margin-top:24px">누적 학습 규칙 <span class="note">(매 생성 시 자동 주입)</span></h2>
+    <div class="card">${rules}</div>`;
+  $('view').querySelectorAll('.prop-ok').forEach(b=>b.onclick=async()=>{
+    const card=b.closest('[data-id]'), id=card&&card.dataset.id;
+    if(DEMO){ toast('데모 — 승인 시 지침에 반영'); return; }
+    if(!id){ toast('승인됨'); return; }
+    const { error } = await sb.from('learnings').update({active:true}).eq('id',id);
+    if(error){ toast('오류: '+error.message); return; }
+    const row=all.find(r=>String(r.id)===String(id)); if(row)row.active=true;
+    toast('승인 · 반영됨 (다음 생성부터 주입)'); renderLearning();
+  });
+  $('view').querySelectorAll('.prop-hold').forEach(b=>b.onclick=()=>toast('보류'));
+}
+
+// ── 캘린더 ───────────────────────────────────────────────────────────────────
+function renderCalendar(){
+  const cal=DATA.calendar||[];
+  const cells=cal.map(c=>`<div class="d ${esc(c.status)}"><div class="n">${esc(c.date.slice(5))}</div>
+    <div class="t">${esc(c.title)}</div></div>`).join('');
+  $('view').innerHTML=`<div class="head"><div><h1>캘린더 · 히스토리</h1><div class="sub">지난 발행과 예정 토픽.</div></div></div>
+    <div class="row" style="margin:0 0 12px">
+      <span class="pill ok">발행됨</span><span class="pill info">검토중</span><span class="pill">예정</span></div>
+    <div class="cal">${cells}</div>`;
+}
+
+// ── 설정 ─────────────────────────────────────────────────────────────────────
+function renderSettings(){
+  $('view').innerHTML=`<div class="head"><div><h1>설정</h1><div class="sub">연결·채널·접근 링크.</div></div></div>
+    <div class="card">
+      <div class="kv"><div class="k"><i class="ti ti-database"></i>Supabase</div><div class="v">${DEMO?'<span class="pill warn">미연결 (데모)</span>':'<span class="pill ok">연결됨</span>'}</div></div>
+      <div class="kv"><div class="k"><i class="ti ti-link"></i>비공개 링크</div><div class="v note">이 배포 URL을 클라에게만 공유</div></div>
+      <div class="kv"><div class="k"><i class="ti ti-refresh"></i>마지막 push</div><div class="v note">오늘 09:00</div></div>
+    </div>
+    <h2 class="sec" style="margin-top:24px">채널</h2>
+    <div class="card">${['instagram','threads','naver-blog','linkedin'].map((c,i)=>`<div class="kv"><div class="k"><i class="ti ${CH[c].icon}"></i>${CH[c].label}</div><div class="toggle ${i<3?'on':''}"></div></div>`).join('')}</div>`;
+  $('view').querySelectorAll('.toggle').forEach(t=>t.onclick=()=>{t.classList.toggle('on');toast(DEMO?'데모 모드':'채널 설정 저장됨')});
+}
+
+const VIEWS={today:renderToday,sources:renderSources,brand:renderBrand,learning:renderLearning,calendar:renderCalendar,settings:renderSettings};
+function go(s){ document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('on',n.dataset.s===s)); (VIEWS[s]||renderToday)(); window.scrollTo(0,0); }
+document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>go(n.dataset.s));
+
+(async()=>{
+  const f=$('foot');
+  f.className='foot'+(DEMO?' demo':''); f.querySelector('span').textContent=DEMO?'데모 모드 (fixture)':'Supabase 연결됨';
+  await loadAll(); go('today');
+  if(!DEMO) sb.channel('live').on('postgres_changes',{event:'*',schema:'public',table:'marketing_drafts'},async()=>{await loadAll();go(document.querySelector('.nav.on').dataset.s)}).subscribe();
+})();
+</script>
+</body>
+</html>

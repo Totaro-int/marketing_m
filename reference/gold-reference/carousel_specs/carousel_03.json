@@ -1,0 +1,116 @@
+{
+  "id": 3,
+  "topic": "더 뺄 것이 없을 때 완성",
+  "thesis": "오래 남는 색에서 순수함은 더함이 아니라 뺌의 결과다. 멜라누아는 성능을 지키는 선에서 보존제·분산제·충전제를 덜어내 변수를 줄였다.",
+  "images": [
+    "black_liquid_and_transparent_gel.png",
+    "black_powder_on_table.png",
+    "texture.png",
+    "black_granule.png",
+    "black_powder(fine).png",
+    "ink_spread_on_glass.png"
+  ],
+  "slides": [
+    {
+      "type": "cover_stmt",
+      "image": "black_powder_on_table.png",
+      "lines": [
+        "완벽함이란,",
+        "더 뺄 것이 없을 때 완성된다."
+      ]
+    },
+    {
+      "type": "body",
+      "image": "texture.png",
+      "mode": "C",
+      "num": "01",
+      "title": "잉크에는 색 말고도 많은 게 들어갑니다.",
+      "segments": [
+        [
+          "색을 안정시키고 오래 보관하기 위해 보존제, 분산제, 충전제 같은 첨가물이 함께 들어가는 경우가 많습니다.",
+          false
+        ],
+        [
+          "색을 위해 더한 것들이 함께 남습니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "texture_2.png",
+      "mode": "A",
+      "num": "02",
+      "title": "오래 남는 색일수록, 변수는 적을수록 좋습니다.",
+      "segments": [
+        [
+          "첨가물 하나하나가 피부에 닿는 또 다른 변수입니다. 수년간 남는 색이라면, 꼭 필요하지 않은 것은 처음부터 없는 편이 낫습니다.",
+          false
+        ],
+        [
+          "필요하지 않은 것은 처음부터 빼는 편이 낫습니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "black_granule.png",
+      "mode": "C",
+      "num": "03",
+      "title": "그래서 최대한 덜어냈습니다.",
+      "segments": [
+        [
+          "멜라누아 엠보는 색의 발현과 안정성을 지키는 선에서 보존제·분산제·충전제를 최소화했습니다. 무엇을 뺄지는 정교한 공학적 설계로 결정됩니다.",
+          false
+        ],
+        [
+          "정교한 설계로 허락하는 만큼 비웁니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "black_powder(fine).png",
+      "mode": "A",
+      "num": "04",
+      "title": "남은 건 색, 그 자체입니다.",
+      "segments": [
+        [
+          "더할수록 좋아진다고 여기기 쉽지만, 오래 남는 색에서 순수함은 더함이 아니라 뺌의 결과입니다.",
+          false
+        ],
+        [
+          "순수함은 더함이 아니라 뺌의 결과.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "body",
+      "image": "ink_spread_on_glass.png",
+      "mode": "C",
+      "num": "05",
+      "title": "무엇을 뺐는지도 정보입니다.",
+      "segments": [
+        [
+          "무엇을 넣었는지만큼 무엇을 뺐는지도 시술자가 확인할 정보입니다. 멜라누아는 그 선택을 숨기지 않습니다.",
+          false
+        ],
+        [
+          "무엇을 뺐는지도 열어 둡니다.",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "closing",
+      "lines": [
+        "멜라누아는",
+        "덜어내며 완성합니다."
+      ]
+    }
+  ],
+  "caption": "완벽함이란, 더 뺄 것이 없을 때 완성됩니다.\n\n잉크에는 색을 안정시키고 보관하기 위한 첨가물이 함께 들어가곤 합니다. 하지만 피부에 수년간 남는 색이라면, 꼭 필요하지 않은 것은 처음부터 없는 편이 낫습니다.\n\n멜라누아 엠보는 색의 발현과 안정성을 지키는 선에서 보존제·분산제·충전제를 최소화했습니다.\n\n멜라누아는 뺄수록 완벽해지는 순수함을 추구합니다.\n\n더 알아보기 →\nmelanoir.co.kr/products/embo\n\n#멜라누아 #MELANOIR #반영구색소 #PMU #반영구화장 #반영구잉크 #멜라닌색소 #엠보 #PMUartist"
+}

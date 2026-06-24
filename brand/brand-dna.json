@@ -1,0 +1,124 @@
+{
+  "_source": "BRAND_LOCKS.md + LEGAL_REVIEW.md + CAROUSEL_CONTENT_MODEL.md + AGENT_LEARNINGS_HANDOFF.md + melanoir_brand_guide.md. 이 파일은 생성(generate.mjs 주입)·검수(guard.mjs 강제)의 브랜드 SSoT. 변경은 상류 BI 문서에서 먼저.",
+  "brand": {
+    "name": "멜라누아",
+    "nameEn": "MELANOIR",
+    "wordmark": "M E L A N O I R",
+    "handle": "@melanoir_official",
+    "site": "melanoir.co.kr",
+    "productUrl": "melanoir.co.kr/products/embo",
+    "product": "멜라누아 엠보",
+    "maker": "멜라누아 (잉크 제조사 — 행위 동사는 '만든다')",
+    "slogan": "지구에서 가장 안전한 Black",
+    "sloganFrame": "추구·정의의 선언 (특정 제품의 최상급 안전 주장 아님)"
+  },
+
+  "facts": [
+    { "id": "P-001", "value": "0.00", "label": "피부 자극 지수", "test": "ISO 10993-23", "testKind": "피부 자극 시험",
+      "subject": "멜라닌 색소(원료)", "language": "측정 범위의 최솟값 / 자극 지수 0 / 자극 반응이 나타나지 않음",
+      "forbiddenLanguage": ["검출", "불검출", "N.D."], "layer": "data" },
+    { "id": "P-002", "value": "97%", "label": "세포 생존율", "test": "세포독성 시험", "testKind": "세포독성",
+      "subject": "멜라닌 색소(원료)", "language": "비독성 인정 기준 70% 초과, 결과 97%",
+      "forbiddenLanguage": ["검출", "불검출", "N.D."], "layer": "data" },
+    { "id": "P-003", "value": "필수 항목 All N.D.(불검출)", "label": "유해물질", "test": "유해물질 자가품질검사", "testKind": "유해물질",
+      "subject": "완성 제품(엠보)", "language": "검출/불검출(N.D.) 용어는 여기에만 귀속. '필수(전)항목' 범위로 한정.",
+      "performedBy": "공인기관 (멜라누아 직접 측정 아님)", "layer": "data" },
+    { "id": "F-004", "value": "ISO 10993-23", "label": "시험 표준", "subject": "시험 방법", "layer": "data" },
+    { "id": "F-006", "value": "EWG 1등급 분류", "label": "성분(멜라닌) 안전성 분류",
+      "subject": "성분(멜라닌)", "note": "EWG(기관)가 성분을 1등급으로 분류. '평가/인증' 아님. 제품 귀속·제품 시험값과 병렬 배치·마케팅 본문 노출 금지.",
+      "layer": "ingredient", "bodyExposure": false }
+  ],
+
+  "topics": [
+    { "id": 1, "title": "지구에서 가장 안전한 Black", "kind": "선언/여정", "layer": "declaration", "length": 8,
+      "thesis": "가장 안전한 검정은 몸이 직접 만드는 색(멜라닌)이며, 그 안전을 숫자로 증명하려는 여정이다." },
+    { "id": 2, "title": "내 몸이 가장 잘 아는 색소", "kind": "선언/교육", "layer": "declaration", "length": 7,
+      "thesis": "멜라닌은 낯선 화학물질이 아니라 몸이 스스로 만들고 평생 지니는 익숙한 색이다." },
+    { "id": 3, "title": "더 뺄 것이 없을 때 완성", "kind": "선언", "layer": "declaration", "length": 7,
+      "thesis": "순수함은 더함이 아니라 뺌의 결과 — 꼭 필요하지 않은 첨가물은 처음부터 없는 편이 낫다." },
+    { "id": 4, "title": "숫자가 먼저 말한다", "kind": "데이터 허브", "layer": "data", "length": 8,
+      "thesis": "우리의 철학을 숫자로 증명한다. 세 개의 숫자(0.00·97%·All N.D.)를 개괄하고 #5·6·7로 딥다이브 연결.",
+      "factIds": ["P-001", "P-002", "P-003", "F-004"] },
+    { "id": 5, "title": "0.00 (피부 자극 지수)", "kind": "데이터", "layer": "data", "length": 6,
+      "thesis": "오래 남는 잉크 → 척도(ISO 10993-23) → 자극 지수 0.00(측정 범위 최솟값) → 공개의 의미.",
+      "factIds": ["P-001", "F-004"] },
+    { "id": 6, "title": "97% (세포 생존율)", "kind": "데이터", "layer": "data", "length": 7,
+      "thesis": "세포독성 시험 → 비독성 기준 70% → 살아남은 비율 97% → 의미.", "factIds": ["P-002"] },
+    { "id": 7, "title": "All N.D. (필수 항목 불검출)", "kind": "데이터", "layer": "data", "length": 7,
+      "thesis": "'검출 안 됨'이 가장 정직한 언어다. 공인기관 자가품질검사로 필수 항목 확인.", "factIds": ["P-003"] },
+    { "id": 8, "title": "소재가 곧 시그니처", "kind": "정체성", "layer": "identity", "length": 7,
+      "thesis": "시술자가 고른 소재는 그의 작업에 새겨지고 그의 기준을 말한다 — 소재가 분명하면 설명이 쉬워진다." },
+    { "id": 9, "title": "베타테스터 모집", "kind": "모집", "layer": "recruit", "length": 7,
+      "thesis": "가장 먼저 이 기준을 시술에 들이는 전문 시술자를 초대한다. (애플식 명료·초대 톤)",
+      "facts": { "deadline": "2026-06-30 23:59", "earlyClose": true, "target": "시술 경험 전문가(인스타 포트폴리오)",
+        "benefitAll": "본품 용량 앰플 키트 3회분", "benefitConditional": "응답 완료 시 3개월 골드 등급 · 우수 리뷰어 3인 50만원 상당",
+        "apply": "melanoir.co.kr/products/embo (SMS 본인인증, 선정자 DM 인증)", "status": "엠보=인허가 완료·정식 판매 전(베타)" } },
+    { "id": 10, "title": "1회용 멸균 설계", "kind": "제품", "layer": "product", "length": 7,
+      "thesis": "뚜껑 여는 순간 오염 노출 → 일회분량 멸균 설계 → 보존제에 기대지 않을 수 있다 → 오로지 당신을 위해 개봉.",
+      "note": "0.5g 등 미게시 수치 금지 → '일회분량'. 반영구 깊이: '표피에 올리되 일부는 진피까지 남는다'." }
+  ],
+
+  "locks": {
+    "bannedExact": ["28종", "28-FREE", "28종 N.D.", "28종 불검출", "@melanoir.official", "100% 안전", "EWG 인증", "공인 인증"],
+    "bannedClaims": [
+      { "pattern": "(?<![가-힣])안전하다(?![가-힣])", "rule": "L-06", "reason": "법적정의 없는 '안전하다' 단독 사용 금지", "severity": "block", "allowSloganContext": true },
+      { "pattern": "무독성", "rule": "L-06", "reason": "'무독성' 단독 금지 → '비독성 기준 초과' 등 측정 언어로", "severity": "block" },
+      { "pattern": "성적서.{0,6}(공개|원본|확인)", "rule": "정책", "reason": "시험성적서 공개/원본 확인 표현 금지(비공개 정책) → '시험 기준·데이터는 홈페이지에서'", "severity": "block" },
+      { "pattern": "트러블.{0,4}(줄|감소|개선)", "rule": "효능주장", "reason": "제품 효능 주장 금지 → 정보·선택 프레임", "severity": "block" },
+      { "pattern": "EWG.{0,4}(1등급|인증)", "rule": "L-04", "reason": "EWG 1등급은 성분(멜라닌) 분류 — 제품 귀속·본문 노출 금지", "severity": "warn" },
+      { "pattern": "직접\\s*측정|자체\\s*측정", "rule": "L-03", "reason": "시험은 공인기관 수행 → '공인기관 자가품질검사로 확인'", "severity": "warn" },
+      { "pattern": "→\\s*(https?://|melanoir|www)", "rule": "콘텐츠모델", "reason": "슬라이드에 '→ URL' 화살표 금지(링크는 캡션에)", "severity": "warn", "scope": "slide" },
+      { "pattern": "수치", "rule": "B-2", "reason": "'수치'보다 '숫자' 기본 채택(고정 용어 '자극 지수' 등은 예외)", "severity": "warn" }
+    ],
+    "termSeparation": {
+      "검출|불검출|N\\.D\\.": { "onlyWith": ["유해물질", "자가품질검사", "All N.D."], "rule": "B-2",
+        "reason": "검출/불검출(N.D.)은 유해물질 자가품질검사 전용. ISO 10993-23(자극)·세포독성(생존율)에 쓰면 위반." }
+    },
+    "layerSeparation": {
+      "productNumbers": ["0.00", "97%", "All N.D.", "ISO 10993-23"],
+      "forbiddenInLayers": ["declaration", "identity", "recruit"],
+      "rule": "L-05",
+      "reason": "선언/여정·정체성·모집 레이어 본문에 제품 스펙 수치를 제품에 귀속 금지 → 데이터 레이어(#4-7)에서 근거와 함께. 단 #9 모집은 시험 '했다'는 접근 언급은 허용(수치 귀속만 금지)."
+    }
+  },
+
+  "tone": {
+    "principles": [
+      "캐러셀 = 하나의 thesis + 한 방향 스토리(사실 나열 금지)",
+      "처음 연 프레임으로 끝까지(프레임 일관성)",
+      "과장·허위 전제 금지('원래 ~였다' 일반화 단정 X)",
+      "하드셀보다 넛지, 친절하되 장황하지 않게",
+      "메타 안내('다음 글에서') 금지 → 리프레임/질문 넛지",
+      "키워드 과반복 금지(검정·기준 등)"
+    ],
+    "byLayer": {
+      "declaration": "약간의 무게 OK (선언/여정)",
+      "data": "담백·정밀 (숫자가 주인공)",
+      "identity": "긍정 초대 (배제·부정 함의 금지)",
+      "recruit": "애플식 명료·초대 (비장·과장 금지, 긍정 초대 프레임)",
+      "product": "명료·자신감 (제조사 = '만든다')"
+    },
+    "lexicon": {
+      "prefer": { "수치": "숫자", "반영구 검정": "반영구 화장/타투", "쓰다(제품 주어)": "만들다" },
+      "fixedTerms": ["피부 자극 지수", "세포 생존율", "ISO 10993-23", "세포독성 시험", "자가품질검사"],
+      "avoid": ["검정(과반복)", "필러/의료기기 등가 표현", "한정 수량(압박)", "Founding Artist 등 낯선 영문 조어"]
+    }
+  },
+
+  "contentModel": {
+    "fourElements": ["thesis(핵심 메시지)", "후킹 커버", "스토리 비트(본문 3~8)", "마무리(선언 한 줄)"],
+    "storyArc": "긴장/오해 → 척도/메커니즘 → 결과/숫자 → 의미·공개",
+    "length": { "total": [7, 10], "cover": 1, "body": [5, 8], "closing": 1 },
+    "bodyGrayText": { "sentences": [2, 3], "chars": [60, 110] },
+    "hookLine": { "chars": [12, 20] },
+    "layout": { "titleYFixed": true, "wordmarkTop": true, "highlightPerSlide": 1, "highlightStyle": "흰색+골드밑줄 인라인", "noLineBreakForceOnHighlight": true },
+    "modes": { "A": "디밍+비네팅", "B": "블러", "C": "헤더밴드", "D": "순흑(마무리)", "E": "가운데 큰 숫자(데이터 커버)" },
+    "modeHint": { "brightImages": ["embo_needle_with_ink", "ink_dip_embo_needle", "sterile_bag"], "preferMode": ["A", "B"] }
+  },
+
+  "captionTemplate": {
+    "structure": ["후킹 1~2줄(커버 메시지 반영)", "본문 설명 문단(thesis 풀어쓰기, 친절하되 간결)", "(데이터형) 시험 기준·데이터는 멜라누아 홈페이지에서 확인", "더 알아보기 →", "{productUrl}", "해시태그"],
+    "linkArrowOnlyInCaption": true,
+    "baseHashtags": ["#멜라누아", "#MELANOIR", "#반영구색소", "#PMU", "#반영구화장", "#반영구잉크", "#멜라닌색소", "#PMUartist"]
+  }
+}
