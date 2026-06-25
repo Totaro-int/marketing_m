@@ -53,9 +53,11 @@ cp web/config.example.js web/config.js
 → `SB_URL`, `SB_ANON`(anon 키 — RLS로 제한돼 공개돼도 안전) 채우기.
 
 ## 5. 플러그인 설치 (Claude Code Desktop)
-1. Claude Code Desktop에서 **`/plugin`**
-2. 이 폴더(또는 깃 URL)를 **로컬 마켓플레이스/경로**로 추가 → `melanoir-studio` 설치
-3. `/melanoir-daily`·`/melanoir-new` 명령이 보이면 완료
+- **깃에서:** `/plugin marketplace add Totaro-int/marketing_m` → `/plugin install melanoir-studio`
+- **또는 로컬:** `/plugin marketplace add <클론한 폴더 경로>` → `/plugin install melanoir-studio`
+- → `/melanoir-daily`·`/melanoir-new` 명령이 보이면 완료.
+
+> ⚠️ **명령은 `node scripts/...` 를 cwd 기준으로 실행**합니다(marketing-agent 와 동일 방식). 즉 **클론한 이 폴더에서 Claude Code 를 열고**(2~4단계 완료 상태) 실행해야 합니다. 플러그인 설치만으로는 `npm install`·`.env.local` 이 갖춰지지 않으니 1~4단계는 필수입니다.
 
 ## 6. 매일 운영 — 명령 한 줄
 ```

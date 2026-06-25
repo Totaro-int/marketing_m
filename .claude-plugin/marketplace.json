@@ -1,0 +1,20 @@
+{
+  "name": "melanoir-studio",
+  "id": "melanoir-studio",
+  "owner": { "name": "Totaro Inc. · Melanoir" },
+  "metadata": {
+    "description": "멜라누아 IG 카드뉴스 + 5채널 콘텐츠 엔진 (single-plugin marketplace).",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "melanoir-studio",
+      "source": "./",
+      "description": "토픽 → 5채널(IG 캐러셀·LinkedIn·Threads·naver-blog) + 자사몰 인사이트 골드 생성. 구독 에이전트(Anthropic API 불요), 브랜드·광고법 가드, Supabase 콘솔·카드 편집기·블로그 미리보기, 실시간 학습 루프. /melanoir-daily · /melanoir-new.",
+      "version": "1.0.0",
+      "author": { "name": "Totaro Inc." },
+      "keywords": ["melanoir", "carousel", "instagram", "korean", "pmu", "content-engine"],
+      "category": "workflow"
+    }
+  ]
+}
