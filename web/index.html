@@ -206,6 +206,7 @@ function renderToday(){
       <textarea class="body">${esc(d.body||'')}</textarea>
       ${tags.length?`<div class="tags">${esc(tags.join(' '))}</div>`:''}
       ${d.guardian_notes?`<div class="guard"><i class="ti ti-shield-check" style="color:var(--ok)"></i> 검수 ${esc(d.guardian_notes)}</div>`:''}
+      ${(()=>{const cs=(d.body||'').split('\n').filter(l=>/^\s*🖼/.test(l));return cs.length?'<div class="lab" style="margin-top:8px">🖼 이미지 배치 — 글에서 이 위치·내용으로 삽입</div>'+cs.map(l=>`<div style="background:#1c1708;border:1px solid var(--gold);border-radius:8px;padding:7px 11px;margin:5px 0;font-size:12.5px;color:#d8c08a">${esc(l.replace(/^\s*🖼\s*/,'🖼 '))}</div>`).join(''):'';})()}
       <div class="imgs">${imgs}</div>
       <div class="row">
         <button class="pri act-copy"><i class="ti ti-copy"></i> 본문 복사</button>
