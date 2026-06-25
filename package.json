@@ -18,6 +18,7 @@
     "watch": "node scripts/watch-supabase.mjs",
     "distill": "node scripts/distill.mjs",
     "topic-queue": "node scripts/topic-queue.mjs",
+    "setup": "node scripts/setup.mjs",
     "doctor": "node scripts/doctor.mjs",
     "self-check": "node scripts/self-check.mjs",
     "verify:render": "node scripts/verify-render.mjs",
@@ -35,7 +36,6 @@
     "pg": "^8.22.0"
   },
   "optionalDependencies": {
-    "_comment": "canvas=서버 렌더(네이티브 빌드 필요). 없어도 생성·발행 동작 — IG 카드는 브라우저 편집기가 렌더. pixelmatch/pngjs=검증 전용.",
     "canvas": "^3.2.3",
     "pixelmatch": "^6.0.0",
     "pngjs": "^7.0.0"
