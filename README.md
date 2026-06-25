@@ -19,7 +19,7 @@
 | Supabase 프로젝트 | 무료 플랜 OK — 콘솔·학습 루프용 |
 | (선택) Vercel | 콘솔 비공개 링크 배포용 |
 
-> Windows는 `npm install` 시 `canvas`/`pg` 네이티브 빌드가 필요할 수 있습니다(안내 메시지대로 빌드툴 설치).
+> **`canvas`(서버 렌더)는 선택 의존성** — Windows 빌드툴이 없어 빌드에 실패해도 `npm install`은 계속 진행되고, **IG 카드는 브라우저 카드 편집기(`web/cards.html`)가 렌더**합니다. 즉 비개발자 클라이언트도 빌드툴 없이 설치·운영 가능. 설치 후 **`npm run doctor`** 로 준비 상태를 확인하세요.
 
 ## 1. 내려받기 + 설치
 ```bash
@@ -76,6 +76,7 @@ npx vercel deploy web --prod --scope <your-team>
 
 ## 8. 검증 (직접 실행)
 ```bash
+npm run doctor        # 설치·연결 준비 점검 (새 기기 첫 실행 시 — node·키·Supabase·폰트)
 npm run verify        # 렌더(골드 대조)·가드·이미지배정·self-check·E2E
 npm run verify:live   # 콘솔·인사이트·콘솔쓰기 (Supabase 연결 시)
 ```

@@ -9,7 +9,6 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { skeletonSpec, finalizeSpec } from '../engine/generate.mjs';
 import { skeletonChannels, finalizeChannels } from '../engine/channels.mjs';
-import { renderSpecToDir } from '../engine/render.mjs';
 import { sbEnv, hasCreds, ui, ROOT } from './_lib.mjs';
 import { pickNextTopic } from './topic-queue.mjs';
 
@@ -23,6 +22,10 @@ const date = argv.indexOf('--date') >= 0 ? argv[argv.indexOf('--date') + 1] : ne
 const env = sbEnv();
 const node = process.execPath;
 const run = (s, a) => spawnSync(node, [path.join(ROOT, 'scripts', s), ...a], { stdio: 'inherit' });
+// 서버 렌더는 canvas(네이티브 빌드) 필요 — 선택. 없으면 생략(IG 카드는 브라우저 편집기 web/cards.html 가 렌더).
+let renderSpecToDir = null;
+try { if (!process.env.MELANOIR_NO_CANVAS) ({ renderSpecToDir } = await import('../engine/render.mjs')); }
+catch { ui.dim('(canvas 미설치 → 서버 렌더 생략. 브라우저 카드 편집기에서 렌더)'); }
 
 ui.info(`=== daily ${date} · 토픽 "${topicArg}"${positional ? '' : ' (큐 자동선택)'} ${PUSH ? '(push)' : '(preview)'} ===`);
 
@@ -46,9 +49,12 @@ ui.dim(`   mode=${mode} · ${spec.slides.length} slides · guard ${guard.blocked
 if (guard.blocked) { ui.err('guard 차단 — 발행 중단:'); guard.findings.filter(f => f.sev === 'block').forEach(f => ui.dim('   ' + JSON.stringify(f))); process.exit(1); }
 
 // 3) render
-ui.info('3) render → PNG');
-const { out, paths } = await renderSpecToDir(spec, path.join(ROOT, 'out', 'daily'));
-ui.dim(`   ${paths.length} cards → ${path.relative(ROOT, out)}`);
+let out = null;
+if (renderSpecToDir) {
+  ui.info('3) render → PNG');
+  ({ out } = await renderSpecToDir(spec, path.join(ROOT, 'out', 'daily')));
+  ui.dim(`   → ${path.relative(ROOT, out)}`);
+} else ui.dim('3) render 생략 — 브라우저 카드 편집기(web/cards.html)에서 렌더(canvas 불요)');
 
 // 3b) 채널 카피 (오프라인 스켈레톤 — 실제는 melanoir-channel-copywriter 에이전트)
 ui.info('3b) channels (LinkedIn·Threads·naver-blog 스켈레톤)');
@@ -70,9 +76,10 @@ if (!PUSH) {
 } else {
   ui.info('4) push (IG + 채널 + 인사이트)');
   const slug = `daily-${date}-${id2}`;
-  run('push-supabase.mjs', [specFile, '--cards', out, '--slug', slug]);
-  run('upload-bg.mjs', [specFile]);            // 카드 편집기 기본 배경(Storage)
+  const pushArgs = [specFile, '--slug', slug]; if (out) pushArgs.push('--cards', out);
+  run('push-supabase.mjs', pushArgs);
   run('push-channels.mjs', [chFile, '--slug', slug]);
-  run('publish-insight.mjs', [specFile, '--date', date]);
-  ui.ok('daily 발행 완료 (5채널 + 인사이트 + 카드 편집기 배경).');
+  if (renderSpecToDir) { run('upload-bg.mjs', [specFile]); run('publish-insight.mjs', [specFile, '--date', date]); }
+  else ui.dim('   인사이트 카드·기본 배경은 canvas 필요 → 생략(브라우저/Totaro 경로).');
+  ui.ok('daily 발행 완료 (5채널' + (renderSpecToDir ? ' + 인사이트 + 배경' : ', 카드는 브라우저 편집기') + ').');
 }
