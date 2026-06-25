@@ -58,18 +58,32 @@ function cardFor(desc,cards,seq){
   if(/마무리|마지막|여정/.test(desc))return cards[cards.length-1];
   return cards[(seq.i++)%(cards.length||1)]||null;
 }
+const figEl=(src,cap)=>src?`<figure><img src="${esc(src)}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>`:`<div class="imgmiss">🖼 ${esc(cap)} <small>(IG 카드 없음)</small></div>`;
 function render(nb,cards){
-  const seq={i:0}; const out=[]; const txt=[];
-  out.push(`<h1 class="ptitle">${esc(nb.title||'')}</h1><p class="pmeta">@melanoir · 멜라누아 블로그</p>`);
-  for(const raw of String(nb.body||'').split('\n')){
-    const t=raw.trim(); if(!t) continue;
-    if(/^🖼/.test(t)){
-      const desc=t.replace(/^🖼\s*/,''); const src=cardFor(desc,cards,seq);
-      out.push(src?`<figure><img src="${esc(src)}" alt="${esc(desc)}" loading="lazy"><figcaption>${esc(desc)}</figcaption></figure>`
-                  :`<div class="imgmiss">🖼 ${esc(desc)}<br><small>(이 캠페인 IG 카드 없음 — 카드 생성 후 표시)</small></div>`);
-    } else if(/^[\[【]/.test(t)){ /* 본문 첫 제목줄은 헤더에 이미 표시 → 건너뜀 */ continue; }
-    else if(/^[■▪◆●]/.test(t)){ const h=t.replace(/^[■▪◆●]\s*/,''); out.push(`<h2>${esc(h)}</h2>`); txt.push('\n'+h+'\n'); }
-    else { out.push(`<p>${esc(t)}</p>`); txt.push(t); }
+  const lines=String(nb.body||'').split('\n').map(l=>l.trim()).filter(Boolean);
+  const hasCues=lines.some(l=>/^🖼/.test(l)); const seq={i:0};
+  let blocks=[];
+  for(const t of lines){
+    if(/^🖼/.test(t)){ const cap=t.replace(/^🖼\s*/,''); blocks.push({img:cardFor(cap,cards,seq), cap}); }
+    else if(/^[\[【]/.test(t)){ /* 본문 첫 제목줄 = 헤더에 이미 표시 → 스킵 */ }
+    else if(/^[■▪◆●]/.test(t)) blocks.push({h:t.replace(/^[■▪◆●]\s*/,'')});
+    else blocks.push({p:t});
+  }
+  // 큐가 없으면(과거 캠페인 등) IG 카드를 자동 배치 — 첫 문단 뒤 대표 + 각 소제목 앞 카드(순환)
+  if(!hasCues && cards.length){
+    const b2=[]; let ci=0, firstP=false;
+    for(const b of blocks){
+      if(b.h!==undefined && firstP && ci<cards.length){ b2.push({img:cards[ci],cap:'관련 이미지'}); ci++; }
+      b2.push(b);
+      if(b.p!==undefined && !firstP){ b2.push({img:cards[ci]||cards[0],cap:'대표 이미지'}); ci++; firstP=true; }
+    }
+    blocks=b2;
+  }
+  const out=[`<h1 class="ptitle">${esc(nb.title||'')}</h1><p class="pmeta">@melanoir · 멜라누아 블로그</p>`]; const txt=[];
+  for(const b of blocks){
+    if(b.img!==undefined) out.push(figEl(b.img,b.cap));
+    else if(b.h!==undefined){ out.push(`<h2>${esc(b.h)}</h2>`); txt.push('\n'+b.h+'\n'); }
+    else if(b.p!==undefined){ out.push(`<p>${esc(b.p)}</p>`); txt.push(b.p); }
   }
   const tags=(nb.hashtags||[]); if(tags.length) out.push(`<div class="tags">${tags.map(h=>`<span>${esc(h)}</span>`).join(' ')}</div>`);
   $('post').innerHTML=out.join('');
