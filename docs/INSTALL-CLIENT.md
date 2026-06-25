@@ -88,4 +88,4 @@ Claude: 콘솔에 올렸습니다 → melanoir-console.vercel.app
 - 스킬이 목록에 안 보이면: ZIP 재업로드 · "코드 실행" ON 확인 · Desktop 재시작
 - 키/권한 문의: **Totaro**
 
-*(img/05·06·07 = 실제 제품 캡처 완료. img/01~04 = Claude Desktop 앱 설정 화면 → macOS에서 캡처해 교체.)*
+*(콘솔·카드편집기·블로그 화면은 실제 캡처. 1·2단계 Claude Desktop 설정 화면은 글 설명으로 갈음 — 필요하면 macOS에서 캡처해 추가 가능.)*
