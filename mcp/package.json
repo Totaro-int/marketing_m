@@ -1,0 +1,13 @@
+{
+  "name": "melanoir-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "멜라누아 MCP 서버 — 클라 Claude Desktop 커넥터(키 서버사이드). guard/finalize/push 도구.",
+  "bin": { "melanoir-mcp": "./server.mjs" },
+  "scripts": { "start": "node server.mjs" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.0",
+    "zod": "^3.23.8"
+  }
+}
