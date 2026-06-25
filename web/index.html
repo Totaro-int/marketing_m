@@ -201,7 +201,7 @@ function renderToday(){
       || '<div class="thumb ph"><i class="ti ti-photo"></i></div>';
     return header + `<div class="card" data-id="${esc(d.id)}">
       <div class="ch"><div class="l"><i class="ti ${m.icon}"></i><span class="name">${esc(m.label)}</span>${stPill(d.status)}</div>
-        <span style="display:flex;gap:6px">${(d.channel==='instagram'&&d.spec&&d.spec.slides)?`<a class="pill" href="cards.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-photo-edit" style="font-size:12px"></i> 카드 편집</a>`:''}<a class="pill" href="${esc(m.url)}" target="_blank" style="text-decoration:none">플랫폼 열기 <i class="ti ti-external-link" style="font-size:12px"></i></a></span></div>
+        <span style="display:flex;gap:6px">${(d.channel==='instagram'&&d.spec&&d.spec.slides)?`<a class="pill" href="cards.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-photo-edit" style="font-size:12px"></i> 카드 편집</a>`:''}${d.channel==='naver-blog'?`<a class="pill" href="blog.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-article" style="font-size:12px"></i> 블로그 미리보기</a>`:''}<a class="pill" href="${esc(m.url)}" target="_blank" style="text-decoration:none">플랫폼 열기 <i class="ti ti-external-link" style="font-size:12px"></i></a></span></div>
       <div class="lab">본문 (직접 수정 가능)</div>
       <textarea class="body">${esc(d.body||'')}</textarea>
       ${tags.length?`<div class="tags">${esc(tags.join(' '))}</div>`:''}
