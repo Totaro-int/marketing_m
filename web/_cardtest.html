@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>card render test</title>
+<style>body{margin:0;background:#222}canvas{display:block;width:360px;height:450px}</style></head><body>
+<script type="module">
+import { renderSlide, loadImageEl, loadFonts } from './card-render.js';
+const q = new URLSearchParams(location.search);
+(async () => {
+  await loadFonts();
+  const spec = await (await fetch(q.get('spec'))).json();
+  const sl = spec.slides[+(q.get('slide') || 0)];
+  let bg = null;
+  if (sl.image) { try { bg = await loadImageEl('/bg/' + sl.image.split('/').pop()); } catch (e) {} }
+  const canvas = await renderSlide(sl, bg);
+  canvas.id = 'card'; document.body.appendChild(canvas);
+  window.__png = canvas.toDataURL('image/png');
+  window.__done = true;
+})().catch(e => { window.__err = String(e && e.message || e); window.__done = true; });
+</script></body></html>

@@ -71,7 +71,8 @@ if (!PUSH) {
   ui.info('4) push (IG + 채널 + 인사이트)');
   const slug = `daily-${date}-${id2}`;
   run('push-supabase.mjs', [specFile, '--cards', out, '--slug', slug]);
+  run('upload-bg.mjs', [specFile]);            // 카드 편집기 기본 배경(Storage)
   run('push-channels.mjs', [chFile, '--slug', slug]);
   run('publish-insight.mjs', [specFile, '--date', date]);
-  ui.ok('daily 발행 완료 (5채널 + 인사이트).');
+  ui.ok('daily 발행 완료 (5채널 + 인사이트 + 카드 편집기 배경).');
 }

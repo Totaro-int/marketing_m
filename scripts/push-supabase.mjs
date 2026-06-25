@@ -35,6 +35,8 @@ const blocks = g.findings.filter(f => f.sev === 'block').length, warns = g.findi
 const row = {
   campaign_slug: slug, channel: 'instagram', title: spec.topic || null,
   body: caption, hashtags, image_urls: [],
+  // 브라우저 카드 편집기용 슬라이드 스펙(텍스트·레이아웃). 배경은 편집기에서 교체.
+  spec: { id: spec.id, topic: spec.topic, slides: spec.slides },
   guardian_ok: !g.blocked, guardian_notes: `${g.blocked ? '차단' : '통과'} · block ${blocks} / warn ${warns}`,
   status: g.blocked ? 'drafting' : 'preview', generated_at: null,
 };

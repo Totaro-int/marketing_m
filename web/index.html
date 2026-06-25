@@ -123,6 +123,7 @@ const CH = {
   linkedin:    { label:'LinkedIn',    icon:'ti-brand-linkedin',  url:'https://www.linkedin.com/feed/' },
   'naver-blog':{ label:'네이버 블로그', icon:'ti-notebook',        url:'https://blog.naver.com' },
   tistory:     { label:'티스토리',     icon:'ti-notebook',        url:'https://www.tistory.com/manage' },
+  insight:     { label:'자사몰 인사이트', icon:'ti-article',         url:'https://melanoir.co.kr/insights' },
 };
 const TONE = { 'relate-kr':'공감형(한국)', b2b:'B2B', informational:'정보형', friendly:'친근형', sales:'세일즈' };
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -183,15 +184,24 @@ const stPill = s => s==='approved'?'<span class="pill ok">승인</span>':s==='ed
 
 // ── 오늘 발행 ────────────────────────────────────────────────────────────────
 function renderToday(){
-  const c=DATA.campaign||{}; const ds=DATA.drafts||[];
+  const c=DATA.campaign||{}; const ds0=DATA.drafts||[];
+  // 캠페인별로 묶어 최신순 — IG가 쭉 나열되지 않게(채널은 instagram→linkedin→threads→naver-blog 순)
+  const chOrder={instagram:0,linkedin:1,threads:2,'naver-blog':3,insight:4};
+  const keyOf=d=>d.campaign_slug||String(d.id);
+  const latestOf={}; for(const d of ds0){const t=Date.parse(d.created_at)||0,k=keyOf(d); if(!(k in latestOf)||t>latestOf[k])latestOf[k]=t;}
+  const grpCount={}; for(const d of ds0){const k=keyOf(d); grpCount[k]=(grpCount[k]||0)+1;}
+  const ds=[...ds0].sort((a,b)=>(latestOf[keyOf(b)]-latestOf[keyOf(a)])||keyOf(a).localeCompare(keyOf(b))||((chOrder[a.channel]??9)-(chOrder[b.channel]??9)));
+  let lastKey=null;
   const cards = ds.map(d=>{
     const m=CH[d.channel]||{label:d.channel,icon:'ti-file',url:'#'};
+    const k=keyOf(d); let header='';
+    if(k!==lastKey){ lastKey=k; header=`<div class="chead" style="margin:22px 0 8px;padding-top:14px;border-top:1px solid var(--line2);font-weight:600">${esc(d.title||k)} <span class="note" style="font-weight:400">· ${grpCount[k]}채널</span></div>`; }
     const tags=d.hashtags||[];
     const imgs=(d.image_urls||[]).map(u=>`<img class="thumb" src="${esc(u)}" loading="lazy" alt="">`).join('')
       || '<div class="thumb ph"><i class="ti ti-photo"></i></div>';
-    return `<div class="card" data-id="${esc(d.id)}">
+    return header + `<div class="card" data-id="${esc(d.id)}">
       <div class="ch"><div class="l"><i class="ti ${m.icon}"></i><span class="name">${esc(m.label)}</span>${stPill(d.status)}</div>
-        <a class="pill" href="${esc(m.url)}" target="_blank" style="text-decoration:none">플랫폼 열기 <i class="ti ti-external-link" style="font-size:12px"></i></a></div>
+        <span style="display:flex;gap:6px">${d.channel==='instagram'?`<a class="pill" href="cards.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-photo-edit" style="font-size:12px"></i> 카드 편집</a>`:''}<a class="pill" href="${esc(m.url)}" target="_blank" style="text-decoration:none">플랫폼 열기 <i class="ti ti-external-link" style="font-size:12px"></i></a></span></div>
       <div class="lab">본문 (직접 수정 가능)</div>
       <textarea class="body">${esc(d.body||'')}</textarea>
       ${tags.length?`<div class="tags">${esc(tags.join(' '))}</div>`:''}
@@ -216,7 +226,7 @@ function renderToday(){
   }).join('') || '<div class="note">아직 전송된 draft가 없습니다. 로컬에서 <code>npm run push:supabase</code> 실행 시 여기에 올라옵니다.</div>';
 
   $('view').innerHTML = `<div class="head"><div><h1>오늘 발행</h1>
-    <div class="sub">${esc(c.date||'')} · ${esc(c.title||'')} · ${ds.length} 채널</div></div>
+    <div class="sub">${esc(c.date||'')} · ${Object.keys(grpCount).length} 캠페인 · ${ds.length} draft</div></div>
     <span class="pill">${DEMO?'데모 모드':'비공개 링크'}</span></div>${cards}`;
 
   ds.forEach(d=>{

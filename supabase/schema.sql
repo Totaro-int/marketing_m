@@ -13,6 +13,7 @@ create table if not exists public.marketing_drafts (
   body          text not null default '',
   hashtags      jsonb not null default '[]'::jsonb,
   image_urls    jsonb not null default '[]'::jsonb,   -- Storage public URL 배열
+  spec          jsonb,                                 -- IG: 슬라이드 스펙(브라우저 카드 편집기 입력)
   guardian_ok   boolean,
   guardian_notes text,
   status        text not null default 'preview',       -- preview | edited | approved
@@ -22,6 +23,9 @@ create table if not exists public.marketing_drafts (
   updated_at    timestamptz not null default now(),
   unique (campaign_slug, channel)                      -- upsert 키
 );
+
+-- 기존 테이블에 컬럼 추가(멱등) — 카드 편집기 슬라이드 스펙
+alter table public.marketing_drafts add column if not exists spec jsonb;
 
 create index if not exists idx_drafts_campaign on public.marketing_drafts (campaign_slug);
 create index if not exists idx_drafts_updated  on public.marketing_drafts (updated_at desc);
