@@ -11,17 +11,9 @@
 
 ## 1. 스킬 등록 (5분)
 1. Claude Desktop → **설정 → 커스터마이징 → Skills**
-
-   ![설정 → 커스터마이징 → Skills](img/01-skills.png)
-
 2. **`+` → "스킬 만들기" → `melanoir-skill.zip` 업로드** → 토글 **ON**
    (ZIP은 엔진 레포 루트의 `melanoir-skill.zip`)
-
-   ![스킬 ZIP 업로드](img/02-upload-zip.png)
-
 3. **설정 → Capabilities → "코드 실행 및 파일 생성" ON** (스킬이 엔진을 돌리려면 필요)
-
-   ![코드 실행 ON](img/03-code-execution.png)
 
 ---
 
@@ -36,8 +28,6 @@ node scripts/setup.mjs        # 설정 템플릿 복사 + npm install + 점검
 ```bash
 npm run doctor                # ✓ "준비 완료" 뜨면 끝
 ```
-
-   ![npm run doctor — 준비 완료](img/04-doctor-ok.png)
 
 > `canvas`(서버 렌더)는 설치 안 돼도 됩니다 — 인스타 카드는 **웹 카드 편집기**가 그립니다.
 
