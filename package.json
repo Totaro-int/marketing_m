@@ -20,6 +20,7 @@
     "topic-queue": "node scripts/topic-queue.mjs",
     "setup": "node scripts/setup.mjs",
     "doctor": "node scripts/doctor.mjs",
+    "shots": "node scripts/shots.mjs",
     "self-check": "node scripts/self-check.mjs",
     "verify:render": "node scripts/verify-render.mjs",
     "verify:guard": "node scripts/verify-guard.mjs",
