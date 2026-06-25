@@ -12,6 +12,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { writeInsightCard } from '../engine/insight-card.mjs';
 import { guardSpec, guardText, topicLayer } from '../engine/guard.mjs';
+import { sbEnv, hasCreds, sbUpsert } from './_lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DNA = JSON.parse(fs.readFileSync(path.join(ROOT, 'brand/brand-dna.json'), 'utf-8'));
@@ -23,6 +24,8 @@ if (!specPath) { console.error('usage: publish-insight.mjs <specPath> [--date YY
 const di = argv.indexOf('--date'), ti = argv.indexOf('--target');
 const date = di >= 0 ? argv[di + 1] : new Date().toISOString().slice(0, 10);
 const TARGET = ti >= 0 ? path.resolve(argv[ti + 1]) : path.join(ROOT, 'web', 'site', 'insights');
+const si = argv.indexOf('--slug');
+const slug = si >= 0 ? argv[si + 1] : null;
 const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
 
 // 토픽 메타(브랜드 SSoT) → 제목/요약/카테고리 기본값
@@ -61,6 +64,25 @@ async function main() {
 
   // 3) 로컬 프리뷰: 타깃에 index.html 이 없을 때만 생성(recruitment 의 자체 페이지는 보존)
   if (!fs.existsSync(path.join(TARGET, 'index.html'))) writePreview(TARGET);
+
+  // 4) 콘솔(marketing_drafts)에 insight 행 — 슬러그가 있으면(daily 캠페인) 5번째 채널로 표시.
+  //    카드레터 PNG를 Storage에 올려 콘솔/다운로드용 이미지로 첨부. 발행 자체는 브랜드가 자사몰에 직접.
+  const env = sbEnv();
+  if (slug && hasCreds(env)) {
+    const obj = `insight/${slug}.png`;
+    const up = await fetch(`${env.URL}/storage/v1/object/card-images/${obj}`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + env.KEY, apikey: env.KEY, 'content-type': 'image/png', 'x-upsert': 'true' },
+      body: fs.readFileSync(path.join(TARGET, 'cards', imgFile)),
+    });
+    const imgUrl = `${env.URL}/storage/v1/object/public/card-images/${obj}`;
+    await sbUpsert(env, 'marketing_drafts', [{
+      campaign_slug: slug, channel: 'insight', title,
+      body: subtitle, hashtags: [], image_urls: up.ok ? [imgUrl] : [],
+      guardian_ok: true, guardian_notes: '인사이트 · 자사몰 직접 발행용(카드 다운로드+요약)', status: 'preview', generated_at: null,
+    }], 'campaign_slug,channel');
+    console.log(`  → 콘솔 insight 행 upsert (카드 이미지 ${up.ok ? 'OK' : 'HTTP ' + up.status}) · slug ${slug}`);
+  }
 
   const isRecruit = fs.existsSync(path.join(TARGET, 'insights.css'));
   console.log(`✓ 인사이트 발행(additive) → ${path.relative(ROOT, TARGET) || TARGET}`);

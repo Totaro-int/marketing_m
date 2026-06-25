@@ -79,7 +79,7 @@ if (!PUSH) {
   const pushArgs = [specFile, '--slug', slug]; if (out) pushArgs.push('--cards', out);
   run('push-supabase.mjs', pushArgs);
   run('push-channels.mjs', [chFile, '--slug', slug]);
-  if (renderSpecToDir) { run('upload-bg.mjs', [specFile]); run('publish-insight.mjs', [specFile, '--date', date]); }
+  if (renderSpecToDir) { run('upload-bg.mjs', [specFile]); run('publish-insight.mjs', [specFile, '--date', date, '--slug', slug]); }
   else ui.dim('   인사이트 카드·기본 배경은 canvas 필요 → 생략(브라우저/Totaro 경로).');
   ui.ok('daily 발행 완료 (5채널' + (renderSpecToDir ? ' + 인사이트 + 배경' : ', 카드는 브라우저 편집기') + ').');
 }
