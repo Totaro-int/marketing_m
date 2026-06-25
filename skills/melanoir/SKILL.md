@@ -1,11 +1,18 @@
 ---
 name: melanoir
-description: 멜라누아 IG 카드뉴스·5채널(LinkedIn·Threads·네이버블로그)+자사몰 인사이트를 골드 품질로 생성→콘솔 검토→학습. "멜라누아 카드 만들어", "오늘 콘텐츠", "인스타 카드뉴스 발행", "반영구 색소 콘텐츠" 요청에 사용.
+description: 멜라누아 5채널(IG·LinkedIn·Threads·네이버블로그·자사몰 인사이트)을 골드 품질로 생성→콘솔 검토→학습. 명령 하나 `/melanoir`로 실행(인자 없으면 오늘 자동 토픽, `/melanoir 6`·`/melanoir 카드`로 지정). "오늘 콘텐츠"로도 트리거.
 ---
 
 # 멜라누아 스튜디오 엔진
 
 멜라누아 콘텐츠를 **골드 품질로 생성 → 콘솔 검토 → 학습**하는 Cowork/Claude Code 스킬. 구동 = **구독**(Anthropic API 키 불요) — 카피는 `melanoir-copywriter`·`melanoir-channel-copywriter` 서브에이전트가 쓴다. 산출물 = **IG 캐러셀 + LinkedIn + Threads + 네이버블로그 + 자사몰 인사이트(5)**.
+
+## 실행 — 명령 하나 `/melanoir`
+작업 폴더 = `melanoir-studio` 레포를 연 상태에서 **`/melanoir`** 한 줄이면 끝. 인자(ARGUMENTS)로 변형:
+- **인자 없음** → 오늘 자동 토픽으로 **5채널 전체** (아래 하루 사이클 1~7 실행).
+- **숫자**(`/melanoir 6`) → 그 토픽 id로. · **토픽 문구**(`/melanoir 97% 세포생존율`) → 그 주제로.
+- **`카드`**(`/melanoir 카드`) → IG 카드만. · **`다음`** → 다음 토픽만 알려줌.
+- (슬래시가 없는 환경이면 "오늘 콘텐츠"/"멜라누아 카드 만들어"로도 동일 실행.)
 
 ## 운영 (Cowork / Claude Code) — 먼저 읽기
 - 이 스킬은 **클론된 엔진 레포에서** 동작한다. **작업 폴더 = `melanoir-studio` 레포 루트**(Totaro-int/marketing_m)로 열 것. 스크립트는 cwd 기준 실행(절대경로 권장).
