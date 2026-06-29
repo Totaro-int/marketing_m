@@ -14,7 +14,11 @@ header button.pri{background:var(--gold);border-color:var(--gold);color:#1a1408;
 .card-img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:14px;background:#111;box-shadow:0 10px 40px rgba(0,0,0,.5);display:block}
 .card-miss{width:100%;aspect-ratio:4/5;border:1.5px dashed var(--gold);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#9c7a23;background:#1c1708;text-align:center;padding:20px;font-size:13.5px}
 .meta h2{font-size:22px;margin:0 0 12px;line-height:1.4}
-.meta .summary{color:#cfcfd4;font-size:15px;line-height:1.75;margin:0 0 22px}
+.meta .summary{color:#cfcfd4;font-size:15px;line-height:1.75;margin:0 0 18px}
+.article{margin:14px 0 8px;border-top:1px solid var(--line);padding-top:16px}
+.ia-h{font-size:15.5px;margin:18px 0 7px;color:var(--ink);font-weight:700}
+.ia-p{font-size:14px;line-height:1.78;color:#cfcfd4;margin:0 0 13px}
+.ia-close{color:var(--gold)}
 .pubrow{display:flex;align-items:center;gap:12px;margin:6px 0 2px;flex-wrap:wrap}
 .pubbtn{background:var(--gold);border:none;color:#1a1408;font-weight:700;padding:11px 20px;border-radius:9px;cursor:pointer;font-size:14px;font-family:inherit}
 .pubbtn:disabled{opacity:.55;cursor:default}
@@ -35,24 +39,43 @@ const q=new URLSearchParams(location.search);
 const SB_URL=window.SB_URL, SB_ANON=window.SB_ANON, slug=q.get('slug')||'';
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);}
-let card='', title='', summary='';
+let card='', title='', summary='', plain='';
 let pubBusy=false;
+// IG 캐러셀 spec(슬라이드)에서 풀 아티클 본문 조립 — 자사몰 발행본과 동일
+function buildArticle(spec){
+  if(!spec||!Array.isArray(spec.slides)) return {html:'',text:''};
+  let html='', text=[];
+  for(const s of spec.slides){
+    if(s.type==='body'){
+      if(s.title){ html+=`<h3 class="ia-h">${esc(s.title)}</h3>`; text.push('\n'+s.title); }
+      const ps=(s.segments||[]).map(g=>Array.isArray(g)?g[0]:g).map(x=>String(x||'').trim()).filter(Boolean);
+      html+=ps.map(p=>`<p class="ia-p">${esc(p)}</p>`).join(''); text.push(...ps);
+    } else if(s.type==='closing'){
+      const t=(s.lines||[]).join(' ').trim(); if(t){ html+=`<p class="ia-p ia-close">${esc(t)}</p>`; text.push('\n'+t); }
+    }
+  }
+  return { html, text:text.join('\n') };
+}
 async function load(){
   if(!(SB_URL&&SB_ANON&&slug)){ $('shell').innerHTML='<div class="empty">slug/연결 없음</div>'; return; }
-  const r=await fetch(`${SB_URL}/rest/v1/marketing_drafts?campaign_slug=eq.${encodeURIComponent(slug)}&channel=eq.insight&select=title,body,image_urls,status`,{headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON}});
-  const [row]=await r.json();
-  if(!row){ $('shell').innerHTML='<div class="empty">이 캠페인에 자사몰 인사이트가 없습니다.</div>'; return; }
-  title=row.title||''; summary=row.body||''; card=(row.image_urls||[])[0]||'';
+  const r=await fetch(`${SB_URL}/rest/v1/marketing_drafts?campaign_slug=eq.${encodeURIComponent(slug)}&channel=in.(insight,instagram)&select=channel,title,body,image_urls,status,spec`,{headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON}});
+  const rows=await r.json();
+  const ins=(rows||[]).find(x=>x.channel==='insight'), ig=(rows||[]).find(x=>x.channel==='instagram');
+  if(!ins){ $('shell').innerHTML='<div class="empty">이 캠페인에 자사몰 인사이트가 없습니다.</div>'; return; }
+  title=ins.title||''; summary=ins.body||''; card=(ins.image_urls||[])[0]||'';
+  const art=buildArticle(ig&&ig.spec);
+  plain=(title?title+'\n\n':'')+(summary?summary+'\n':'')+art.text;
   $('camp').textContent=title||slug;
   $('shell').innerHTML=`
     <div>${card?`<img class="card-img" src="${esc(card)}" alt="${esc(title)}">`:`<div class="card-miss">🖼 인사이트 카드 이미지 없음<br><small>(canvas 렌더 / publish-insight 필요)</small></div>`}</div>
     <div class="meta">
       <h2>${esc(title)}</h2>
       <p class="summary">${esc(summary)}</p>
+      ${art.html?`<div class="article">${art.html}</div>`:'<p class="note">본문(IG spec)이 없어 요약만 — IG 생성 후 표시됩니다.</p>'}
       <div class="pubrow"><button class="pubbtn" id="pub">자사몰에 발행</button><span class="pubst" id="pubst"></span></div>
-      <div class="note">발행하면 <a href="https://melanoir.co.kr/insights" target="_blank" style="color:var(--gold)">melanoir.co.kr/insights</a> 에 바로 노출됩니다.</div>
+      <div class="note">발행하면 <b>위 본문 그대로</b> <a href="https://melanoir.co.kr/insights" target="_blank" style="color:var(--gold)">melanoir.co.kr/insights</a> 에 GEO/SEO 아티클로 노출됩니다.</div>
     </div>`;
-  setPubState(row.status==='published');
+  setPubState(ins.status==='published');
   $('pub').onclick=publish;
 }
 function setPubState(published){
@@ -70,6 +93,6 @@ async function publish(){
   finally{ b.disabled=false; pubBusy=false; }
 }
 $('dl').onclick=async()=>{ if(!card){toast('카드 이미지 없음');return;} try{const b=await(await fetch(card)).blob();const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`insight-${slug}.png`;a.click();URL.revokeObjectURL(u);toast('다운로드 시작');}catch{window.open(card,'_blank');toast('새 탭에서 열기')} };
-$('copytxt').onclick=async()=>{ try{await navigator.clipboard.writeText((title?title+'\n\n':'')+summary);toast('제목+요약 복사됨');}catch{toast('복사 실패')} };
+$('copytxt').onclick=async()=>{ try{await navigator.clipboard.writeText(plain||((title?title+'\n\n':'')+summary));toast('본문 전체 복사됨');}catch{toast('복사 실패')} };
 load().catch(e=>{$('shell').innerHTML='<div class="empty">오류: '+esc(e.message)+'</div>';});
 </script></body></html>
