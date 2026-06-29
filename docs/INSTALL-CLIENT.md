@@ -31,6 +31,18 @@ npm run doctor                # ✓ "준비 완료" 뜨면 끝
 
 > `canvas`(서버 렌더)는 설치 안 돼도 됩니다 — 인스타 카드는 **웹 카드 편집기**가 그립니다.
 
+### 2-1. 🔑 키 채우기 & 전달
+넣을 값 3개 = **Supabase 대시보드 → Project Settings → API** 에서 복사:
+
+| 값 | 넣는 곳 |
+|---|---|
+| Project URL | `.env.local` + `web/config.js` |
+| anon public key | `.env.local` + `web/config.js` (공개키 — RLS로 보호) |
+| service_role key | **`.env.local` 에만** (⚠️ 전체 DB 권한 — 공개 절대 금지) |
+
+- **본인 맥(지금)**: 맥에서 대시보드 열고 위 값 복사 → `cp .env.local.example .env.local` · `cp web/config.example.js web/config.js` 후 붙여넣기 (기계 간 전송 불필요).
+- **클라이언트에게 넘길 때**: 값을 **비밀번호 관리자(1Password·Bitwarden 공유 링크) 또는 암호화 메모**로 전달. **git·평문 이메일/메신저 금지**(특히 service_role).
+
 ---
 
 ## 3. 스킬 사용법 (매일)
