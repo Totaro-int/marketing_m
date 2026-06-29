@@ -27,6 +27,7 @@ description: 멜라누아 5채널(IG·LinkedIn·Threads·네이버블로그·자
 5. (canvas시) `node engine/render.mjs out/final_NN.json --out out` → 카드 PNG. 없으면 웹 편집기.
 6. 채널: `node engine/channels.mjs --brief <topic>` → **`melanoir-channel-copywriter` 에이전트** → `out/channels_NN.json` → `--finalize`(채널별 가드 + 🖼 이미지 배치 큐).
 7. 휴먼 게이트 후 발행: `push-supabase`(IG+spec) · `push-channels`(채널) · (canvas시) `upload-bg`·`publish-insight`.
+   - **자사몰 인사이트 자동 발행**: `.env.local`의 `MELANOIR_SITE_REPO`(자사몰 레포 insights 경로) 설정 시, publish-insight가 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 만들어 **자사몰 레포에 git commit+push → melanoir.co.kr/insights 자동 배포**(소유자 쓰기 권한 머신). 미설정이면 로컬 스테이징만.
 
 ## 검토·복붙 (클라이언트)
 - **콘솔** `melanoir-console.vercel.app` — 캠페인별 5채널, 본문 복사, 🖼 이미지 배치.

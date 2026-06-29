@@ -43,6 +43,13 @@ npm run doctor                # ✓ "준비 완료" 뜨면 끝
 - **본인 맥(지금)**: 맥에서 대시보드 열고 위 값 복사 → `cp .env.local.example .env.local` · `cp web/config.example.js web/config.js` 후 붙여넣기 (기계 간 전송 불필요).
 - **클라이언트에게 넘길 때**: 값을 **비밀번호 관리자(1Password·Bitwarden 공유 링크) 또는 암호화 메모**로 전달. **git·평문 이메일/메신저 금지**(특히 service_role).
 
+### 2-2. 자사몰 인사이트 자동 발행 설정 (선택)
+인사이트를 **명령 한 줄로 melanoir.co.kr/insights 에 자동 게시**하려면:
+1. 자사몰 레포를 **쓰기 권한 계정**으로 클론 — `git clone <자사몰-레포> melanoir-recruitment`
+2. `.env.local` 에 경로 추가 — `MELANOIR_SITE_REPO=/경로/melanoir-recruitment/web/site/insights`
+
+→ 이후 **`/melanoir`** 발행 단계에서 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 만들어 **자사몰 레포에 git commit+push → Vercel 자동 배포**. (미설정이면 콘솔에서 확인만)
+
 ---
 
 ## 3. 스킬 사용법 (매일)
@@ -83,7 +90,7 @@ Claude가 5채널 초안을 보여주면:
 
    ![네이버 블로그 미리보기](img/07-blog-preview.png)
 - **LinkedIn · Threads** — 본문 `복사` → 플랫폼 붙여넣기. 카드의 **🖼 이미지 배치** 표시대로 이미지 첨부
-- **자사몰 인사이트 (melanoir.co.kr/insights)** — 콘솔에서 **`자사몰 카드 미리보기`** → **`자사몰에 발행`** 버튼 한 번 → **melanoir.co.kr/insights 에 자동 노출** (Supabase 연동 — SNS 복붙과 달리 자사몰은 버튼 발행).
+- **자사몰 인사이트 (melanoir.co.kr/insights)** — `/melanoir` 발행 시 **GEO/SEO 정적 아티클**(텍스트 본문+JSON-LD)이 **자사몰에 자동 게시**(§2-2 설정 시). 콘솔 `자사몰 카드 미리보기`로 확인·다운로드.
 - 각 채널 **수정 저장 / 승인** 가능. **피드백**(👍잘됨·👎아쉬움 + 메모) 남기면 **다음 생성에 자동 반영**(학습)
 
 ### 3-4. 예시 한 세션

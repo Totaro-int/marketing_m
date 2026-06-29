@@ -9,6 +9,7 @@
 // 사용: node scripts/publish-insight.mjs <specPath> [--date YYYY-MM-DD] [--target dir]
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { writeInsightCard } from '../engine/insight-card.mjs';
 import { guardSpec, guardText, topicLayer } from '../engine/guard.mjs';
@@ -16,6 +17,8 @@ import { buildInsightArticle } from '../engine/insight-page.mjs';
 import { sbEnv, hasCreds, sbUpsert } from './_lib.mjs';
 
 const BASE_URL = 'https://melanoir.co.kr';
+// --target 안에서 git 레포 루트 탐색(.git 위로)
+function gitRootOf(start) { let d = path.resolve(start); while (d && d !== path.dirname(d)) { if (fs.existsSync(path.join(d, '.git'))) return d; d = path.dirname(d); } return null; }
 // sitemap.xml 에 /insights + /insights/<date> 추가(중복 방지)
 function updateSitemap(siteRoot, date) {
   const p = path.join(siteRoot, 'sitemap.xml'); if (!fs.existsSync(p)) return false;
@@ -47,6 +50,7 @@ const date = di >= 0 ? argv[di + 1] : new Date().toISOString().slice(0, 10);
 const TARGET = ti >= 0 ? path.resolve(argv[ti + 1]) : path.join(ROOT, 'web', 'site', 'insights');
 const si = argv.indexOf('--slug');
 const slug = si >= 0 ? argv[si + 1] : null;
+const PUSH = argv.includes('--push'); // 자사몰 레포에 commit+push (소유자 쓰기 권한 머신)
 const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'));
 
 // 토픽 메타(브랜드 SSoT) → 제목/요약/카테고리 기본값
@@ -93,6 +97,22 @@ async function main() {
     const sm = updateSitemap(siteRoot, date);
     writeLlmsTxt(siteRoot, arr);
     console.log(`  GEO/SEO 아티클 → insights/${date}.html (본문 ${art.content.bodyText.length}자 + JSON-LD) · sitemap ${sm ? '갱신' : '없음'} · llms.txt`);
+
+    // 2c) --push: 자사몰 레포에 commit + push → Vercel 자동 배포 (명령 한 줄 발행)
+    if (PUSH) {
+      const root = gitRootOf(TARGET);
+      if (!root) { console.warn('  ⚠ --push: git 레포 못 찾음 — --target 이 자사몰 클론 안인지 확인'); }
+      else {
+        const files = [path.join(TARGET, `${date}.html`), path.join(TARGET, 'cards', imgFile), cardsPath, path.join(siteRoot, 'sitemap.xml'), path.join(siteRoot, 'llms.txt')]
+          .filter(f => fs.existsSync(f)).map(f => path.relative(root, f));
+        spawnSync('git', ['-C', root, 'add', ...files], { stdio: 'inherit' });
+        const c = spawnSync('git', ['-C', root, 'commit', '-m', `insight: ${title} (${date})`], { stdio: 'inherit' });
+        if (c.status === 0) {
+          const p = spawnSync('git', ['-C', root, 'push'], { stdio: 'inherit' });
+          console.log(p.status === 0 ? '  ✓ 자사몰 push 완료 → Vercel 자동 배포 (melanoir.co.kr/insights)' : '  ✗ push 실패 — 레포 쓰기 권한/원격 확인');
+        } else console.log('  (변경 없음 — 이미 발행됨)');
+      }
+    }
   }
 
   // 3) 로컬 프리뷰: 타깃에 index.html 이 없을 때만 생성(recruitment 의 자체 페이지는 보존)

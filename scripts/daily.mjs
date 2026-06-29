@@ -79,7 +79,14 @@ if (!PUSH) {
   const pushArgs = [specFile, '--slug', slug]; if (out) pushArgs.push('--cards', out);
   run('push-supabase.mjs', pushArgs);
   run('push-channels.mjs', [chFile, '--slug', slug]);
-  if (renderSpecToDir) { run('upload-bg.mjs', [specFile]); run('publish-insight.mjs', [specFile, '--date', date, '--slug', slug]); }
+  if (renderSpecToDir) {
+    run('upload-bg.mjs', [specFile]);
+    // MELANOIR_SITE_REPO = 자사몰 레포의 insights 디렉터리 경로면 → 정적 아티클 생성 + git push(자동 배포)
+    const insDir = process.env.MELANOIR_SITE_REPO;
+    const insArgs = [specFile, '--date', date, '--slug', slug];
+    if (insDir) { insArgs.push('--target', insDir, '--push'); ui.dim(`   인사이트 → 자사몰 레포(${insDir}) 자동 발행`); }
+    run('publish-insight.mjs', insArgs);
+  }
   else ui.dim('   인사이트 카드·기본 배경은 canvas 필요 → 생략(브라우저/Totaro 경로).');
   ui.ok('daily 발행 완료 (5채널' + (renderSpecToDir ? ' + 인사이트 + 배경' : ', 카드는 브라우저 편집기') + ').');
 }
