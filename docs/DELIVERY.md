@@ -51,6 +51,7 @@
 |---|---|
 | 🖥 검토 콘솔 | https://melanoir-console.vercel.app |
 | 📘 설치 가이드 PDF | https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/docs/INSTALL-CLIENT.pdf |
+| 🔑 키 설치 안내 PDF (메일 첨부용) | https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/docs/KEY-SETUP.pdf |
 | 📄 이 납품 안내 PDF | https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/docs/DELIVERY.pdf |
 | 📦 스킬 ZIP | 엔진 레포 루트 `melanoir-skill.zip` (항상 최신) |
 | 💻 엔진 소스 | https://github.com/Totaro-int/marketing_m |
