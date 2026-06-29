@@ -41,7 +41,7 @@ npm run doctor                # ✓ "준비 완료" 뜨면 끝
 | service_role key | **`.env.local` 에만** (⚠️ 전체 DB 권한 — 공개 절대 금지) |
 
 - **본인 맥(지금)**: 맥에서 대시보드 열고 위 값 복사 → `cp .env.local.example .env.local` · `cp web/config.example.js web/config.js` 후 붙여넣기 (기계 간 전송 불필요).
-- **클라이언트에게 넘길 때**: 값을 **비밀번호 관리자(1Password·Bitwarden 공유 링크) 또는 암호화 메모**로 전달. **git·평문 이메일/메신저 금지**(특히 service_role).
+- **클라이언트에게 넘길 때**: **`.env.local` 파일을 그대로 비공개로 전달**하면 됩니다(USB·비공개 드라이브 공유·DM 첨부 등). 신뢰하는 클라 1명에게 비공개로 주는 건 OK. **금지는 딱 하나 — 공개 노출**(공개 레포 커밋·공개 링크·공개 게시판). service_role이 전체 DB 권한이라 *공개*만 피하면 됩니다.
 
 ### 2-2. 자사몰 인사이트 자동 발행 설정 (선택)
 인사이트를 **명령 한 줄로 melanoir.co.kr/insights 에 자동 게시**하려면:
