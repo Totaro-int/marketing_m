@@ -2,6 +2,9 @@
 .env.local
 .env
 web/config.js
+설정파일.zip
+설정파일/
+*-ready.zip
 
 # assets (이미지스톡·폰트 = 골드레퍼런스에서 가져옴, 무겁다)
 assets/
