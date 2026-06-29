@@ -40,7 +40,7 @@ npm run doctor                # ✓ "준비 완료" 뜨면 끝
 | anon public key | `.env.local` + `web/config.js` (공개키 — RLS로 보호) |
 | service_role key | **`.env.local` 에만** (⚠️ 전체 DB 권한 — 공개 절대 금지) |
 
-- **본인 맥(지금)**: 맥에서 대시보드 열고 위 값 복사 → `cp .env.local.example .env.local` · `cp web/config.example.js web/config.js` 후 붙여넣기 (기계 간 전송 불필요).
+- **본인 맥(지금)**: 맥에서 대시보드 값으로 `.env.local` 만 채우면 → `npm run setup`(또는 `npm run gen:config`)이 **`web/config.js` 를 자동 생성**합니다. (config.js 따로 안 만들어도 됨)
 - **클라이언트에게 넘길 때**: **`.env.local` 파일을 그대로 비공개로 전달**하면 됩니다(USB·비공개 드라이브 공유·DM 첨부 등). 신뢰하는 클라 1명에게 비공개로 주는 건 OK. **금지는 딱 하나 — 공개 노출**(공개 레포 커밋·공개 링크·공개 게시판).
   - **메일로 보낼 때**: `.env.local` + `web/config.js` 두 파일 첨부 + **키 설치 안내(`KEY-SETUP.pdf`)** 동봉 → 클라가 제자리에 넣고 **메일 삭제(받은함+휴지통)**, 보낸 사람도 보낸함에서 삭제. (메일은 영구 보관되니 service_role은 *넣은 뒤 반드시 삭제*.)
 

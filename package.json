@@ -19,6 +19,7 @@
     "distill": "node scripts/distill.mjs",
     "topic-queue": "node scripts/topic-queue.mjs",
     "setup": "node scripts/setup.mjs",
+    "gen:config": "node scripts/gen-config.mjs",
     "doctor": "node scripts/doctor.mjs",
     "shots": "node scripts/shots.mjs",
     "guide:pdf": "node scripts/guide-pdf.mjs",

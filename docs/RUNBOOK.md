@@ -51,7 +51,8 @@ Claude Code 운영자에게: 위 루프를 **자동으로** 수행하라. doctor
 - 키 자체는 사람(브랜드)이 보유 → 없으면 사람에게 요청.
 
 ### [CONFIG] — web/config.js 없음 (콘솔 anon)
-- 자가수정: `cp web/config.example.js web/config.js` → `window.SB_URL`·`window.SB_ANON`(anon public) 입력. service_role 넣지 말 것.
+- 자가수정: **`npm run gen:config`** — `.env.local` 의 URL·anon 으로 `web/config.js` 자동 생성. (`npm run setup` 도 자동 호출)
+- 실패하면 [KEYS] 먼저 — 특히 `.env.local` 에 **`SUPABASE_ANON_KEY`** 값이 있어야 함(엔진은 service_role을 쓰지만 콘솔 config.js는 anon 필요).
 
 ### [FONTS] — 카드 폰트 없음
 - 증상: 렌더 폰트 깨짐/실패.

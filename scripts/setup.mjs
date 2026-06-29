@@ -16,16 +16,16 @@ const cp = (ex, dst) => {
 
 console.log('=== 멜라누아 스튜디오 셋업 ===\n1) 설정 템플릿 복사');
 cp('.env.local.example', '.env.local');
-cp('web/config.example.js', 'web/config.js');
+// web/config.js 는 .env.local 의 anon 으로 자동 생성(3단계) — 별도 전달/첨부 불필요
 
 console.log('\n2) npm install (canvas 선택 — 실패해도 진행)');
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const ni = spawnSync(npm, ['install', '--no-audit', '--no-fund'], { cwd: ROOT, stdio: 'inherit' });
 if (ni.status !== 0) console.log('  • npm install 경고/실패 — canvas(선택 의존성)면 무시 가능. doctor로 확인.');
 
-console.log('\n3) 키 입력 안내');
-console.log('   .env.local → SUPABASE_URL · SUPABASE_SERVICE_KEY · SUPABASE_ANON_KEY · SUPABASE_DB_PASSWORD');
-console.log('   web/config.js → SB_URL · SB_ANON   (값은 Totaro 전달)');
+console.log('\n3) web/config.js 자동 생성 (.env.local 의 URL·anon)');
+const gc = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'gen-config.mjs')], { stdio: 'inherit' });
+if (gc.status !== 0) console.log('   • .env.local 에 키(URL·SERVICE_KEY·ANON) 넣은 뒤 `npm run gen:config` 재실행 → config.js 생성.');
 
 console.log('\n4) 준비 점검 (doctor)');
 spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'doctor.mjs')], { stdio: 'inherit' });
