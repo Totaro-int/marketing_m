@@ -15,7 +15,8 @@ const MIME = { '.html': 'text/html', '.md': 'text/plain; charset=utf-8', '.png':
 
 // 1) 스크린샷 다운스케일 (node-canvas, Buffer 로드 = 한글경로 안전)
 fs.mkdirSync(SDIR, { recursive: true });
-let mdText = fs.readFileSync(path.join(DOCS, 'INSTALL-CLIENT.md'), 'utf8');
+const NAME = process.argv[2] || 'INSTALL-CLIENT';   // 렌더할 docs/<NAME>.md → docs/<NAME>.pdf
+let mdText = fs.readFileSync(path.join(DOCS, NAME + '.md'), 'utf8');
 try {
   const { createCanvas, loadImage } = await import('canvas');
   for (const f of fs.readdirSync(IMG).filter(f => /\.png$/i.test(f))) {
@@ -72,7 +73,7 @@ try {
   await page.goto(`http://localhost:${PORT}/_print.html`, { waitUntil: 'networkidle' });
   await page.waitForFunction('window.__ready===true', { timeout: 20000 }).catch(() => {});
   await page.waitForTimeout(1500);
-  const out = path.join(DOCS, 'INSTALL-CLIENT.pdf');
+  const out = path.join(DOCS, NAME + '.pdf');
   await page.pdf({ path: out, format: 'A4', printBackground: true, margin: { top: '14mm', bottom: '14mm', left: '12mm', right: '12mm' } });
   console.log('✓ PDF:', path.relative(ROOT, out), (fs.statSync(out).size / 1024 | 0) + 'KB');
 } finally {

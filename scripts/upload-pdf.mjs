@@ -10,8 +10,9 @@ for (const l of fs.readFileSync(new URL('../.env.local', import.meta.url), 'utf8
 const url = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || env.VITE_SUPABASE_URL;
 const key = env.SUPABASE_SERVICE_ROLE_KEY || env.SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY || env.SUPABASE_KEY;
 if (!url || !key) { console.error('✗ .env.local 에 SUPABASE URL/service_role 키 없음'); process.exit(1); }
-const buf = fs.readFileSync(new URL('../docs/INSTALL-CLIENT.pdf', import.meta.url));
-const bucket = 'card-images', obj = 'docs/INSTALL-CLIENT.pdf';
+const NAME = process.argv[2] || 'INSTALL-CLIENT';
+const buf = fs.readFileSync(new URL(`../docs/${NAME}.pdf`, import.meta.url));
+const bucket = 'card-images', obj = `docs/${NAME}.pdf`;
 const r = await fetch(`${url}/storage/v1/object/${bucket}/${obj}`, {
   method: 'POST',
   headers: { Authorization: 'Bearer ' + key, apikey: key, 'content-type': 'application/pdf', 'x-upsert': 'true' },
