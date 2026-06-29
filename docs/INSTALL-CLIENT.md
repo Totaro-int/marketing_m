@@ -12,26 +12,30 @@
 ## 1. 스킬 등록 (5분)
 1. Claude Desktop → **설정 → 커스터마이징 → Skills**
 2. **`+` → "스킬 만들기" → `melanoir-skill.zip` 업로드** → 토글 **ON**
-   (ZIP은 엔진 레포 루트의 `melanoir-skill.zip`)
+   (ZIP은 **클론한 `melanoir-studio` 폴더 안**의 `melanoir-skill.zip`)
 3. **설정 → Capabilities → "코드 실행 및 파일 생성" ON** (스킬이 엔진을 돌리려면 필요)
 
 ---
 
-## 2. 엔진 설치 (한 방, 10분)
-Cowork(또는 터미널)에서:
+## 2. 엔진 설치 (GitHub · 약 10분)
+Cowork(또는 터미널)에서 — **작업 폴더로 이 폴더를 엽니다**:
 ```bash
 git clone https://github.com/Totaro-int/marketing_m.git melanoir-studio
 cd melanoir-studio
-node scripts/setup.mjs        # 설정 템플릿 복사 + npm install + 점검
 ```
-그다음 **`.env.local`** 과 **`web/config.js`** 에 Totaro가 준 키를 붙여넣고:
+**메일로 받은 `.env.local`** 을 이 폴더 **맨 위(루트)** 에 넣고(→ §2-1 그림):
 ```bash
-npm run doctor                # ✓ "준비 완료" 뜨면 끝
+npm run setup     # npm install + web/config.js 자동 생성 + 점검
+npm run doctor    # ✓ "준비 완료" 뜨면 끝
 ```
 
-> `canvas`(서버 렌더)는 설치 안 돼도 됩니다 — 인스타 카드는 **웹 카드 편집기**가 그립니다.
+> 메일로 받는 건 **`.env.local` 하나뿐**(클라 본인 Supabase 키 · `.js` 아니라 메일 첨부 OK).
+> `web/config.js`는 **자동 생성**, 스킬 ZIP·문서·엔진은 **레포 안에** 들어있습니다.
+> `canvas`(서버 렌더)는 없어도 됩니다 — IG 카드는 **웹 카드 편집기**가 그립니다.
 
 ### 2-1. 🔑 키 채우기 & 전달
+
+> **클라이언트는** 메일로 받은 `.env.local`을 폴더에 넣기만 하면 됩니다(키 입력 X). 아래는 **사장님이 그 `.env.local`을 만들 때**(Supabase 값 채우기) 참고용.
 
 **① 어디서 복사?** Supabase 대시보드 → Project Settings → API 에서 값 3개를 복사해 **`.env.local`** 에 붙여넣기:
 

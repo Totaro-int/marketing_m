@@ -27,7 +27,7 @@
 
 ## 빠른 시작 (1회 · 약 15분)
 1. Claude Desktop → 설정 → **Skills 에 `melanoir-skill.zip` 업로드** + "코드 실행" ON
-2. 엔진 설치 — `git clone … && npm run setup` → `.env.local` 에 키 입력 → **`npm run doctor`** 가 ✓
+2. 엔진 설치 — `git clone https://github.com/Totaro-int/marketing_m.git melanoir-studio` → **메일로 받은 `.env.local`** 을 폴더 루트에 넣기 → `npm run setup` → **`npm run doctor`** 가 ✓ (config.js 자동 생성)
 3. (자사몰 자동발행 쓰면) 자사몰 레포 클론 + `.env.local` 에 `MELANOIR_SITE_REPO`
 
 > 그림과 함께 한 단계씩 → **설치 가이드 PDF**(아래 링크)
