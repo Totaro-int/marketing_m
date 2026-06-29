@@ -19,6 +19,14 @@ import { sbEnv, hasCreds, sbUpsert } from './_lib.mjs';
 const BASE_URL = 'https://melanoir.co.kr';
 // --target 안에서 git 레포 루트 탐색(.git 위로)
 function gitRootOf(start) { let d = path.resolve(start); while (d && d !== path.dirname(d)) { if (fs.existsSync(path.join(d, '.git'))) return d; d = path.dirname(d); } return null; }
+// IndexNow — 발행 URL 즉시 색인 통보(네이버·Bing·ChatGPT·Yandex 공유). 키는 도메인 루트에 <key>.txt 로 호스팅.
+const INDEXNOW_KEY = '7f3c9e21b8d4f06a5c1e9b3d7f2068ca';
+async function pingIndexNow(urls) {
+  for (const u of urls) for (const ep of ['https://searchadvisor.naver.com/indexnow', 'https://api.indexnow.org/indexnow']) {
+    try { const r = await fetch(`${ep}?url=${encodeURIComponent(u)}&key=${INDEXNOW_KEY}`); console.log(`  IndexNow ${ep.includes('naver') ? 'Naver ' : '공통  '} ${r.status} ${u}`); }
+    catch (e) { console.log(`  IndexNow 실패(${ep.includes('naver') ? 'Naver' : '공통'}): ${e.message}`); }
+  }
+}
 // sitemap.xml 에 /insights + /insights/<date> 추가(중복 방지)
 function updateSitemap(siteRoot, date) {
   const p = path.join(siteRoot, 'sitemap.xml'); if (!fs.existsSync(p)) return false;
@@ -96,20 +104,22 @@ async function main() {
     fs.writeFileSync(path.join(TARGET, `${date}.html`), art.html);
     const sm = updateSitemap(siteRoot, date);
     writeLlmsTxt(siteRoot, arr);
-    console.log(`  GEO/SEO 아티클 → insights/${date}.html (본문 ${art.content.bodyText.length}자 + JSON-LD) · sitemap ${sm ? '갱신' : '없음'} · llms.txt`);
+    const keyFile = path.join(siteRoot, `${INDEXNOW_KEY}.txt`); if (!fs.existsSync(keyFile)) fs.writeFileSync(keyFile, INDEXNOW_KEY);
+    console.log(`  GEO/SEO 아티클 → insights/${date}.html (본문 ${art.content.bodyText.length}자 + JSON-LD) · sitemap ${sm ? '갱신' : '없음'} · llms.txt · IndexNow키`);
 
     // 2c) --push: 자사몰 레포에 commit + push → Vercel 자동 배포 (명령 한 줄 발행)
     if (PUSH) {
       const root = gitRootOf(TARGET);
       if (!root) { console.warn('  ⚠ --push: git 레포 못 찾음 — --target 이 자사몰 클론 안인지 확인'); }
       else {
-        const files = [path.join(TARGET, `${date}.html`), path.join(TARGET, 'cards', imgFile), cardsPath, path.join(siteRoot, 'sitemap.xml'), path.join(siteRoot, 'llms.txt')]
+        const files = [path.join(TARGET, `${date}.html`), path.join(TARGET, 'cards', imgFile), cardsPath, path.join(siteRoot, 'sitemap.xml'), path.join(siteRoot, 'llms.txt'), path.join(siteRoot, `${INDEXNOW_KEY}.txt`)]
           .filter(f => fs.existsSync(f)).map(f => path.relative(root, f));
         spawnSync('git', ['-C', root, 'add', ...files], { stdio: 'inherit' });
         const c = spawnSync('git', ['-C', root, 'commit', '-m', `insight: ${title} (${date})`], { stdio: 'inherit' });
         if (c.status === 0) {
           const p = spawnSync('git', ['-C', root, 'push'], { stdio: 'inherit' });
           console.log(p.status === 0 ? '  ✓ 자사몰 push 완료 → Vercel 자동 배포 (melanoir.co.kr/insights)' : '  ✗ push 실패 — 레포 쓰기 권한/원격 확인');
+          if (p.status === 0) { console.log('  IndexNow 색인 통보:'); await pingIndexNow([`${BASE_URL}/insights/${date}`, `${BASE_URL}/insights`]); }
         } else console.log('  (변경 없음 — 이미 발행됨)');
       }
     }

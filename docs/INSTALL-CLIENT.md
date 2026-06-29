@@ -48,7 +48,7 @@ npm run doctor                # ✓ "준비 완료" 뜨면 끝
 1. 자사몰 레포를 **쓰기 권한 계정**으로 클론 — `git clone <자사몰-레포> melanoir-recruitment`
 2. `.env.local` 에 경로 추가 — `MELANOIR_SITE_REPO=/경로/melanoir-recruitment/web/site/insights`
 
-→ 이후 **`/melanoir`** 발행 단계에서 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 만들어 **자사몰 레포에 git commit+push → Vercel 자동 배포**. (미설정이면 콘솔에서 확인만)
+→ 이후 **`/melanoir`** 발행 시 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 자사몰 레포에 **git push → Vercel 배포**, 그리고 **IndexNow로 네이버·Bing·ChatGPT 즉시 색인 통보**. (구글은 sitemap 자동 크롤 + 1회 `/totaro-seo`로 Search Console 등록 권장 · 미설정이면 콘솔에서 확인만)
 
 ---
 
