@@ -32,17 +32,26 @@ npm run doctor                # ✓ "준비 완료" 뜨면 끝
 > `canvas`(서버 렌더)는 설치 안 돼도 됩니다 — 인스타 카드는 **웹 카드 편집기**가 그립니다.
 
 ### 2-1. 🔑 키 채우기 & 전달
-넣을 값 3개 = **Supabase 대시보드 → Project Settings → API** 에서 복사:
 
-| 값 | 넣는 곳 |
+**① 어디서 복사?** Supabase 대시보드 → Project Settings → API 에서 값 3개를 복사해 **`.env.local`** 에 붙여넣기:
+
+![Supabase API 키 위치](img/key-supabase.png)
+
+| Supabase 값 | .env.local 변수 |
 |---|---|
-| Project URL | `.env.local` + `web/config.js` |
-| anon public key | `.env.local` + `web/config.js` (공개키 — RLS로 보호) |
-| service_role key | **`.env.local` 에만** (⚠️ 전체 DB 권한 — 공개 절대 금지) |
+| Project URL | `SUPABASE_URL` |
+| anon public | `SUPABASE_ANON_KEY` (공개키 — RLS 보호) |
+| service_role | `SUPABASE_SERVICE_KEY` (⚠️ 전체 DB 권한 — 공개 절대 금지) |
 
-- **본인 맥(지금)**: 맥에서 대시보드 값으로 `.env.local` 만 채우면 → `npm run setup`(또는 `npm run gen:config`)이 **`web/config.js` 를 자동 생성**합니다. (config.js 따로 안 만들어도 됨)
-- **클라이언트에게 넘길 때**: **`.env.local` 파일을 그대로 비공개로 전달**하면 됩니다(USB·비공개 드라이브 공유·DM 첨부 등). 신뢰하는 클라 1명에게 비공개로 주는 건 OK. **금지는 딱 하나 — 공개 노출**(공개 레포 커밋·공개 링크·공개 게시판).
-  - **메일로 보낼 때**: `.env.local` + `web/config.js` 두 파일 첨부 + **키 설치 안내(`KEY-SETUP.pdf`)** 동봉 → 클라가 제자리에 넣고 **메일 삭제(받은함+휴지통)**, 보낸 사람도 보낸함에서 삭제. (메일은 영구 보관되니 service_role은 *넣은 뒤 반드시 삭제*.)
+> `web/config.js`(콘솔용)는 **자동 생성**됩니다 — `.env.local` 만 채우고 `npm run setup`(또는 `npm run gen:config`).
+
+**② `.env.local` 파일을 어디에 넣나?** → 엔진 폴더(`melanoir-studio`) **맨 위(루트)**:
+
+![.env.local 넣는 위치](img/key-folder.png)
+
+- **본인 맥(지금)**: 대시보드 값으로 `.env.local` 채움 → `npm run setup` → 끝(config.js 자동 생성).
+- **클라이언트에게 넘길 때**: **`.env.local` 파일을 비공개로 전달**(USB·비공개 공유·DM·메일). 금지는 딱 하나 — **공개 노출**(공개 깃·링크·게시판).
+  - **메일**: **`.env.local` + `KEY-SETUP.pdf` 2개만** 첨부(config.js는 클라가 자동 생성). 클라가 넣고 → **메일 삭제(받은함+휴지통)**, 보낸 사람도 보낸함 삭제.
 
 ### 2-2. 자사몰 인사이트 자동 발행 설정 (선택)
 인사이트를 **명령 한 줄로 melanoir.co.kr/insights 에 자동 게시**하려면:
