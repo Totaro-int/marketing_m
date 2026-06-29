@@ -15,10 +15,10 @@ header button.pri{background:var(--gold);border-color:var(--gold);color:#1a1408;
 .card-miss{width:100%;aspect-ratio:4/5;border:1.5px dashed var(--gold);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#9c7a23;background:#1c1708;text-align:center;padding:20px;font-size:13.5px}
 .meta h2{font-size:22px;margin:0 0 12px;line-height:1.4}
 .meta .summary{color:#cfcfd4;font-size:15px;line-height:1.75;margin:0 0 22px}
-.steps{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-.steps h3{font-size:13px;margin:0 0 10px;color:var(--gold)}
-.steps ol{margin:0;padding-left:18px;font-size:13.5px;line-height:1.95;color:var(--ink)}
-.steps code{background:#0e0e10;padding:1px 6px;border-radius:5px;font-size:12px;color:var(--gold)}
+.pubrow{display:flex;align-items:center;gap:12px;margin:6px 0 2px;flex-wrap:wrap}
+.pubbtn{background:var(--gold);border:none;color:#1a1408;font-weight:700;padding:11px 20px;border-radius:9px;cursor:pointer;font-size:14px;font-family:inherit}
+.pubbtn:disabled{opacity:.55;cursor:default}
+.pubst{font-size:13px;color:var(--dim)}
 .note{color:var(--dim);font-size:12.5px;margin-top:12px;line-height:1.6}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#000;border:1px solid var(--line);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.2s;pointer-events:none}
 .toast.show{opacity:1} .empty{color:var(--dim);text-align:center;padding:60px 20px;grid-column:1/-1}
@@ -36,9 +36,10 @@ const SB_URL=window.SB_URL, SB_ANON=window.SB_ANON, slug=q.get('slug')||'';
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);}
 let card='', title='', summary='';
+let pubBusy=false;
 async function load(){
   if(!(SB_URL&&SB_ANON&&slug)){ $('shell').innerHTML='<div class="empty">slug/연결 없음</div>'; return; }
-  const r=await fetch(`${SB_URL}/rest/v1/marketing_drafts?campaign_slug=eq.${encodeURIComponent(slug)}&channel=eq.insight&select=title,body,image_urls`,{headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON}});
+  const r=await fetch(`${SB_URL}/rest/v1/marketing_drafts?campaign_slug=eq.${encodeURIComponent(slug)}&channel=eq.insight&select=title,body,image_urls,status`,{headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON}});
   const [row]=await r.json();
   if(!row){ $('shell').innerHTML='<div class="empty">이 캠페인에 자사몰 인사이트가 없습니다.</div>'; return; }
   title=row.title||''; summary=row.body||''; card=(row.image_urls||[])[0]||'';
@@ -48,16 +49,25 @@ async function load(){
     <div class="meta">
       <h2>${esc(title)}</h2>
       <p class="summary">${esc(summary)}</p>
-      <div class="steps">
-        <h3>자사몰에 직접 발행하기</h3>
-        <ol>
-          <li>위 <b>카드 PNG 다운로드</b> + <b>제목/요약 복사</b></li>
-          <li>자사몰 인사이트(<code>melanoir.co.kr</code>) 레포에 카드 추가 — 또는 <code>node scripts/publish-insight.mjs &lt;final&gt; --target &lt;레포&gt;/web/site/insights</code></li>
-          <li>커밋/머지 → <a href="https://melanoir.co.kr/insights" target="_blank" style="color:var(--gold)">melanoir.co.kr/insights</a> 라이브</li>
-        </ol>
-        <div class="note">자사몰은 자동 push가 아니라 <b>브랜드가 직접 발행</b>합니다 (SNS 복붙과 동일한 수동 발행).</div>
-      </div>
+      <div class="pubrow"><button class="pubbtn" id="pub">자사몰에 발행</button><span class="pubst" id="pubst"></span></div>
+      <div class="note">발행하면 <a href="https://melanoir.co.kr/insights" target="_blank" style="color:var(--gold)">melanoir.co.kr/insights</a> 에 바로 노출됩니다.</div>
     </div>`;
+  setPubState(row.status==='published');
+  $('pub').onclick=publish;
+}
+function setPubState(published){
+  const b=$('pub'), s=$('pubst'); if(!b) return;
+  if(published){ b.textContent='재발행'; s.innerHTML='✅ <b style="color:var(--gold)">발행됨</b> · melanoir.co.kr/insights'; }
+  else { b.textContent='자사몰에 발행'; s.textContent=''; }
+}
+async function publish(){
+  if(pubBusy) return; pubBusy=true; const b=$('pub'); b.disabled=true; const t=b.textContent; b.textContent='발행 중…';
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/marketing_drafts?campaign_slug=eq.${encodeURIComponent(slug)}&channel=eq.insight`,{method:'PATCH',headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status:'published'})});
+    if(!res.ok) throw new Error('HTTP '+res.status+' (RLS 권한 확인)');
+    setPubState(true); toast('자사몰에 발행됨 — melanoir.co.kr/insights');
+  }catch(e){ b.textContent=t; toast('발행 실패: '+e.message); }
+  finally{ b.disabled=false; pubBusy=false; }
 }
 $('dl').onclick=async()=>{ if(!card){toast('카드 이미지 없음');return;} try{const b=await(await fetch(card)).blob();const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`insight-${slug}.png`;a.click();URL.revokeObjectURL(u);toast('다운로드 시작');}catch{window.open(card,'_blank');toast('새 탭에서 열기')} };
 $('copytxt').onclick=async()=>{ try{await navigator.clipboard.writeText((title?title+'\n\n':'')+summary);toast('제목+요약 복사됨');}catch{toast('복사 실패')} };
