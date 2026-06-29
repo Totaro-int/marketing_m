@@ -107,8 +107,15 @@ Claude: 콘솔에 올렸습니다 → melanoir-console.vercel.app
 
 ---
 
-## 문제 해결
-- `npm run doctor` 의 빨간(✗) 항목 안내대로 조치
+## 문제 해결 — 자가수정 루프
+환경을 옮기면 오류가 날 수 있습니다. **Claude Code가 스스로 고치도록** 런북을 넣어뒀습니다(`docs/RUNBOOK.md`):
+
+1. **`npm run doctor`** → ✗ 항목의 `[CODE]` 확인
+2. **`docs/RUNBOOK.md`** 에서 그 `[CODE]`(또는 에러 메시지)를 찾아 **자가수정** 적용
+3. `npm run doctor` 재실행 → **전부 ✓ 될 때까지 반복** → `npm run verify` → `/melanoir` 1회 테스트 → 완료
+
+> Cowork에서 그냥 **"오류 났어, RUNBOOK 보고 고쳐줘"** 라고 하면 Claude가 위 루프를 자동으로 수행합니다.
+
 - 스킬이 목록에 안 보이면: ZIP 재업로드 · "코드 실행" ON 확인 · Desktop 재시작
 - 키/권한 문의: **Totaro**
 

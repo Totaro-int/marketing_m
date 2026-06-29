@@ -17,6 +17,7 @@ description: 멜라누아 5채널(IG·LinkedIn·Threads·네이버블로그·자
 ## 운영 (Cowork / Claude Code) — 먼저 읽기
 - 이 스킬은 **클론된 엔진 레포에서** 동작한다. **작업 폴더 = `melanoir-studio` 레포 루트**(Totaro-int/marketing_m)로 열 것. 스크립트는 cwd 기준 실행(절대경로 권장).
 - 새 기기/첫 실행: **`npm run doctor`** 로 준비 점검(node·키·Supabase·폰트). ✓ 면 진행.
+- **오류 시 자가수정 루프**: 설치/실행 오류가 나면 **`docs/RUNBOOK.md`** 에서 출력의 `[CODE]`·증상을 찾아 지침대로 고치고 재시도하라(doctor → ✗ → RUNBOOK → 수정 → 재실행, 전부 ✓ 까지 반복). 2회 시도 후에도 안 풀리면 사람에게 보고.
 - `canvas`(서버 렌더)는 선택 — 없으면 IG 카드는 **웹 카드 편집기**가 렌더(생성·발행엔 지장 없음).
 
 ## 하루 사이클 ("멜라누아 카드 만들어" / "오늘 콘텐츠")
@@ -27,7 +28,8 @@ description: 멜라누아 5채널(IG·LinkedIn·Threads·네이버블로그·자
 5. (canvas시) `node engine/render.mjs out/final_NN.json --out out` → 카드 PNG. 없으면 웹 편집기.
 6. 채널: `node engine/channels.mjs --brief <topic>` → **`melanoir-channel-copywriter` 에이전트** → `out/channels_NN.json` → `--finalize`(채널별 가드 + 🖼 이미지 배치 큐).
 7. 휴먼 게이트 후 발행: `push-supabase`(IG+spec) · `push-channels`(채널) · (canvas시) `upload-bg`·`publish-insight`.
-   - **자사몰 인사이트 자동 발행 + 색인**: `.env.local`의 `MELANOIR_SITE_REPO`(자사몰 레포 insights 경로) 설정 시, publish-insight가 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 만들어 **자사몰 레포에 git commit+push → melanoir.co.kr/insights 자동 배포** + **IndexNow로 네이버·Bing·ChatGPT 즉시 색인 통보**(소유자 쓰기 권한 머신). 구글은 sitemap 자동 크롤 + 1회 `/totaro-seo`(Search Console). 미설정이면 로컬 스테이징만.
+   - **자사몰 인사이트 자동 발행 + 색인**: `.env.local`의 `MELANOIR_SITE_REPO`(자사몰 레포 insights 경로) 설정 시, publish-insight가 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 만들어 **자사몰 레포에 git commit+push → melanoir.co.kr/insights 자동 배포** + **IndexNow로 네이버·Bing·ChatGPT 즉시 색인 통보**(소유자 쓰기 권한 머신). 미설정이면 로컬 스테이징만.
+   - **색인 마무리(`/totaro-seo`)**: 발행 직후 **`/totaro-seo` 스킬을 실행**해 새 인사이트 URL(`melanoir.co.kr/insights/<날짜>`)을 **Google Search Console·네이버 서치어드바이저에 색인 요청**한다(1회 등록 후 자동 크롤). 즉 `/melanoir` = 5채널 생성·발행 + 자사몰 발행 + (IndexNow 즉시 + totaro-seo) **색인까지** 한 흐름.
 
 ## 검토·복붙 (클라이언트)
 - **콘솔** `melanoir-console.vercel.app` — 캠페인별 5채널, 본문 복사, 🖼 이미지 배치.
