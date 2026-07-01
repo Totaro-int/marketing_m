@@ -29,7 +29,8 @@ description: 멜라누아 5채널(IG·LinkedIn·Threads·네이버블로그·자
 6. 채널: `node engine/channels.mjs --brief <topic>` → **`melanoir-channel-copywriter` 에이전트** → `out/channels_NN.json` → `--finalize`(채널별 가드 + 🖼 이미지 배치 큐).
 7. 휴먼 게이트 후 발행: `push-supabase`(IG+spec) · `push-channels`(채널) · (canvas시) `upload-bg`·`publish-insight`.
    - **자사몰 인사이트 자동 발행 + 색인**: `.env.local`의 `MELANOIR_SITE_REPO`(자사몰 레포 insights 경로) 설정 시, publish-insight가 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 만들어 **자사몰 레포에 git commit+push → melanoir.co.kr/insights 자동 배포** + **IndexNow로 네이버·Bing·ChatGPT 즉시 색인 통보**(소유자 쓰기 권한 머신). 미설정이면 로컬 스테이징만.
-   - **색인 마무리(`/totaro-seo`)**: 발행 직후 **`/totaro-seo` 스킬을 실행**해 새 인사이트 URL(`melanoir.co.kr/insights/<날짜>`)을 **Google Search Console·네이버 서치어드바이저에 색인 요청**한다(1회 등록 후 자동 크롤). 즉 `/melanoir` = 5채널 생성·발행 + 자사몰 발행 + (IndexNow 즉시 + totaro-seo) **색인까지** 한 흐름.
+   - **색인은 내장·자동**: 발행(--push) 성공 시 색인기(`engine/seo.mjs` · = `npm run seo:index`)가 자동으로 **IndexNow 즉시 색인 통보**(네이버 서치어드바이저·Bing·Yandex·ChatGPT)를 보내고 sitemap.xml·llms.txt·IndexNow 키파일을 유지한다. **인증키·외부 스킬 불요**(예전 `/totaro-seo` 참조는 폐기 — 이 로직이 패키지에 내장됨). 재통보가 필요하면 `npm run seo:index` 단독 실행. 즉 `/melanoir` = 5채널 생성·발행 + 자사몰 발행 + **색인(IndexNow 즉시)** 까지 한 흐름.
+   - **구글·네이버 콘솔은 1회만(소유자 수동)**: 구글은 공식 즉시색인 API가 없어 **sitemap 자동 크롤**로 색인된다. 최초 1회 **Google Search Console·네이버 서치어드바이저 사이트 소유확인**(소유자 계정 로그인 필요 — 패키지 자동화 대상 아님)만 하면 이후 자동. (RUNBOOK `[SEO]` 참고)
 
 ## 검토·복붙 (클라이언트)
 - **콘솔** `melanoir-console.vercel.app` — 캠페인별 5채널, 본문 복사, 🖼 이미지 배치.

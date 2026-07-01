@@ -62,7 +62,9 @@ npm run doctor    # ✓ "준비 완료" 뜨면 끝
 1. 자사몰 레포를 **쓰기 권한 계정**으로 클론 — `git clone <자사몰-레포> melanoir-recruitment`
 2. `.env.local` 에 경로 추가 — `MELANOIR_SITE_REPO=/경로/melanoir-recruitment/web/site/insights`
 
-→ 이후 **`/melanoir`** 발행 시 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 자사몰 레포에 **git push → Vercel 배포**, 그리고 **IndexNow로 네이버·Bing·ChatGPT 즉시 색인 통보**. (구글은 sitemap 자동 크롤 + 1회 `/totaro-seo`로 Search Console 등록 권장 · 미설정이면 콘솔에서 확인만)
+→ 이후 **`/melanoir`** 발행 시 **GEO/SEO 정적 아티클**(텍스트 본문 + JSON-LD + sitemap + llms.txt)을 자사몰 레포에 **git push → Vercel 배포**, 그리고 **색인기(내장 · 인증키 불요)** 가 **IndexNow로 네이버 서치어드바이저·Bing·Yandex·ChatGPT 즉시 색인 통보**까지 자동. 재통보는 `npm run seo:index` 단독 실행.
+
+> **구글·네이버 콘솔은 최초 1회만**(소유자 수동): 구글은 즉시색인 API가 없어 **sitemap 자동 크롤**로 색인됩니다. Google Search Console·네이버 서치어드바이저에서 **사이트 소유확인 1회**(소유자 계정 로그인)만 해두면 이후 자동 — 이 1회는 로그인이 필요해 패키지 자동화 대상이 아닙니다.
 
 ---
 

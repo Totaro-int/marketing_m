@@ -105,8 +105,10 @@ Claude Code 운영자에게: 위 루프를 **자동으로** 수행하라. doctor
 
 ---
 
-## 5. 색인(SEO/GEO) — /melanoir에 포함
+## 5. 색인(SEO/GEO) `[SEO]` — /melanoir에 내장
 
-- **자동(매 발행)**: IndexNow → 네이버·Bing·ChatGPT 즉시 색인 통보 + sitemap·llms.txt 갱신(publish-insight).
-- **1회 설정**: `/totaro-seo` 로 Google Search Console·네이버 서치어드바이저 등록 + 사이트맵 제출 → 이후 자동 크롤. 새 인사이트 URL은 `/totaro-seo`로 추가 색인 요청 가능.
-- 확인: `melanoir.co.kr/sitemap.xml`에 `/insights/<날짜>` 포함, `melanoir.co.kr/<key>.txt` 200(IndexNow 키), `/llms.txt` 200.
+- **자동(매 발행 · 인증키 불요)**: 발행(`--push`) 성공 시 색인기(`engine/seo.mjs`)가 **IndexNow**로 네이버 서치어드바이저·Bing·Yandex·ChatGPT에 즉시 색인 통보하고 sitemap.xml·llms.txt·IndexNow 키파일을 유지한다. (예전 외부 `/totaro-seo` 스킬 참조는 폐기 — 이 로직이 패키지에 내장됨.)
+- **수동 재통보**: `npm run seo:index` (또는 특정 URL만 `npm run seo:index -- --url https://melanoir.co.kr/insights/2026-07-01`). `--no-ping`이면 자산만 갱신.
+- **1회 설정(소유자 수동)**: 구글은 공식 즉시색인 API가 없어 **sitemap 자동 크롤**로 색인. 최초 1회 **Google Search Console·네이버 서치어드바이저에서 사이트 소유확인**(소유자 계정 로그인 필요 · 패키지 자동화 대상 아님)만 하면 이후 자동.
+- **확인**: `melanoir.co.kr/sitemap.xml`에 `/insights/<날짜>` 포함 · `melanoir.co.kr/<key>.txt` 200(IndexNow 키) · `/llms.txt` 200.
+- **증상→원인**: seo:index가 `0/N OK` → 사이트가 아직 라이브 아님(키파일 미노출) 또는 네트워크. 배포 후 재실행. `사이트 루트 없음` → `MELANOIR_SITE_REPO`(자사몰 insights 경로) 미설정 → `.env.local` 확인.

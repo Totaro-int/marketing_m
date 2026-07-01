@@ -15,36 +15,11 @@ import { writeInsightCard } from '../engine/insight-card.mjs';
 import { guardSpec, guardText, topicLayer } from '../engine/guard.mjs';
 import { buildInsightArticle } from '../engine/insight-page.mjs';
 import { sbEnv, hasCreds, sbUpsert } from './_lib.mjs';
+// 색인 로직은 내장 공유 모듈(engine/seo.mjs)로 일원화 — seo-index CLI 와 동일 코드.
+import { updateSitemap, writeLlmsTxt, ensureIndexNowKey, pingIndexNow, INDEXNOW_KEY, BASE_URL } from '../engine/seo.mjs';
 
-const BASE_URL = 'https://melanoir.co.kr';
 // --target 안에서 git 레포 루트 탐색(.git 위로)
 function gitRootOf(start) { let d = path.resolve(start); while (d && d !== path.dirname(d)) { if (fs.existsSync(path.join(d, '.git'))) return d; d = path.dirname(d); } return null; }
-// IndexNow — 발행 URL 즉시 색인 통보(네이버·Bing·ChatGPT·Yandex 공유). 키는 도메인 루트에 <key>.txt 로 호스팅.
-const INDEXNOW_KEY = '7f3c9e21b8d4f06a5c1e9b3d7f2068ca';
-async function pingIndexNow(urls) {
-  for (const u of urls) for (const ep of ['https://searchadvisor.naver.com/indexnow', 'https://api.indexnow.org/indexnow']) {
-    try { const r = await fetch(`${ep}?url=${encodeURIComponent(u)}&key=${INDEXNOW_KEY}`); console.log(`  IndexNow ${ep.includes('naver') ? 'Naver ' : '공통  '} ${r.status} ${u}`); }
-    catch (e) { console.log(`  IndexNow 실패(${ep.includes('naver') ? 'Naver' : '공통'}): ${e.message}`); }
-  }
-}
-// sitemap.xml 에 /insights + /insights/<date> 추가(중복 방지)
-function updateSitemap(siteRoot, date) {
-  const p = path.join(siteRoot, 'sitemap.xml'); if (!fs.existsSync(p)) return false;
-  let xml = fs.readFileSync(p, 'utf-8');
-  for (const u of [`${BASE_URL}/insights`, `${BASE_URL}/insights/${date}`]) {
-    if (!xml.includes(`<loc>${u}</loc>`)) xml = xml.replace('</urlset>', `  <url><loc>${u}</loc></url>\n</urlset>`);
-  }
-  fs.writeFileSync(p, xml); return true;
-}
-// llms.txt — AI 크롤러용 사이트/인사이트 안내(emerging standard)
-function writeLlmsTxt(siteRoot, cards) {
-  const L = ['# 멜라누아 (Melanoir)', '', '> 반영구 색소·멜라닌 기반 PMU 브랜드. 멜라닌 단일 색소 설계와 공인기관 자가품질검사로 안전을 숫자로 증명한다.', '', '## 인사이트 (Insights)', ''];
-  for (const c of [...(cards || [])].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))) {
-    if (c.date) L.push(`- [${(c.title || c.date)}](${BASE_URL}/insights/${c.date}): ${c.subtitle || ''}`);
-  }
-  L.push('', '## 제품 (Products)', `- [엠보 반영구 색소](${BASE_URL}/products/embo)`, '');
-  fs.writeFileSync(path.join(siteRoot, 'llms.txt'), L.join('\n'));
-}
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DNA = JSON.parse(fs.readFileSync(path.join(ROOT, 'brand/brand-dna.json'), 'utf-8'));
@@ -102,9 +77,9 @@ async function main() {
     console.warn('  ⚠ 아티클 guard 차단 — 정적 페이지 생략:', JSON.stringify(art.guard.findings.filter(f => f.sev === 'block')));
   } else {
     fs.writeFileSync(path.join(TARGET, `${date}.html`), art.html);
-    const sm = updateSitemap(siteRoot, date);
+    const sm = updateSitemap(siteRoot, [`${BASE_URL}/insights`, `${BASE_URL}/insights/${date}`]);
     writeLlmsTxt(siteRoot, arr);
-    const keyFile = path.join(siteRoot, `${INDEXNOW_KEY}.txt`); if (!fs.existsSync(keyFile)) fs.writeFileSync(keyFile, INDEXNOW_KEY);
+    ensureIndexNowKey(siteRoot);
     console.log(`  GEO/SEO 아티클 → insights/${date}.html (본문 ${art.content.bodyText.length}자 + JSON-LD) · sitemap ${sm ? '갱신' : '없음'} · llms.txt · IndexNow키`);
 
     // 2c) --push: 자사몰 레포에 commit + push → Vercel 자동 배포 (명령 한 줄 발행)

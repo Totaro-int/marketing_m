@@ -13,6 +13,7 @@
     "caption": "node engine/caption.mjs",
     "insight-card": "node engine/insight-card.mjs",
     "publish-insight": "node scripts/publish-insight.mjs",
+    "seo:index": "node scripts/seo-index.mjs",
     "push": "node scripts/push-supabase.mjs",
     "pull": "node scripts/pull-supabase.mjs",
     "watch": "node scripts/watch-supabase.mjs",
