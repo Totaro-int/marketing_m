@@ -26,9 +26,11 @@ body{font-family:Pretendard,system-ui,sans-serif;background:var(--bg);color:var(
 .rail::-webkit-scrollbar{display:none}
 .card{flex:0 0 300px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .18s,border-color .18s,box-shadow .18s;display:flex;flex-direction:column}
 .card:hover{transform:translateY(-6px);border-color:var(--line2);box-shadow:0 16px 40px rgba(0,0,0,.6)}
-.thumb{position:relative;aspect-ratio:4/5;background:#050505;overflow:hidden}
-.thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb .cat{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);color:#fff;font-size:11px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:999px;border:1px solid var(--line)}
+.thumb{position:relative;aspect-ratio:4/5;overflow:hidden;background:radial-gradient(120% 120% at 30% 20%,#1e1e23 0%,#0a0a0c 72%)}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.thumb .ph{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:20px;font-weight:800;line-height:1.32;letter-spacing:-.01em;color:#ededef}
+.thumb.noimg .ph{display:flex}
+.thumb .cat{position:absolute;top:12px;left:12px;z-index:2;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);color:#fff;font-size:11px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:999px;border:1px solid var(--line)}
 .card .b{padding:16px 16px 18px}
 .card h3{font-size:16px;line-height:1.4;font-weight:700;letter-spacing:-.01em;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card p{color:var(--dim);font-size:13px;line-height:1.6;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -68,7 +70,7 @@ function cardHtml(c){
   const tags=(c.hashtags||[]).slice(0,3).join(' ');
   const href=c.campaign_slug?`insight.html?slug=${encodeURIComponent(c.campaign_slug)}`:'#';
   return `<a class="card" href="${href}">
-    <div class="thumb">${img?`<img src="${esc(img)}" alt="${esc(c.title)}" loading="lazy">`:''}<span class="cat">${esc(c.category||'인사이트')}</span></div>
+    <div class="thumb${img?'':' noimg'}">${img?`<img src="${esc(img)}" alt="${esc(c.title)}" loading="lazy" onerror="this.style.display='none';this.closest('.thumb').classList.add('noimg')">`:''}<div class="ph">${esc(c.title||'')}</div><span class="cat">${esc(c.category||'인사이트')}</span></div>
     <div class="b"><h3>${esc(c.title||'')}</h3><p>${esc(c.body||'')}</p>${tags?`<div class="tg">${esc(tags)}</div>`:''}<div class="dt">${esc(date)}</div></div>
   </a>`;
 }
