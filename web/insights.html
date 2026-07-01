@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>인사이트 — 멜라누아</title>
+<meta name="description" content="멜라닌·반영구 색소의 안전성과 과학을, 한 장의 카드로. 멜라누아 인사이트.">
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{--bg:#0b0b0d;--card:#151519;--line:#26262c;--ink:#f4f4f5;--dim:#9a9aa2;--gold:#c2a15a;--gold2:#e6cd91}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Pretendard,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+/* top bar */
+.top{display:flex;align-items:center;gap:14px;padding:20px 24px;max-width:1200px;margin:0 auto}
+.top .brand{font-weight:800;letter-spacing:.22em;font-size:15px}
+.top .brand b{color:var(--gold)}
+.top a{margin-left:auto;color:var(--dim);text-decoration:none;font-size:13.5px;border:1px solid var(--line);padding:8px 14px;border-radius:999px}
+/* hero */
+.hero{padding:60px 0 34px;position:relative}
+.hero::after{content:"";position:absolute;top:-40px;right:-60px;width:340px;height:340px;background:radial-gradient(circle,rgba(194,161,90,.18),transparent 70%);pointer-events:none}
+.eyebrow{color:var(--gold);letter-spacing:.28em;font-size:12.5px;font-weight:700;margin-bottom:14px}
+.hero h1{font-size:clamp(30px,4.6vw,52px);line-height:1.18;letter-spacing:-.02em;font-weight:800}
+.hero h1 .u{background:linear-gradient(transparent 62%,rgba(194,161,90,.45) 0);padding:0 2px}
+.hero p{color:var(--dim);font-size:16px;margin-top:16px;max-width:560px;line-height:1.65}
+/* tabs */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 8px}
+.tab{background:transparent;border:1px solid var(--line);color:var(--dim);padding:9px 18px;border-radius:999px;font-size:13.5px;cursor:pointer;font-family:inherit;transition:.15s}
+.tab:hover{color:var(--ink);border-color:#3a3a42}
+.tab.on{background:var(--gold);border-color:var(--gold);color:#1a1408;font-weight:700}
+/* carousel */
+.crow{position:relative;padding:22px 0 70px}
+.rail{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:6px 2px 16px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.card{flex:0 0 300px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .18s,border-color .18s,box-shadow .18s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-6px);border-color:var(--gold);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.thumb{position:relative;aspect-ratio:4/5;background:#000;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .cat{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);color:var(--gold2);font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 10px;border-radius:999px;border:1px solid rgba(194,161,90,.4)}
+.card .b{padding:16px 16px 18px}
+.card h3{font-size:16px;line-height:1.4;font-weight:700;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card p{color:var(--dim);font-size:13px;line-height:1.6;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .tg{margin-top:12px;color:var(--gold);font-size:12px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .dt{color:#6a6a72;font-size:11.5px;margin-top:10px}
+/* arrows */
+.nav{position:absolute;top:42%;width:46px;height:46px;border-radius:50%;background:#1c1c22;border:1px solid var(--line);color:var(--ink);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:.15s}
+.nav:hover{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.nav.prev{left:-10px} .nav.next{right:-10px}
+@media(max-width:560px){.nav{display:none}.card{flex-basis:78vw}}
+.empty{color:var(--dim);padding:50px 0;text-align:center}
+.foot{color:#5a5a62;font-size:12.5px;text-align:center;padding:30px 0 60px;border-top:1px solid var(--line);margin-top:10px}
+</style><script src="config.js"></script></head>
+<body>
+<div class="top"><span class="brand">MELA<b>NOIR</b></span><a href="https://melanoir.co.kr" target="_blank">melanoir.co.kr →</a></div>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">MELANOIR INSIGHTS</div>
+    <h1>안전한 색, <span class="u">숫자로 이야기하다</span></h1>
+    <p>멜라닌·반영구 색소의 안전성과 과학을, 한 장의 카드로. 매일 쌓이는 멜라누아의 인사이트.</p>
+    <div class="tabs" id="tabs"></div>
+  </section>
+  <div class="crow">
+    <button class="nav prev" id="prev" aria-label="이전">‹</button>
+    <div class="rail" id="rail"><div class="empty">불러오는 중…</div></div>
+    <button class="nav next" id="next" aria-label="다음">›</button>
+  </div>
+</div>
+<div class="foot">© MELANOIR · 인사이트는 멜라누아 콘텐츠 엔진이 매일 생성합니다.</div>
+<script type="module">
+const $=s=>document.querySelector(s);
+const SB_URL=window.SB_URL, SB_ANON=window.SB_ANON;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let all=[], cat='전체';
+function cardHtml(c){
+  const img=(c.image_urls||[])[0]||'';
+  const date=String(c.created_at||'').slice(0,10);
+  const tags=(c.hashtags||[]).slice(0,3).join(' ');
+  const href=c.campaign_slug?`insight.html?slug=${encodeURIComponent(c.campaign_slug)}`:'#';
+  return `<a class="card" href="${href}">
+    <div class="thumb">${img?`<img src="${esc(img)}" alt="${esc(c.title)}" loading="lazy">`:''}<span class="cat">${esc(c.category||'인사이트')}</span></div>
+    <div class="b"><h3>${esc(c.title||'')}</h3><p>${esc(c.body||'')}</p>${tags?`<div class="tg">${esc(tags)}</div>`:''}<div class="dt">${esc(date)}</div></div>
+  </a>`;
+}
+function render(){
+  const list=cat==='전체'?all:all.filter(c=>(c.category||'인사이트')===cat);
+  $('#rail').innerHTML=list.length?list.map(cardHtml).join(''):'<div class="empty">이 분류의 인사이트가 아직 없습니다.</div>';
+}
+function tabs(){
+  const cats=['전체',...[...new Set(all.map(c=>c.category||'인사이트'))]];
+  $('#tabs').innerHTML=cats.map(c=>`<button class="tab${c===cat?' on':''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
+  $('#tabs').querySelectorAll('.tab').forEach(b=>b.onclick=()=>{cat=b.dataset.c;tabs();render();});
+}
+async function load(){
+  if(!(SB_URL&&SB_ANON)){ $('#rail').innerHTML='<div class="empty">연결 설정 없음</div>'; return; }
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/marketing_drafts?channel=eq.insight&status=eq.published&select=title,body,image_urls,hashtags,campaign_slug,created_at&order=created_at.desc`,{headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON}});
+    all=await r.json(); if(!Array.isArray(all)) all=[];
+    // 카테고리 없으면 기본값
+    all.forEach(c=>{ if(!c.category) c.category='브랜드 인사이트'; });
+    if(!all.length){ $('#rail').innerHTML='<div class="empty">아직 발행된 인사이트가 없습니다. 콘솔에서 <b>자사몰에 발행</b>하면 여기 표시됩니다.</div>'; $('#tabs').innerHTML=''; return; }
+    tabs(); render();
+  }catch(e){ $('#rail').innerHTML='<div class="empty">오류: '+esc(e.message)+'</div>'; }
+}
+$('#prev').onclick=()=>$('#rail').scrollBy({left:-640,behavior:'smooth'});
+$('#next').onclick=()=>$('#rail').scrollBy({left:640,behavior:'smooth'});
+load();
+</script></body></html>
