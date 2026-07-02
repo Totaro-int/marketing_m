@@ -27,6 +27,28 @@ create table if not exists public.marketing_drafts (
 -- 기존 테이블에 컬럼 추가(멱등) — 카드 편집기 슬라이드 스펙
 alter table public.marketing_drafts add column if not exists spec jsonb;
 
+-- 원본 스냅샷 — 최초 생성 카피 보존. 사람이 콘솔에서 body 를 고쳐도 원본은 여기 남아
+--   "원본 → 수정본" diff 가 학습(distill) 재료가 된다. anon 에는 UPDATE 권한 미부여(아래 grant 참고).
+alter table public.marketing_drafts add column if not exists original_body text;
+
+-- 최초 삽입 시 original_body 가 비어 있으면 body 로 채운다(멱등 seed).
+--   재upsert(ON CONFLICT DO UPDATE)에는 push 스크립트가 original_body 를 payload 에 넣지 않으므로
+--   기존 원본이 덮이지 않고 보존된다(SET 절에 original_body 부재 = 기존값 유지).
+create or replace function public.seed_original_body()
+returns trigger language plpgsql as $$
+begin
+  if new.original_body is null then new.original_body = new.body; end if;
+  return new;
+end;
+$$;
+drop trigger if exists trg_seed_original on public.marketing_drafts;
+create trigger trg_seed_original
+  before insert on public.marketing_drafts
+  for each row execute function public.seed_original_body();
+
+-- 기존 행 백필 — 원본 스냅샷이 없던 행은 현재 body 를 원본으로 간주(스냅샷 부재 시 최선값).
+update public.marketing_drafts set original_body = body where original_body is null;
+
 create index if not exists idx_drafts_campaign on public.marketing_drafts (campaign_slug);
 create index if not exists idx_drafts_updated  on public.marketing_drafts (updated_at desc);
 
@@ -55,8 +77,12 @@ drop policy if exists "anon can update" on public.marketing_drafts;
 create policy "anon can read"   on public.marketing_drafts for select using (true);
 create policy "anon can update" on public.marketing_drafts for update using (true) with check (true);
 
--- 컬럼 단위 권한: anon 은 본문/태그/상태/피드백만 UPDATE (slug·guardian 등은 잠금)
+-- 컬럼 단위 권한: anon 은 본문/태그/상태/피드백만 UPDATE (slug·guardian·original_body 등은 잠금)
+--   original_body 는 의도적으로 제외 — 웹(anon)이 원본 스냅샷을 덮어쓰지 못하게 한다.
+--   ⚠ 테이블 단위 UPDATE(Supabase 기본 grant-all 잔재)가 있으면 컬럼 단위 권한을 덮어써 전 컬럼이
+--     수정 가능해진다. 먼저 테이블 단위 UPDATE 를 회수해야 컬럼 화이트리스트가 실제로 강제된다.
 grant select on public.marketing_drafts to anon;
+revoke update on public.marketing_drafts from anon;
 grant update (title, body, hashtags, status, feedback) on public.marketing_drafts to anon;
 
 -- 5) Storage 정책: public 버킷이라 읽기는 자동. 업로드는 service_role(push)만.

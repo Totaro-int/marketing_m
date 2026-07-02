@@ -18,6 +18,14 @@ async function main() {
   }
   ui.info(`Supabase pull — ${env.URL}`);
   const feedback = await sbSelect(env, 'feedback', 'select=*&order=created_at.asc');
+  // diff 학습용: 각 피드백에 원본 스냅샷(draft.original_body)을 붙인다.
+  //   feedback 테이블엔 edited_body(수정본)만 있고 원본이 없으므로 draft 에서 조회해 합친다.
+  const draftIds = [...new Set(feedback.map(f => f.draft_id).filter(Boolean))];
+  if (draftIds.length) {
+    const drafts = await sbSelect(env, 'marketing_drafts', `id=in.(${draftIds.join(',')})&select=id,original_body`);
+    const om = new Map(drafts.map(d => [d.id, d.original_body]));
+    for (const f of feedback) if (om.has(f.draft_id)) f.original_body = om.get(f.draft_id);
+  }
   const sources = await sbSelect(env, 'sources', 'kind=eq.guideline&active=eq.true&select=*');
   const learnings = await sbSelect(env, 'learnings', 'active=eq.true&select=scope,kind,rule,weight&order=weight.desc');
   ui.dim(`  feedback ${feedback.length}건 · 활성 지침 ${sources.length}개 · 승인 학습 ${learnings.length}개`);

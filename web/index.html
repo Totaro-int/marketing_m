@@ -91,6 +91,15 @@
   .toggle::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.15s}
   .toggle.on::after{left:19px}
   .note{font-size:12.5px;color:var(--dim)}
+  /* 원본↔수정본 diff */
+  .diffwrap{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .diffhead{padding:8px 12px;background:var(--soft);font-size:12px;color:var(--dim);display:flex;align-items:center;gap:10px}
+  .diffhead .tag{padding:1px 7px;border-radius:5px;font-weight:600}
+  .dline{font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;padding:1px 12px;white-space:pre-wrap;word-break:break-word;display:flex;gap:8px}
+  .dline .dmark{width:10px;flex-shrink:0;color:var(--faint);user-select:none}
+  .dline.del{background:var(--dangerbg);color:var(--danger)}
+  .dline.add{background:var(--okbg);color:var(--ok)}
+  .dline.eq{color:var(--dim)}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:9}
   .toast.show{opacity:1}
   h2.sec{font-size:16px;font-weight:600;margin:0 0 12px}
@@ -160,12 +169,15 @@ async function patch(id, fields){
   const { error } = await sb.from('marketing_drafts').update(fields).eq('id',id);
   if(error){ toast('저장 오류: '+error.message); return false; } return true;
 }
-// 피드백 → feedback 테이블 INSERT (verdict+note+edited_body) → pull/distill 학습 입력
-async function insertFeedback(d, verdict, note){
+// 피드백 → feedback 테이블 INSERT (verdict+note+edited_body) → pull/distill 학습 입력.
+//   editedBody 를 명시하면 그 값을, 아니면 현재 본문(d.body)을 저장한다.
+//   verdict='edit' 는 [수정 저장]이 만드는 자동 학습 신호(원본↔수정본 diff 재료).
+async function insertFeedback(d, verdict, note, editedBody){
   if(DEMO){ toast('데모 모드 — 피드백 저장 안 됨'); return false; }
   const { error } = await sb.from('feedback').insert({
     draft_id:d.id, campaign_slug:d.campaign_slug||(DATA.campaign||{}).slug||null,
-    channel:d.channel, verdict:verdict||null, note:note||null, edited_body:d.body||null });
+    channel:d.channel, verdict:verdict||null, note:note||null,
+    edited_body:(editedBody!==undefined?editedBody:d.body)||null });
   if(error){ toast('피드백 오류: '+error.message); return false; } return true;
 }
 // 지침 → sources(kind='guideline') upsert. 기존 guideline 행 갱신, 없으면 생성.
@@ -181,6 +193,30 @@ function fullText(d){
   return (tags.length && !body.includes(tags[0])) ? body+'\n\n'+tags.join(' ') : body;
 }
 const stPill = s => s==='approved'?'<span class="pill ok">승인</span>':s==='edited'?'<span class="pill info">수정됨</span>':'<span class="pill">검토 대기</span>';
+
+// 라인 단위 diff (LCS) — 원본(a) 대비 현재(b)의 삭제(−)/추가(+)/유지 표시
+function lineDiff(a, b){
+  const A=String(a==null?'':a).split('\n'), B=String(b==null?'':b).split('\n');
+  const n=A.length, m=B.length;
+  const dp=Array.from({length:n+1},()=>new Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--)
+    dp[i][j]=A[i]===B[j]?dp[i+1][j+1]+1:Math.max(dp[i+1][j],dp[i][j+1]);
+  const out=[]; let i=0,j=0;
+  while(i<n&&j<m){
+    if(A[i]===B[j]){out.push({t:'eq',s:A[i]});i++;j++;}
+    else if(dp[i+1][j]>=dp[i][j+1]){out.push({t:'del',s:A[i]});i++;}
+    else{out.push({t:'add',s:B[j]});j++;}
+  }
+  while(i<n)out.push({t:'del',s:A[i++]});
+  while(j<m)out.push({t:'add',s:B[j++]});
+  return out;
+}
+function diffHtml(orig, cur){
+  const d=lineDiff(orig,cur);
+  const changed=d.some(x=>x.t!=='eq');
+  const body=d.map(x=>`<div class="dline ${x.t}"><span class="dmark">${x.t==='del'?'−':x.t==='add'?'+':''}</span>${esc(x.s)||'&nbsp;'}</div>`).join('');
+  return `<div class="diffhead"><span class="tag del" style="background:var(--dangerbg)">− 원본</span><span class="tag add" style="background:var(--okbg)">+ 현재</span>${changed?'':'<span style="margin-left:auto">원본과 동일 — 변경 없음</span>'}</div>${body}`;
+}
 
 // ── 오늘 발행 ────────────────────────────────────────────────────────────────
 function renderToday(){
@@ -212,8 +248,10 @@ function renderToday(){
         <button class="pri act-copy"><i class="ti ti-copy"></i> 본문 복사</button>
         <button class="act-save"><i class="ti ti-device-floppy"></i> 수정 저장</button>
         <button class="act-appr"><i class="ti ti-check"></i> 승인</button>
+        <button class="sm act-diff"><i class="ti ti-git-compare"></i> 원본 대조</button>
         <span class="len"></span>
       </div>
+      <div class="diffwrap" style="display:none"></div>
       <div class="fbwrap">
         <div class="lab" style="margin-top:0">피드백 — 다음 생성 학습에 반영</div>
         <textarea class="fb" placeholder="예: 첫 문장 더 가볍게. 데이터 근거 한 줄 추가.">${esc(d.feedback||'')}</textarea>
@@ -239,7 +277,24 @@ function renderToday(){
       try{await navigator.clipboard.writeText(fullText({...d,body:body.value}))}catch{body.select();document.execCommand('copy')}
       const b=e.currentTarget,o=b.innerHTML; b.innerHTML='<i class="ti ti-check"></i> 복사됨'; setTimeout(()=>b.innerHTML=o,1300);
     };
-    el.querySelector('.act-save').onclick=async()=>{ if(await patch(d.id,{body:body.value,status:'edited'})){d.body=body.value;d.status='edited';toast('본문 저장됨')} };
+    // 원본 대조 — 원본(original_body) 대비 현재 본문의 라인 diff 토글
+    const diffBtn=el.querySelector('.act-diff'), diffWrap=el.querySelector('.diffwrap');
+    const showDiff=()=>{ diffWrap.innerHTML=diffHtml(d.original_body!=null?d.original_body:d.body, body.value); };
+    diffBtn.onclick=()=>{
+      const open=diffWrap.style.display!=='none';
+      if(open){ diffWrap.style.display='none'; diffBtn.classList.remove('on'); return; }
+      showDiff(); diffWrap.style.display='block'; diffBtn.classList.add('on');
+    };
+    el.querySelector('.act-save').onclick=async()=>{
+      const nb=body.value, orig=(d.original_body!=null?d.original_body:d.body);
+      if(!(await patch(d.id,{body:nb,status:'edited'}))) return;
+      const edited = nb!==orig;
+      d.body=nb; d.status='edited';
+      // 본문이 원본과 달라졌으면 편집 자체를 학습 신호로 기록(verdict='edit', edited_body=신본).
+      if(edited && !DEMO) await insertFeedback(d,'edit',null,nb);
+      if(diffWrap.style.display!=='none') showDiff(); // 대조 열려 있으면 저장 후 갱신
+      toast(edited?'본문 저장 · 수정이 학습 신호로 기록됨':'본문 저장됨');
+    };
     el.querySelector('.act-appr').onclick=async()=>{ if(await patch(d.id,{status:'approved'})){d.status='approved';renderToday()} };
     const fb=el.querySelector('.fb'); let sent=null;
     el.querySelector('.act-up').onclick=e=>{sent='up';el.querySelector('.act-up').classList.add('on');el.querySelector('.act-down').classList.remove('on')};

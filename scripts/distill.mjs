@@ -13,24 +13,57 @@ const NO_PUSH = argv.includes('--no-push'); // 테스트/오프라인: learnings
 const LEARN = path.join(ROOT, 'learnings');
 const norm = s => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
 
+// 규칙 후보를 byRule 맵에 누적(정규화 텍스트로 dedup, 빈도=weight). 노트·편집 신호가 같은 파이프라인을 공유.
+function addRule(byRule, { scope, kind, rule }, srcId) {
+  const id = `${scope}|${kind}|${norm(rule)}`;
+  const cur = byRule.get(id) || { scope, kind, rule: rule.trim(), weight: 0, sources: [] };
+  cur.weight++; if (srcId) cur.sources.push(srcId);
+  byRule.set(id, cur);
+}
+
+// 편집(원본 → 수정본) diff → 반복 가능한 do/dont 신호. 결정론적 휴리스틱(LLM 없이 규칙화).
+//   여러 편집에서 같은 신호가 반복되면 weight 누적 → 규칙으로 승격된다.
+function editSignals(orig, edited, scope) {
+  const out = [];
+  const o = String(orig || ''), e = String(edited || '');
+  const oLen = o.length, eLen = e.length;
+  const ratio = oLen ? (eLen - oLen) / oLen : 0;
+  if (ratio <= -0.12) out.push({ scope, kind: 'do', rule: '카피를 더 짧고 간결하게 — 불필요한 문장 덜어내기' });
+  else if (ratio >= 0.12) out.push({ scope, kind: 'do', rule: '설명·맥락을 한 줄 더 보강하기' });
+
+  const sents = s => (s.match(/[^.!?。\n]+[.!?。]?/g) || []).filter(x => x.trim().length > 1).length;
+  if (sents(e) < sents(o)) out.push({ scope, kind: 'do', rule: '문장 수를 줄여 한 문장을 짧게 유지' });
+
+  const nums = s => (s.match(/\d+(?:[.,]\d+)?\s*%?/g) || []).length;
+  if (nums(e) > nums(o)) out.push({ scope, kind: 'do', rule: '구체적 수치·근거를 한 줄 추가' });
+
+  const emo = s => (s.match(/\p{Extended_Pictographic}/gu) || []).length;
+  if (emo(e) < emo(o)) out.push({ scope, kind: 'dont', rule: '이모지 남용 줄이기(과한 이모지 삭제)' });
+
+  const excl = s => (s.match(/!/g) || []).length;
+  if (excl(e) < excl(o)) out.push({ scope, kind: 'dont', rule: '느낌표·과장 톤 줄이기' });
+  return out;
+}
+
 async function main() {
   if (!fs.existsSync(inboxPath)) { ui.warn(`인박스 없음: ${inboxPath} — pull-supabase 먼저(또는 샘플 작성). 종료.`); process.exit(0); }
   const fb = JSON.parse(fs.readFileSync(inboxPath, 'utf-8'));
   const withNote = fb.filter(f => (f.note || '').trim());
-  if (!withNote.length) { ui.warn('노트 있는 피드백 없음. 종료.'); process.exit(0); }
+  // 편집 신호: verdict='edit' 또는 edited_body 존재 + 원본 있고 실제로 달라진 행.
+  const editRows = fb.filter(f => (f.verdict === 'edit' || f.edited_body) && f.original_body && f.edited_body && norm(f.original_body) !== norm(f.edited_body));
+  if (!withNote.length && !editRows.length) { ui.warn('노트/편집 신호 있는 피드백 없음. 종료.'); process.exit(0); }
 
-  // 노트 → 규칙 후보 (verdict down=dont, up=do). 정규화 텍스트로 dedup + 빈도=weight.
   const byRule = new Map();
+  // ⓐ 노트 → 규칙 후보 (verdict down=dont, up/그외=do). 정규화 텍스트로 dedup + 빈도=weight.
   for (const f of withNote) {
-    const key = norm(f.note);
-    const scope = f.channel || 'global';
-    const kind = f.verdict === 'down' ? 'dont' : 'do';
-    const id = `${scope}|${kind}|${key}`;
-    const cur = byRule.get(id) || { scope, kind, rule: f.note.trim(), weight: 0, sources: [] };
-    cur.weight++; if (f.id) cur.sources.push(f.id);
-    byRule.set(id, cur);
+    addRule(byRule, { scope: f.channel || 'global', kind: f.verdict === 'down' ? 'dont' : 'do', rule: f.note.trim() }, f.id);
+  }
+  // ⓑ 편집 diff → 규칙 후보. 같은 byRule 맵에 누적되어 dedup/weight/제안 로직을 공유한다.
+  for (const f of editRows) {
+    for (const sig of editSignals(f.original_body, f.edited_body, f.channel || 'global')) addRule(byRule, sig, f.id);
   }
   const rules = [...byRule.values()].sort((a, b) => b.weight - a.weight);
+  ui.dim(`  입력: 노트 ${withNote.length}건 · 편집 ${editRows.length}건 → 규칙 후보 ${rules.length}개`);
 
   // ① 즉시 주입용 .md (generate readLearnings 가 읽음)
   const md = ['# 학습 distill — 피드백 누적 규칙 (자동 생성, 즉시 주입)',
