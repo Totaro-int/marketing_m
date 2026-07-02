@@ -103,7 +103,134 @@
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:9}
   .toast.show{opacity:1}
   h2.sec{font-size:16px;font-weight:600;margin:0 0 12px}
+  /* ── 채널별 뷰 ── */
+  .chvbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+  .chvtab{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--line2);border-radius:999px;cursor:pointer;font-size:13px;color:var(--dim);background:var(--bg);user-select:none}
+  .chvtab:hover{background:var(--soft)}
+  .chvtab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chvtab i{font-size:15px} .chvtab .ct{font-size:11px;opacity:.7}
+  .chvfilter{display:flex;gap:7px;align-items:center;margin:0 0 18px}
+  .fchip{padding:5px 12px;border:1px solid var(--line2);border-radius:999px;cursor:pointer;font-size:12.5px;color:var(--dim);user-select:none}
+  .fchip:hover{background:var(--soft)}
+  .fchip.on{border-color:var(--ink);color:var(--ink);font-weight:600;background:var(--soft)}
+  /* IG 갤러리 */
+  .iggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}
+  .igcell{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--soft);cursor:pointer}
+  .igcell img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+  .igcell:hover img{transform:scale(1.045)}
+  .igcell .multi{position:absolute;top:7px;right:8px;color:#fff;filter:drop-shadow(0 1px 3px rgba(0,0,0,.7));font-size:17px}
+  .igcell .cap{position:absolute;left:0;right:0;bottom:0;padding:16px 10px 8px;background:linear-gradient(transparent,rgba(0,0,0,.66));color:#fff;font-size:11.5px;line-height:1.4;opacity:0;transition:opacity .2s}
+  .igcell:hover .cap{opacity:1}
+  .igcell.ph{display:flex;align-items:center;justify-content:center;color:var(--faint);cursor:default}
+  .igcell.ph i{font-size:26px}
+  /* 텍스트 채널 피드 */
+  .txcard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;background:var(--bg)}
+  .txcard .top{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+  .txcard .av{width:38px;height:38px;border-radius:50%;background:var(--soft2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .txcard .av i{font-size:20px} .txcard .who{font-weight:600;line-height:1.3}
+  .txcard .who .h{color:var(--dim);font-weight:400;font-size:12px;display:flex;align-items:center;gap:6px;margin-top:2px}
+  .txcard .ttl{font-weight:600;margin-bottom:6px} .txcard .txt{white-space:pre-wrap;line-height:1.72}
+  .txcard .tags{color:var(--info);margin-top:11px;font-size:13.5px}
+  /* 블로그/인사이트 갤러리 */
+  .blgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .blcard{border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;background:var(--bg);transition:box-shadow .15s,transform .15s}
+  .blcard:hover{box-shadow:0 8px 26px rgba(0,0,0,.08);transform:translateY(-2px)}
+  .blcard .cov{width:100%;aspect-ratio:16/10;object-fit:cover;background:var(--soft);display:block}
+  .blcard .cov.ph{display:flex;align-items:center;justify-content:center;color:var(--faint)}
+  .blcard .cov.ph i{font-size:28px}
+  .blcard .m{padding:13px 15px}
+  .blcard .m .t{font-weight:600;font-size:14.5px;line-height:1.4;margin-bottom:6px}
+  .blcard .m .ex{color:var(--dim);font-size:12.5px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  /* 라이트박스 (공통) */
+  .lb{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}
+  .lb .box{background:#fff;border-radius:14px;overflow:hidden;max-width:960px;width:100%;max-height:92vh;display:flex;box-shadow:0 20px 80px rgba(0,0,0,.5)}
+  .lb .x{position:absolute;top:16px;right:20px;z-index:2;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;cursor:pointer;font-size:17px;line-height:1}
+  .lb .stage{position:relative;flex:0 0 auto;width:min(60vh,540px);background:#000;display:flex;align-items:center;justify-content:center}
+  .lb .stage img{max-width:100%;max-height:92vh;display:block;object-fit:contain}
+  .lb .nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#111;font-size:22px;line-height:1}
+  .lb .nav.prev{left:10px} .lb .nav.next{right:10px}
+  .lb .nav:disabled{opacity:.3;cursor:default}
+  .lb .dots{position:absolute;bottom:10px;left:0;right:0;display:flex;gap:5px;justify-content:center}
+  .lb .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5)}
+  .lb .dots i.on{background:#fff}
+  .lb .side{flex:1;min-width:0;display:flex;flex-direction:column;color:#1f1f1f}
+  .lb .side .top{display:flex;align-items:center;gap:9px;padding:15px 17px;border-bottom:1px solid #eee;font-weight:600}
+  .lb .side .top i{font-size:19px}
+  .lb .side .cont{padding:15px 17px;overflow:auto;white-space:pre-wrap;line-height:1.72;font-size:14px;color:#33363b}
+  .lb .side .tags{color:#1a73c0;padding:0 17px 15px;font-size:13.5px}
+  /* 읽기뷰(블로그/인사이트) */
+  .readlb .box{max-width:760px}
+  .readlb .rd{overflow:auto;max-height:92vh;background:#fff;color:#1f1f1f;width:100%}
+  .readlb .rd .cov{width:100%;max-height:340px;object-fit:cover;display:block;background:#eee}
+  .readlb .rd .bd{padding:34px 42px 46px;line-height:1.9;font-size:16px;letter-spacing:-.01em}
+  .readlb .rd .bd h1{font-size:25px;font-weight:800;line-height:1.35;margin:0 0 6px}
+  .readlb .rd .bd .meta{color:#9aa0a6;font-size:13px;margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid #eee}
+  .readlb .rd .bd p{margin:0 0 15px;color:#33363b}
+  .readlb .rd .bd h2{font-size:19px;font-weight:700;margin:30px 0 10px;color:#111}
+  .readlb .rd .bd .tags{margin-top:26px;color:#1a73c0;font-size:14px}
+  /* 상태 스티커 */
+  .sticker{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;white-space:nowrap}
+  .sticker i{font-size:12px}
+  .sticker.edit{background:var(--infobg);color:var(--info)}
+  .sticker.fin{background:var(--okbg);color:var(--ok)}
+  .sticker.rej{background:var(--dangerbg);color:var(--danger)}
+  .igcell .stk,.blcard .stk{position:absolute;top:8px;left:8px;z-index:1}
+  .igcell .stk .sticker,.blcard .stk .sticker{box-shadow:0 1px 5px rgba(0,0,0,.18)}
+  .blcard{position:relative}
+  /* 라이트박스 편집(IG 캡션) */
+  .lb .side .ed{padding:12px 17px 16px;display:flex;flex-direction:column;gap:9px}
+  .edbody{width:100%;border:1px solid #ddd;border-radius:9px;padding:10px 11px;font:14px/1.6 inherit;color:#1f1f1f;resize:vertical}
+  .lb .side .edbody{min-height:120px}
+  .edbody:focus{outline:none;border-color:#111}
+  .edrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .edrow .grow{margin-left:auto}
+  .lbbtn{font:13px inherit;border-radius:8px;padding:8px 13px;cursor:pointer;border:1px solid #d5d5d2;background:#fff;color:#1f1f1f;display:inline-flex;align-items:center;gap:6px;font-weight:600;text-decoration:none}
+  .lbbtn:hover{background:#f4f4f2}
+  .lbbtn.pri{background:#161616;color:#fff;border-color:#161616}
+  .lbbtn.pri:hover{opacity:.9;background:#161616}
+  .lbbtn i{font-size:15px}
+  /* 텍스트 피드 편집 */
+  .txcard .edbody{background:var(--bg);color:var(--ink);border-color:var(--line2);min-height:96px}
+  .txcard .edbody:focus{border-color:var(--ink)}
+  .txcard .edrow{margin-top:9px}
+  /* 블로그 읽기뷰 편집 */
+  .readlb .rd .bd .editsec{margin-top:28px;border-top:1px solid #eee;padding-top:18px}
+  .readlb .rd .bd .editsec .lab2{font-size:12px;color:#9aa0a6;margin-bottom:8px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .readlb .rd .bd .editsec .edbody{min-height:180px;font-size:14.5px;line-height:1.7}
+  .readlb .rd .bd .editsec .edrow{margin-top:11px}
+  /* 방향 피드백(다음 생성·파생 학습) */
+  .chvfb{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .chvfb .lab2{font-size:12px;color:var(--faint);margin-bottom:7px;font-weight:600}
+  .chvfb .fbnote{width:100%;min-height:52px;border:1px solid var(--line2);border-radius:9px;padding:9px 11px;font:13.5px/1.5 inherit;resize:vertical;background:var(--bg);color:var(--ink);margin-bottom:8px}
+  .chvfb .fbnote:focus{outline:none;border-color:var(--ink)}
+  .lb .side .chvfb,.readlb .chvfb{border-top-color:#eee}
+  .lb .side .chvfb .lab2,.readlb .chvfb .lab2{color:#9aa0a6}
+  .lb .side .chvfb .fbnote,.readlb .chvfb .fbnote{border-color:#ddd;color:#1f1f1f;background:#fff}
+  .lbbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  /* 파생 출처 표시 */
+  .srcline{font-size:12px;color:var(--dim);margin:2px 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .srcline i{font-size:14px}
+  .lb .side .srcline,.readlb .srcline{color:#6a6a68}
+  /* 발행하기 모달 */
+  .pub-modal .box{max-width:460px}
+  .pub-modal .pm{padding:22px 24px 24px;width:100%;color:var(--ink);background:var(--bg)}
+  .pub-modal h3{margin:0 0 4px;font-size:18px;font-weight:700}
+  .pub-modal .pmsub{color:var(--dim);font-size:13px;margin-bottom:8px;line-height:1.5}
+  .pub-modal label{display:block;font-size:12px;color:var(--dim);margin:14px 0 5px}
+  .pub-modal input,.pub-modal textarea{width:100%;border:1px solid var(--line2);border-radius:9px;padding:10px 12px;font:14px/1.5 inherit;background:var(--bg);color:var(--ink)}
+  .pub-modal textarea{min-height:58px;resize:vertical}
+  .pub-modal .warn{margin-top:14px;font-size:12px;color:var(--warn);background:var(--warnbg);border-radius:8px;padding:9px 11px;line-height:1.5;display:flex;gap:7px;align-items:flex-start}
+  .pub-modal .pmrow{display:flex;gap:9px;margin-top:18px}
+  .pub-modal .pmrow .grow{margin-left:auto}
+  .pub-modal .pmnote{margin-top:13px;font-size:12px;color:var(--dim);line-height:1.6}
+  .pub-modal code{background:var(--soft2);padding:1px 6px;border-radius:5px;font-size:12px}
+  .pub-modal .chkrow{display:flex;flex-wrap:wrap;gap:8px}
+  .pub-modal .chk{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:9px;padding:8px 11px;font-size:13px;cursor:pointer;width:auto;user-select:none}
+  .pub-modal .chk:hover{background:var(--soft)}
+  .pub-modal .chk i{font-size:15px}
+  .pub-modal .chk input{width:auto;margin:0}
   @media(max-width:720px){.side{width:60px}.side .brand span,.nav span,.side .foot span{display:none}.main{padding:18px}}
+  @media(max-width:640px){.lb{padding:0}.lb .box{flex-direction:column;max-height:100vh;height:100vh;border-radius:0}.lb .stage{width:100%;max-height:50vh}.lb .stage img{max-height:50vh}.readlb .rd .bd{padding:22px 20px 32px}}
 </style>
 </head>
 <body>
@@ -111,6 +238,7 @@
   <aside class="side">
     <div class="brand"><i class="ti ti-broadcast"></i><span>마케팅 콘솔</span></div>
     <div class="nav on" data-s="today"><i class="ti ti-clipboard-check"></i><span>오늘 발행</span></div>
+    <div class="nav" data-s="channels"><i class="ti ti-layout-grid"></i><span>채널별 뷰</span></div>
     <div class="nav" data-s="sources"><i class="ti ti-photo"></i><span>소스</span></div>
     <div class="nav" data-s="brand"><i class="ti ti-fingerprint"></i><span>브랜드 DNA</span></div>
     <div class="nav" data-s="learning"><i class="ti ti-bulb"></i><span>학습 · 업그레이드</span></div>
@@ -266,7 +394,9 @@ function renderToday(){
 
   $('view').innerHTML = `<div class="head"><div><h1>오늘 발행</h1>
     <div class="sub">${esc(c.date||'')} · ${Object.keys(grpCount).length} 캠페인 · ${ds.length} draft</div></div>
-    <span class="pill">${DEMO?'데모 모드':'비공개 링크'}</span></div>${cards}`;
+    <div class="row" style="margin:0;gap:8px"><button class="pri" id="pubday"><i class="ti ti-sparkles"></i> 오늘의 컨텐츠 발행하기</button>
+      <span class="pill">${DEMO?'데모 모드':'비공개 링크'}</span></div></div>${cards}`;
+  const pubBtn=$('pubday'); if(pubBtn) pubBtn.onclick=openPublishModal;
 
   ds.forEach(d=>{
     const el=$('view').querySelector(`[data-id="${CSS.escape(d.id)}"]`); if(!el) return;
@@ -305,6 +435,319 @@ function renderToday(){
       if(okFb||DEMO){ await patch(d.id,{feedback:fb.value}); d.feedback=fb.value; toast('피드백 저장됨 — pull→distill 학습 반영') }
     };
   });
+}
+
+// ── 채널별 뷰 ────────────────────────────────────────────────────────────────
+// 발행 결과를 채널 화면처럼 확인: IG=갤러리→캐러셀, LinkedIn/Threads=텍스트 피드,
+// naver-blog/insight=갤러리→블로그식 읽기뷰. 열람 전용(쓰기 없음).
+const CHV_ORDER=['instagram','linkedin','threads','naver-blog','insight'];
+let chv={ ch:null, status:'active' };
+const isPublished = d => d.status==='approved' || d.status==='published';
+const isFinal = d => d.status==='approved' || d.status==='published';
+const chvExcerpt = (d,n) => { const t=(d.body||'').replace(/\s+/g,' ').trim(); return t.length>n?t.slice(0,n)+'…':t; };
+// 상태 스티커 — 확정(승인/발행) vs 수정 가능(초안/검토/수정본)
+const chvSticker = d => d.status==='rejected'
+  ? '<span class="sticker rej"><i class="ti ti-ban"></i>반려</span>'
+  : isFinal(d)
+  ? '<span class="sticker fin"><i class="ti ti-circle-check"></i>확정</span>'
+  : '<span class="sticker edit"><i class="ti ti-pencil"></i>수정 가능</span>';
+const rejLabel = d => d.status==='rejected' ? '<i class="ti ti-arrow-back-up"></i> 복원' : '<i class="ti ti-ban"></i> 반려';
+// 파생 출처: 같은 campaign_slug의 원본 IG(파생본이 만들어진 근거). IG 자신은 null.
+const chvSourceIG = d => d.channel==='instagram' ? null : ((DATA.drafts||[]).find(x=>x.channel==='instagram'&&x.campaign_slug===d.campaign_slug)||null);
+// 이 캠페인에서 IG로부터 파생된 채널 라벨들
+const chvDerived = d => (DATA.drafts||[]).filter(x=>x.campaign_slug===d.campaign_slug&&x.channel!=='instagram').map(x=>(CH[x.channel]||{}).label||x.channel);
+// 채널 뷰 공용 저장 — 오늘 발행과 동일 규칙(본문 변경 시 verdict='edit' 학습 신호 기록)
+async function chvSave(d, newBody){
+  const orig=(d.original_body!=null?d.original_body:d.body);
+  if(!(await patch(d.id,{body:newBody,status:'edited'}))) return false;
+  const edited=newBody!==orig; d.body=newBody; d.status='edited';
+  if(edited && !DEMO) await insertFeedback(d,'edit',null,newBody);
+  return true;
+}
+async function chvApprove(d){ if(await patch(d.id,{status:'approved'})){ d.status='approved'; return true; } return false; }
+// 반려/복원 — 반려하면 활성 목록에서 숨김(로그엔 남음). 복원하면 edited 로 되돌림.
+async function chvReject(d, reject){ const s=reject?'rejected':'edited'; if(await patch(d.id,{status:s})){ d.status=s; return true; } return false; }
+// 방향 피드백 블록 — 직접 수정과 별개로 '다음 생성·파생' 학습에 반영(잘됨/아쉬움 + 메모 → feedback → distill → learnings)
+const chvFbBlock = () => `<div class="chvfb">
+  <div class="lab2">방향 피드백 — 다음 생성·파생 학습에 반영 (직접 수정과 별개)</div>
+  <textarea class="fbnote" placeholder="예: 톤이 너무 딱딱함, 더 대화체로. 첫 줄 후킹 약함. 근거 한 줄 추가."></textarea>
+  <div class="edrow"><button class="lbbtn fb-up"><i class="ti ti-thumb-up"></i> 잘됨</button>
+    <button class="lbbtn fb-down"><i class="ti ti-thumb-down"></i> 아쉬움</button>
+    <button class="lbbtn pri fb-save grow"><i class="ti ti-send"></i> 피드백 저장</button></div></div>`;
+function bindChvFb(scope, d){
+  const up=scope.querySelector('.fb-up'), down=scope.querySelector('.fb-down'), note=scope.querySelector('.fbnote'), save=scope.querySelector('.fb-save');
+  if(!save) return; let verdict=null;
+  up.onclick=()=>{verdict='up';up.classList.add('on');down.classList.remove('on');};
+  down.onclick=()=>{verdict='down';down.classList.add('on');up.classList.remove('on');};
+  save.onclick=async()=>{
+    if(!verdict && !note.value.trim()){ toast('잘됨/아쉬움 또는 메모를 입력하세요'); return; }
+    const ok=await insertFeedback(d, verdict, note.value);
+    if(ok||DEMO) toast('방향 피드백 저장됨 — 다음 생성·파생에 반영');
+  };
+}
+// 요청 → content_requests 큐(Claude 처리 커맨드 /melanoir-queue 가 감지·gold 생성·파생). anon insert.
+async function enqueueRequest(payload){
+  if(DEMO) return {ok:false,reason:'demo'};
+  const { error } = await sb.from('content_requests').insert({ source:'console', ...payload });
+  if(error){ const missing=/relation|does not exist|not found|schema cache|content_requests/i.test(error.message||''); return {ok:false,reason:error.message,missing}; }
+  return {ok:true};
+}
+const enqueueGeneration = ({topic,note}) => enqueueRequest({ type:'generate', topic:topic||null, note:note||null });
+const enqueueDerive = ({source,channels,note}) => enqueueRequest({ type:'derive', source_slug:source||null, channels:channels||[], note:note||null });
+
+function renderChannels(){
+  const ds=DATA.drafts||[];
+  const counts={}; ds.forEach(d=>counts[d.channel]=(counts[d.channel]||0)+1);
+  const chans=CHV_ORDER.filter(c=>counts[c]);
+  Object.keys(counts).forEach(c=>{ if(!chans.includes(c)) chans.push(c); }); // 맵에 없는 채널도 뒤에
+  if(!chv.ch || !counts[chv.ch]) chv.ch = chans[0] || 'instagram';
+
+  const tabs=chans.map(c=>{ const m=CH[c]||{label:c,icon:'ti-file'};
+    return `<div class="chvtab ${c===chv.ch?'on':''}" data-ch="${esc(c)}"><i class="ti ${m.icon}"></i>${esc(m.label)}<span class="ct">${counts[c]}</span></div>`; }).join('');
+  const filter=`<div class="chvfilter"><span class="note">상태</span>
+    <span class="fchip ${chv.status==='active'?'on':''}" data-st="active">활성</span>
+    <span class="fchip ${chv.status==='pub'?'on':''}" data-st="pub">발행됨</span>
+    <span class="fchip ${chv.status==='rejected'?'on':''}" data-st="rejected">반려</span></div>`;
+
+  let rows=ds.filter(d=>d.channel===chv.ch);
+  if(chv.status==='active') rows=rows.filter(d=>d.status!=='rejected');
+  else if(chv.status==='pub') rows=rows.filter(isPublished);
+  else if(chv.status==='rejected') rows=rows.filter(d=>d.status==='rejected');
+  rows=rows.slice().sort((a,b)=>(Date.parse(b.created_at)||0)-(Date.parse(a.created_at)||0));
+
+  const m=CH[chv.ch]||{label:chv.ch,url:'#'};
+  const body=chvBody(chv.ch,rows) || '<div class="note" style="margin-top:8px">이 조건에 표시할 콘텐츠가 없습니다.</div>';
+  $('view').innerHTML=`<div class="head"><div><h1>채널별 뷰</h1>
+    <div class="sub">발행 결과를 채널 화면처럼 확인 · ${esc(m.label)} ${rows.length}건</div></div>
+    <a class="pill" href="${esc(m.url||'#')}" target="_blank" style="text-decoration:none">플랫폼 열기 <i class="ti ti-external-link" style="font-size:12px"></i></a></div>
+    <div class="chvbar">${tabs}</div>${filter}${body}`;
+
+  $('view').querySelectorAll('.chvtab').forEach(t=>t.onclick=()=>{ chv.ch=t.dataset.ch; renderChannels(); });
+  $('view').querySelectorAll('.fchip').forEach(t=>t.onclick=()=>{ chv.status=t.dataset.st; renderChannels(); });
+  chvBind(chv.ch,rows);
+}
+function chvBody(ch,rows){
+  if(!rows.length) return '';
+  if(ch==='instagram') return igGallery(rows);
+  if(ch==='linkedin'||ch==='threads') return textFeed(ch,rows);
+  if(ch==='naver-blog'||ch==='insight') return blogGallery(rows);
+  // 알 수 없는 채널: 이미지 있으면 갤러리, 아니면 텍스트
+  return rows.some(d=>(d.image_urls||[]).length) ? blogGallery(rows) : textFeed(ch,rows);
+}
+function igGallery(rows){
+  const cells=rows.map((d,i)=>{
+    const imgs=(d.image_urls||[]).filter(Boolean), cover=imgs[0];
+    if(!cover) return `<div class="igcell ph"><span class="stk">${chvSticker(d)}</span><i class="ti ti-photo"></i></div>`;
+    return `<div class="igcell" data-i="${i}"><img src="${esc(cover)}" loading="lazy" alt="">${imgs.length>1?'<i class="ti ti-copy multi"></i>':''}<span class="stk">${chvSticker(d)}</span><div class="cap">${esc(chvExcerpt(d,60))}</div></div>`;
+  }).join('');
+  return `<div class="iggrid">${cells}</div>`;
+}
+function textFeed(ch,rows){
+  const m=CH[ch]||{label:ch,icon:'ti-file'};
+  const handle=ch==='linkedin'?'멜라누아 · MELANOIR':'@melanoir';
+  return rows.map((d,i)=>{ const tags=(d.hashtags||[]);
+    return `<div class="txcard" data-i="${i}"><div class="top"><div class="av"><i class="ti ${m.icon}"></i></div>
+      <div class="who">${esc(m.label)}<div class="h">${esc(handle)} · <span class="tx-stk">${chvSticker(d)}</span></div></div>
+      <button class="sm tx-copy" style="margin-left:auto" title="본문 복사"><i class="ti ti-copy"></i></button></div>
+      ${(()=>{const s=chvSourceIG(d);return s?`<div class="srcline"><i class="ti ti-arrow-guide"></i>원본 IG · <b>${esc(s.title||s.campaign_slug)}</b><button class="lbbtn opensrc" data-slug="${esc(s.campaign_slug)}" style="padding:3px 9px;font-size:12px">원본 보기</button></div>`:'';})()}
+      ${d.title?`<div class="ttl">${esc(d.title)}</div>`:''}
+      <textarea class="edbody tx-body">${esc(d.body||'')}</textarea>
+      ${tags.length?`<div class="tags">${esc(tags.join(' '))}</div>`:''}
+      <div class="edrow"><button class="lbbtn pri tx-save" style="padding:7px 12px"><i class="ti ti-device-floppy"></i> 저장</button>
+        <button class="lbbtn tx-appr" style="padding:7px 12px"><i class="ti ti-check"></i> 승인</button>
+        <button class="lbbtn tx-reject" style="padding:7px 12px">${rejLabel(d)}</button></div>
+      ${chvFbBlock()}</div>`;
+  }).join('');
+}
+function blogGallery(rows){
+  const cells=rows.map((d,i)=>{ const cover=(d.image_urls||[])[0];
+    const cov=cover?`<img class="cov" src="${esc(cover)}" loading="lazy" alt="">`:`<div class="cov ph"><i class="ti ti-article"></i></div>`;
+    return `<div class="blcard" data-i="${i}"><span class="stk">${chvSticker(d)}</span>${cov}<div class="m"><div class="t">${esc(d.title||'(제목 없음)')}</div>
+      <div class="ex">${esc(chvExcerpt(d,90))}</div></div></div>`;
+  }).join('');
+  return `<div class="blgrid">${cells}</div>`;
+}
+function chvBind(ch,rows){
+  const v=$('view');
+  if(ch==='instagram'){
+    v.querySelectorAll('.igcell[data-i]').forEach(c=>c.onclick=()=>openCarousel(rows[+c.dataset.i]));
+  } else if(ch==='linkedin'||ch==='threads'||(!rows.some(d=>(d.image_urls||[]).length) && ch!=='naver-blog' && ch!=='insight')){
+    v.querySelectorAll('.txcard').forEach(card=>{
+      const d=rows[+card.dataset.i], body=card.querySelector('.tx-body');
+      card.querySelector('.tx-copy').onclick=async b=>{
+        try{ await navigator.clipboard.writeText(fullText({...d,body:body.value})); }catch{}
+        const btn=b.currentTarget,o=btn.innerHTML; btn.innerHTML='<i class="ti ti-check"></i>'; setTimeout(()=>btn.innerHTML=o,1200);
+      };
+      card.querySelector('.tx-save').onclick=async()=>{
+        if(await chvSave(d,body.value)){ card.querySelector('.tx-stk').innerHTML=chvSticker(d); toast(DEMO?'데모 모드':'본문 저장됨'); }
+      };
+      card.querySelector('.tx-appr').onclick=async()=>{ if(await chvApprove(d)){ card.querySelector('.tx-stk').innerHTML=chvSticker(d); toast('승인됨 · 확정'); } };
+      card.querySelector('.tx-reject').onclick=async()=>{ const toRej=d.status!=='rejected'; if(await chvReject(d,toRej)){ toast(toRej?'반려됨 — 활성 목록에서 숨김':'복원됨'); renderChannels(); } };
+      const osrc=card.querySelector('.opensrc'); if(osrc) osrc.onclick=()=>{ const ig=(DATA.drafts||[]).find(x=>x.channel==='instagram'&&x.campaign_slug===osrc.dataset.slug); if(ig) openCarousel(ig); else toast('원본 IG 없음'); };
+      bindChvFb(card, d);
+    });
+  } else {
+    v.querySelectorAll('.blcard').forEach(c=>c.onclick=()=>openReader(rows[+c.dataset.i],ch));
+  }
+}
+
+// 라이트박스 공통 (한 번에 하나만)
+let lbKey=null;
+function lbClose(){ const e=$('lb'); if(e)e.remove(); if(lbKey){ document.removeEventListener('keydown',lbKey); lbKey=null; } }
+function openCarousel(d){
+  lbClose();
+  const imgs=(d.image_urls||[]).filter(Boolean); if(!imgs.length){ toast('이미지 없음'); return; }
+  const tags=(d.hashtags||[]); let i=0;
+  const el=document.createElement('div'); el.className='lb'; el.id='lb';
+  el.innerHTML=`<button class="x" title="닫기(Esc)">✕</button>
+    <div class="box">
+      <div class="stage">
+        <img id="lbimg" src="${esc(imgs[0])}" alt="">
+        <button class="nav prev" title="이전(←)">‹</button>
+        <button class="nav next" title="다음(→)">›</button>
+        <div class="dots">${imgs.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('')}</div>
+      </div>
+      <div class="side">
+        <div class="top"><i class="ti ti-brand-instagram"></i>${esc((CH.instagram||{}).label||'Instagram')}
+          <span id="lbstk" style="margin-left:auto">${chvSticker(d)}</span></div>
+        <div class="ed">
+          <div class="edrow"><span class="note" id="lbct"></span>
+            <a class="lbbtn grow" href="cards.html?slug=${encodeURIComponent(d.campaign_slug||'')}" target="_blank" title="카드 이미지·카드 안 텍스트 편집"><i class="ti ti-photo-edit"></i> 카드 편집</a>
+            <button class="lbbtn" id="lbderive" title="이 캠페인을 기반으로 다른 채널 콘텐츠 파생 생성"><i class="ti ti-arrows-split-2"></i> 채널 파생</button></div>
+          <div class="srcline"><i class="ti ti-arrows-split-2"></i>${(()=>{const ds=chvDerived(d);return ds.length?'파생된 채널 · '+ds.map(esc).join(', '):'아직 파생된 채널 없음';})()}</div>
+          <textarea class="edbody" id="lbbody" placeholder="캡션(본문)">${esc(d.body||'')}</textarea>
+          <div class="edrow"><button class="lbbtn pri" id="lbsave"><i class="ti ti-device-floppy"></i> 캡션 저장</button>
+            <button class="lbbtn" id="lbappr"><i class="ti ti-check"></i> 승인</button>
+            <button class="lbbtn" id="lbreject">${rejLabel(d)}</button></div>
+          ${tags.length?`<div class="tags" style="padding:0">${esc(tags.join(' '))}</div>`:''}
+          ${chvFbBlock()}
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(el);
+  const img=el.querySelector('#lbimg'), dots=[...el.querySelectorAll('.dots i')], ct=el.querySelector('#lbct');
+  const prev=el.querySelector('.prev'), next=el.querySelector('.next');
+  const show=k=>{ i=(k+imgs.length)%imgs.length; img.src=imgs[i]; dots.forEach((x,n)=>x.classList.toggle('on',n===i)); ct.textContent=`${i+1} / ${imgs.length}`; };
+  prev.disabled=next.disabled=imgs.length<2;
+  prev.onclick=e=>{ e.stopPropagation(); show(i-1); };
+  next.onclick=e=>{ e.stopPropagation(); show(i+1); };
+  el.querySelector('.x').onclick=lbClose;
+  el.onclick=e=>{ if(e.target===el) lbClose(); };
+  el.querySelector('#lbsave').onclick=async()=>{ if(await chvSave(d,el.querySelector('#lbbody').value)){ el.querySelector('#lbstk').innerHTML=chvSticker(d); toast(DEMO?'데모 모드':'캡션 저장됨'); } };
+  el.querySelector('#lbappr').onclick=async()=>{ if(await chvApprove(d)){ el.querySelector('#lbstk').innerHTML=chvSticker(d); toast('승인됨 · 확정'); } };
+  el.querySelector('#lbreject').onclick=async()=>{ const toRej=d.status!=='rejected'; if(await chvReject(d,toRej)){ el.querySelector('#lbstk').innerHTML=chvSticker(d); el.querySelector('#lbreject').innerHTML=rejLabel(d); toast(toRej?'반려됨 — 활성 목록에서 숨김':'복원됨'); renderChannels(); } };
+  el.querySelector('#lbderive').onclick=()=>openDeriveModal(d);
+  bindChvFb(el, d);
+  show(0);
+  lbKey=e=>{ if(e.key==='Escape')lbClose(); else if(e.key==='ArrowLeft')show(i-1); else if(e.key==='ArrowRight')show(i+1); };
+  document.addEventListener('keydown',lbKey);
+}
+function openReader(d,ch){
+  lbClose();
+  const cover=(d.image_urls||[])[0], tags=(d.hashtags||[]);
+  const bodyHtml=String(d.body||'').split('\n').map(l=>l.trim()).filter(Boolean).map(t=>{
+    if(/^🖼/.test(t)) return '';                                   // 이미지 배치 큐는 읽기뷰에서 생략
+    if(/^[■▪◆●]/.test(t)) return `<h2>${esc(t.replace(/^[■▪◆●]\s*/,''))}</h2>`;
+    if(/^[\[【]/.test(t)) return '';                                // 제목줄(헤더에 이미 표시) 스킵
+    return `<p>${esc(t)}</p>`;
+  }).join('');
+  const prevHref = ch==='naver-blog'?`blog.html?slug=${encodeURIComponent(d.campaign_slug||'')}`
+                 : ch==='insight'?`insight.html?slug=${encodeURIComponent(d.campaign_slug||'')}`:'';
+  const src=chvSourceIG(d);
+  const el=document.createElement('div'); el.className='lb readlb'; el.id='lb';
+  el.innerHTML=`<button class="x" title="닫기(Esc)">✕</button>
+    <div class="box"><div class="rd">
+      ${cover?`<img class="cov" src="${esc(cover)}" alt="">`:''}
+      <div class="bd">
+        <h1>${esc(d.title||'(제목 없음)')}</h1>
+        <p class="meta">@melanoir · ${esc((CH[ch]||{}).label||ch)}${prevHref?` · <a href="${prevHref}" target="_blank" style="color:#1a73c0">전체 미리보기 ↗</a>`:''}</p>
+        ${src?`<div class="srcline"><i class="ti ti-arrow-guide"></i>원본 IG · <b>${esc(src.title||src.campaign_slug)}</b><button class="lbbtn opensrc-rd" style="padding:3px 9px;font-size:12px">원본 보기</button></div>`:''}
+        ${bodyHtml||'<p class="note">본문 없음</p>'}
+        ${tags.length?`<div class="tags">${esc(tags.join(' '))}</div>`:''}
+        <div class="editsec"><div class="lab2">본문 수정 · <span id="rdstk">${chvSticker(d)}</span></div>
+          <textarea class="edbody" id="rdbody">${esc(d.body||'')}</textarea>
+          <div class="edrow"><button class="lbbtn pri" id="rdsave"><i class="ti ti-device-floppy"></i> 저장</button>
+            <button class="lbbtn" id="rdappr"><i class="ti ti-check"></i> 승인</button>
+            <button class="lbbtn" id="rdreject">${rejLabel(d)}</button>
+            ${prevHref?`<a class="lbbtn grow" href="${prevHref}" target="_blank"><i class="ti ti-external-link"></i> 전체 미리보기</a>`:''}</div></div>
+        ${chvFbBlock()}
+      </div>
+    </div></div>`;
+  document.body.appendChild(el);
+  el.querySelector('.x').onclick=lbClose;
+  el.onclick=e=>{ if(e.target===el) lbClose(); };
+  el.querySelector('#rdsave').onclick=async()=>{ if(await chvSave(d,el.querySelector('#rdbody').value)){ el.querySelector('#rdstk').innerHTML=chvSticker(d); toast(DEMO?'데모 모드':'본문 저장됨'); } };
+  el.querySelector('#rdappr').onclick=async()=>{ if(await chvApprove(d)){ el.querySelector('#rdstk').innerHTML=chvSticker(d); toast('승인됨 · 확정'); } };
+  el.querySelector('#rdreject').onclick=async()=>{ const toRej=d.status!=='rejected'; if(await chvReject(d,toRej)){ el.querySelector('#rdstk').innerHTML=chvSticker(d); el.querySelector('#rdreject').innerHTML=rejLabel(d); toast(toRej?'반려됨 — 활성 목록에서 숨김':'복원됨'); renderChannels(); } };
+  bindChvFb(el, d);
+  { const o=el.querySelector('.opensrc-rd'); if(o&&src) o.onclick=()=>openCarousel(src); }
+  lbKey=e=>{ if(e.key==='Escape')lbClose(); };
+  document.addEventListener('keydown',lbKey);
+}
+
+// 오늘의 컨텐츠 발행하기 — 새 캠페인 생성 요청 모달(큐 방식)
+function openPublishModal(){
+  lbClose();
+  const el=document.createElement('div'); el.className='lb pub-modal'; el.id='lb';
+  el.innerHTML=`<button class="x" title="닫기(Esc)">✕</button><div class="box"><div class="pm">
+    <h3>오늘의 컨텐츠 발행하기</h3>
+    <div class="pmsub">새 캠페인 생성을 요청합니다. 로컬 생성 파이프라인이 요청 큐를 감지해 5채널(IG·LinkedIn·Threads·네이버블로그·인사이트) 콘텐츠를 만들고, 완료되면 이 콘솔에 올라옵니다.</div>
+    <label>토픽 <span class="note">(비우면 토픽 큐에서 자동 선택)</span></label>
+    <input id="pmtopic" placeholder="예: 반영구 색소 안전성 — 세포독성 시험 결과">
+    <label>메모 <span class="note">(선택 — 강조점·톤 요청)</span></label>
+    <textarea id="pmnote" placeholder="예: 데이터 근거 한 줄 강조, 톤은 담백하게"></textarea>
+    <div class="warn"><i class="ti ti-alert-triangle"></i><span>요청 자체는 큐에 담길 뿐 무료입니다. 실제 gold 콘텐츠 생성은 Claude 구독 토큰을 소모하니, 정말 필요할 때만 요청하세요.</span></div>
+    <div class="pmrow"><button class="lbbtn" id="pmcancel">취소</button>
+      <button class="lbbtn pri grow" id="pmsend"><i class="ti ti-send"></i> 생성 요청 보내기</button></div>
+    <div class="pmnote" id="pmresult"></div>
+  </div></div>`;
+  document.body.appendChild(el);
+  el.querySelector('.x').onclick=lbClose; el.querySelector('#pmcancel').onclick=lbClose;
+  el.onclick=e=>{ if(e.target===el) lbClose(); };
+  lbKey=e=>{ if(e.key==='Escape')lbClose(); }; document.addEventListener('keydown',lbKey);
+  el.querySelector('#pmsend').onclick=async()=>{
+    const topic=el.querySelector('#pmtopic').value.trim(), note=el.querySelector('#pmnote').value.trim();
+    const btn=el.querySelector('#pmsend'), o=btn.innerHTML; btn.disabled=true; btn.innerHTML='요청 중…';
+    const res=await enqueueGeneration({topic,note}); const box=el.querySelector('#pmresult');
+    if(res.ok){ box.innerHTML='<span style="color:var(--ok)"><i class="ti ti-check"></i> 요청됨 — 로컬 파이프라인이 곧 생성합니다. 완료되면 [오늘 발행]·[채널별 뷰]에 반영됩니다.</span>'; btn.innerHTML='<i class="ti ti-check"></i> 요청됨'; }
+    else if(res.reason==='demo'){ box.textContent='데모 모드 — 실제 요청은 Supabase 연결 시 전송됩니다.'; btn.disabled=false; btn.innerHTML=o; }
+    else if(res.missing){ box.innerHTML=`큐 테이블(<code>content_requests</code>)이 아직 없습니다. 담당자가 <code>supabase/content_requests.sql</code> 적용 + <code>npm run watch:requests</code> 실행 후 사용 가능합니다.<br>지금 수동 생성: <code>npm run daily -- "${esc(topic||'토픽')}" --push</code>`; btn.disabled=false; btn.innerHTML=o; }
+    else { box.textContent='요청 오류: '+res.reason; btn.disabled=false; btn.innerHTML=o; }
+  };
+}
+
+// 완성 채널 → 다른 채널 파생 요청 모달 (gold IG 기반)
+function openDeriveModal(src){
+  lbClose();
+  const targets=[['linkedin','LinkedIn'],['threads','Threads'],['naver-blog','네이버 블로그'],['insight','자사몰 인사이트']];
+  const el=document.createElement('div'); el.className='lb pub-modal'; el.id='lb';
+  el.innerHTML=`<button class="x" title="닫기(Esc)">✕</button><div class="box"><div class="pm">
+    <h3>다른 채널로 파생</h3>
+    <div class="pmsub"><b>${esc(src.title||src.campaign_slug||'')}</b> 인스타 카드뉴스를 기준으로 선택한 채널 콘텐츠를 생성합니다. 완료되면 같은 캠페인에 채널별로 추가됩니다.</div>
+    <label>대상 채널</label>
+    <div class="chkrow">${targets.map(([k,l])=>`<label class="chk"><input type="checkbox" value="${k}" checked> <i class="ti ${(CH[k]||{}).icon||'ti-file'}"></i> ${esc(l)}</label>`).join('')}</div>
+    <label>메모 <span class="note">(선택 — 강조점·톤)</span></label>
+    <textarea id="dmnote" placeholder="예: 블로그는 길게, 쓰레드는 짧고 담백하게"></textarea>
+    <div class="warn"><i class="ti ti-alert-triangle"></i><span>요청은 큐에 담길 뿐 무료입니다. 실제 파생 생성은 Claude 구독 토큰을 소모합니다.</span></div>
+    <div class="pmrow"><button class="lbbtn" id="dmcancel">취소</button>
+      <button class="lbbtn pri grow" id="dmsend"><i class="ti ti-arrows-split-2"></i> 파생 요청 보내기</button></div>
+    <div class="pmnote" id="dmresult"></div>
+  </div></div>`;
+  document.body.appendChild(el);
+  el.querySelector('.x').onclick=lbClose; el.querySelector('#dmcancel').onclick=lbClose;
+  el.onclick=e=>{ if(e.target===el) lbClose(); };
+  lbKey=e=>{ if(e.key==='Escape')lbClose(); }; document.addEventListener('keydown',lbKey);
+  el.querySelector('#dmsend').onclick=async()=>{
+    const channels=[...el.querySelectorAll('.chkrow input:checked')].map(c=>c.value);
+    const box=el.querySelector('#dmresult');
+    if(!channels.length){ box.textContent='채널을 하나 이상 선택하세요.'; return; }
+    const btn=el.querySelector('#dmsend'), o=btn.innerHTML; btn.disabled=true; btn.innerHTML='요청 중…';
+    const res=await enqueueDerive({source:src.campaign_slug, channels, note:el.querySelector('#dmnote').value.trim()});
+    if(res.ok){ box.innerHTML=`<span style="color:var(--ok)"><i class="ti ti-check"></i> 파생 요청됨 — 처리 커맨드가 곧 ${channels.length}개 채널을 생성합니다.</span>`; btn.innerHTML='<i class="ti ti-check"></i> 요청됨'; }
+    else if(res.reason==='demo'){ box.textContent='데모 모드 — 실제 요청은 Supabase 연결 시 전송됩니다.'; btn.disabled=false; btn.innerHTML=o; }
+    else if(res.missing){ box.innerHTML='큐 테이블(<code>content_requests</code>)이 아직 없습니다. 담당자가 <code>supabase/content_requests.sql</code> 적용 후 사용 가능합니다.'; btn.disabled=false; btn.innerHTML=o; }
+    else { box.textContent='요청 오류: '+res.reason; btn.disabled=false; btn.innerHTML=o; }
+  };
 }
 
 // ── 소스 ─────────────────────────────────────────────────────────────────────
@@ -402,7 +845,7 @@ function renderSettings(){
   $('view').querySelectorAll('.toggle').forEach(t=>t.onclick=()=>{t.classList.toggle('on');toast(DEMO?'데모 모드':'채널 설정 저장됨')});
 }
 
-const VIEWS={today:renderToday,sources:renderSources,brand:renderBrand,learning:renderLearning,calendar:renderCalendar,settings:renderSettings};
+const VIEWS={today:renderToday,channels:renderChannels,sources:renderSources,brand:renderBrand,learning:renderLearning,calendar:renderCalendar,settings:renderSettings};
 function go(s){ document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('on',n.dataset.s===s)); (VIEWS[s]||renderToday)(); window.scrollTo(0,0); }
 document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>go(n.dataset.s));
 

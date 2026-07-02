@@ -58,7 +58,9 @@ function cardFor(desc,cards,seq){
   if(/마무리|마지막|여정/.test(desc))return cards[cards.length-1];
   return cards[(seq.i++)%(cards.length||1)]||null;
 }
-const figEl=(src,cap)=>src?`<figure><img src="${esc(src)}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>`:`<div class="imgmiss">🖼 ${esc(cap)} <small>(IG 카드 없음)</small></div>`;
+// 캡션에서 '이미지 N'·'카드 N' 넘버링 제거(캐러셀 번호는 블로그 본문에 불필요)
+const cleanCap=c=>String(c||'').replace(/^\s*(?:이미지|카드|사진|그림)\s*\d+\s*(?:[·:∙\-–—.)]\s*)?/,'').trim();
+const figEl=(src,cap)=>{const cc=cleanCap(cap);return src?`<figure><img src="${esc(src)}" alt="${esc(cc)}" loading="lazy">${cc?`<figcaption>${esc(cc)}</figcaption>`:''}</figure>`:`<div class="imgmiss">🖼 ${esc(cc||cap)} <small>(IG 카드 없음)</small></div>`;};
 function render(nb,cards){
   const lines=String(nb.body||'').split('\n').map(l=>l.trim()).filter(Boolean);
   const hasCues=lines.some(l=>/^🖼/.test(l)); const seq={i:0};
