@@ -3,8 +3,7 @@
 <title>멜라누아 · 인사이트</title>
 <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
-/* 실제 사이트 토큰: --shell-bg #000 · --color-ink #1d1d1f(라이트용) · 텍스트 #f5f5f7 · dim #86868b · muted #6e6e73 · 골드 없음 */
-:root{--bg:#000;--card:#0c0c0e;--line:rgba(255,255,255,.12);--line2:rgba(255,255,255,.2);--ink:#f5f5f7;--dim:#86868b;--muted:#6e6e73}
+:root{--bg:#000;--card:#0e0e11;--line:rgba(255,255,255,.14);--line2:rgba(255,255,255,.24);--ink:#f5f5f7;--dim:#9a9aa0;--muted:#6e6e73}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Pretendard,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 .top{display:flex;align-items:center;gap:14px;padding:20px 24px;max-width:1200px;margin:0 auto}
@@ -24,14 +23,17 @@ body{font-family:Pretendard,system-ui,sans-serif;background:var(--bg);color:var(
 .rail::-webkit-scrollbar{display:none}
 .card{flex:0 0 300px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .18s,border-color .18s,box-shadow .18s;display:flex;flex-direction:column}
 .card:hover{transform:translateY(-6px);border-color:var(--line2);box-shadow:0 16px 40px rgba(0,0,0,.6)}
-.thumb{position:relative;aspect-ratio:4/5;background:#050505;overflow:hidden}
-.thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb .cat{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);color:#fff;font-size:11px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:999px;border:1px solid var(--line)}
-.card .b{padding:16px 16px 18px}
-.card h3{font-size:16px;line-height:1.4;font-weight:700;letter-spacing:-.01em;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card p{color:var(--dim);font-size:13px;line-height:1.6;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .tg{margin-top:12px;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card .dt{color:var(--muted);font-size:11.5px;margin-top:10px}
+/* 썸네일: 항상 보이는 그라디언트 배경 + 이미지 오버레이. 이미지 실패/없음이면 제목 폴백(.ph) */
+.thumb{position:relative;aspect-ratio:4/5;overflow:hidden;background:radial-gradient(120% 120% at 30% 20%,#1e1e23 0%,#0a0a0c 72%)}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ph{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:20px;font-weight:800;line-height:1.32;letter-spacing:-.01em;color:#eDeDef}
+.thumb.noimg .ph{display:flex}
+.cat{position:absolute;top:12px;left:12px;z-index:2;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);color:#fff;font-size:11px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:999px;border:1px solid var(--line)}
+.b{padding:16px 16px 18px}
+.b h3{font-size:16px;line-height:1.4;font-weight:700;letter-spacing:-.01em;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.b p{color:var(--dim);font-size:13px;line-height:1.6;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.b .tg{margin-top:12px;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b .dt{color:var(--muted);font-size:11.5px;margin-top:10px}
 .nav{position:absolute;top:42%;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--ink);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:.15s}
 .nav:hover{background:#f5f5f7;color:#000;border-color:#f5f5f7}
 .nav.prev{left:-10px}.nav.next{right:-10px}
@@ -54,7 +56,7 @@ body{font-family:Pretendard,system-ui,sans-serif;background:var(--bg);color:var(
     <button class="nav next" id="next" aria-label="다음">›</button>
   </div>
 </div>
-<div class="foot">© MELANOIR · 미리보기용 자체완결 파일(발행 시스템 무관) · 카드 이미지는 인터넷 연결 시 표시</div>
+<div class="foot">© MELANOIR · 미리보기용 자체완결 파일(발행 시스템 무관) · 이미지 없으면 제목 카드로 표시</div>
 <script>
 const CARDS = [{"title":"1회용 멸균 설계","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/10-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"소재가 곧 시그니처","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/08-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"베타테스터 모집","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/09-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"내 몸이 가장 잘 아는 색소","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/02-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"더 뺄 것이 없을 때 완성","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/03-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"숫자가 먼저 말한다","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/04-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"0.00 (피부 자극 지수)","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/05-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"97% (세포 생존율)","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/06-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"All N.D. (필수 항목 불검출)","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/07-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-07-01","category":"브랜드 인사이트"},{"title":"지구에서 가장 안전한 Black","body":"가장 안전한 검정은 몸이 직접 만드는 색(멜라닌)이며, 그 안전을 숫자로 증명하려는 여정이다.","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/insight/daily-2026-06-25-01.png","tags":[],"date":"2026-06-25","category":"브랜드 인사이트"},{"title":"지구에서 가장 안전한 Black","body":"","image":"https://inrvgokeuyewwvaxwitc.supabase.co/storage/v1/object/public/card-images/instagram/01-s1.png","tags":["#멜라누아","#반영구색소"],"date":"2026-06-24","category":"브랜드 인사이트"}];
 const $=s=>document.querySelector(s);
@@ -62,9 +64,13 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 let cat='전체';
 function cardHtml(c){
   const tags=(c.tags||[]).join(' ');
+  const t=esc(c.title);
+  const img=c.image
+    ? '<img src="'+esc(c.image)+'" alt="'+t+'" loading="lazy" onerror="this.style.display=\'none\';this.closest(\'.thumb\').classList.add(\'noimg\')">'
+    : '';
   return '<div class="card">'
-    +'<div class="thumb">'+(c.image?'<img src="'+esc(c.image)+'" alt="'+esc(c.title)+'" loading="lazy">':'')+'<span class="cat">'+esc(c.category)+'</span></div>'
-    +'<div class="b"><h3>'+esc(c.title)+'</h3><p>'+esc(c.body)+'</p>'+(tags?'<div class="tg">'+esc(tags)+'</div>':'')+'<div class="dt">'+esc(c.date)+'</div></div>'
+    +'<div class="thumb'+(c.image?'':' noimg')+'">'+img+'<div class="ph">'+t+'</div><span class="cat">'+esc(c.category)+'</span></div>'
+    +'<div class="b"><h3>'+t+'</h3><p>'+esc(c.body)+'</p>'+(tags?'<div class="tg">'+esc(tags)+'</div>':'')+'<div class="dt">'+esc(c.date)+'</div></div>'
     +'</div>';
 }
 function render(){
