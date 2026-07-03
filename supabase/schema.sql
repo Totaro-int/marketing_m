@@ -166,5 +166,52 @@ begin
   begin execute 'alter publication supabase_realtime add table public.learnings';        exception when duplicate_object then null; when others then null; end;
 end $$;
 
+-- ============================================================================
+-- v3 — 작가·기자 레이어(상류 원천 콘텐츠): fact_candidates (인용락 승인 대기열)
+-- JOURNALIST-PLAN §4. 기자 에이전트가 취재한 새 사실 후보 → 콘솔/로컬 승인 →
+-- scripts/fact-candidates.mjs --pull 이 brand/verified-sources.json 으로 병합(VS-###).
+-- additive · idempotent — 같은 SQL 재실행 안전.
+-- ============================================================================
+
+-- 11) fact_candidates — 취재 사실 후보 (pending → approved/rejected → merged)
+create table if not exists public.fact_candidates (
+  id           uuid primary key default gen_random_uuid(),
+  claim        text not null,             -- 본문에 쓸 사실 진술(한국어)
+  value        text,                      -- 핵심 수치·값 (인용락 대조용)
+  quote        text,                      -- 출처 원문 인용(발췌)
+  source_title text,                      -- 논문·문서 제목
+  publisher    text,                      -- 발행처(저널·기관)
+  published_at text,                      -- 발행연도/일자
+  url          text,                      -- 출처 URL 또는 DOI
+  reliability  text,                      -- peer-reviewed | institution | industry | media
+  dossier_ref  text,                      -- 제출한 도시어 (예: dossier_05)
+  submitted_by text not null default 'melanoir-journalist',
+  status       text not null default 'pending',  -- pending | approved | rejected
+  merged       boolean not null default false,   -- --pull 이 verified-sources 로 병합했는지
+  note         text,                      -- 검토자 메모
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now()
+);
+create index if not exists idx_factcand_status on public.fact_candidates (status, merged);
+drop trigger if exists trg_touch_factcand on public.fact_candidates;
+create trigger trg_touch_factcand before update on public.fact_candidates
+  for each row execute function public.touch_updated_at();
+
+-- 12) RLS — anon: 읽기 + 검토(status/note)만. insert(제출)·merged 갱신은 service_role(로컬).
+alter table public.fact_candidates enable row level security;
+drop policy if exists "anon read fc"   on public.fact_candidates;
+drop policy if exists "anon update fc" on public.fact_candidates;
+create policy "anon read fc"   on public.fact_candidates for select using (true);
+create policy "anon update fc" on public.fact_candidates for update using (true) with check (true);
+grant select on public.fact_candidates to anon;
+revoke update on public.fact_candidates from anon;
+grant update (status, note) on public.fact_candidates to anon;
+
+-- 13) Realtime
+do $$
+begin
+  begin execute 'alter publication supabase_realtime add table public.fact_candidates'; exception when duplicate_object then null; when others then null; end;
+end $$;
+
 -- 끝. 확인: select count(*) from public.marketing_drafts;
---   4테이블: marketing_drafts · feedback · sources · learnings
+--   5테이블: marketing_drafts · feedback · sources · learnings · fact_candidates

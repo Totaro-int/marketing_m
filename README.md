@@ -44,7 +44,7 @@ SUPABASE_DB_PASSWORD=<DB 비밀번호>
 ```bash
 node scripts/apply-schema.mjs
 ```
-→ 4테이블(`marketing_drafts`·`feedback`·`sources`·`learnings`) + RLS + Realtime 생성. (멱등 — 다시 실행해도 안전)
+→ 5테이블(`marketing_drafts`·`feedback`·`sources`·`learnings`·`fact_candidates`) + RLS + Realtime 생성. (멱등 — 다시 실행해도 안전)
 
 ## 4. 웹 콘솔 연결
 ```bash
@@ -66,6 +66,7 @@ cp web/config.example.js web/config.js
 토픽 자동 선택 → copywriter 에이전트가 5채널 골드 카피 → 가드 → 렌더 → **콘솔에서 검토·승인** → 발행(복붙) → 피드백이 다음 날 학습으로 환류.
 
 - 한 건만: `/melanoir-new 6` (토픽 6)
+- **장문 원천 콘텐츠(작가·기자)**: `/melanoir-story 6` (과학 기사) · `/melanoir-story 1 essay` (브랜드 스토리) → 콘솔 승인 → 다음 daily가 도시어에서 5채널 파생. 상세: `JOURNALIST-PLAN.md`
 - 토픽 목록·다음 토픽: `npm run topic-queue -- --list`
 
 ## 7. 콘솔 배포 (선택 · Vercel)
@@ -92,12 +93,12 @@ npm run verify:live   # 콘솔·인사이트·콘솔쓰기 (Supabase 연결 시)
 
 ## 🗂 구조
 ```
-engine/         렌더·생성·가드·채널·캡션·이미지배정
-agents/         melanoir-copywriter · melanoir-channel-copywriter (구독 LLM)
-commands/       /melanoir-daily · /melanoir-new
+engine/         렌더·생성·가드·채널·캡션·이미지배정 · story(장문)·figure(도식 SVG)
+agents/         melanoir-copywriter · melanoir-channel-copywriter · melanoir-storyteller(작가) · melanoir-journalist(기자)
+commands/       /melanoir-daily · /melanoir-new · /melanoir-story
 skills/         자연어 트리거(멜라누아 카드 만들어)
-scripts/        push/pull/distill/publish-insight/topic-queue/verify-*
-brand/          브랜드 SSoT (brand-dna · image-stock · channels)
+scripts/        push/pull/distill/publish-insight/topic-queue/fact-candidates(인용락 승인)/push-article/verify-*
+brand/          브랜드 SSoT (brand-dna · image-stock · channels · verified-sources · image-policy)
 web/            검토 콘솔(정적)   ·   supabase/  스키마
 .claude-plugin/ 플러그인 매니페스트   ·   reference/  골드 레퍼런스(품질 기준)
 ```

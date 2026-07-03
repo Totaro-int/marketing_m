@@ -16,8 +16,11 @@ description: 멜라누아 하루 사이클 — 피드백 pull→distill → 토�
 `node scripts/pull-supabase.mjs` → 피드백이 있으면 `node scripts/distill.mjs`.
 → `learnings/01-distilled.md` 갱신 → 다음 brief에 자동 주입(즉시 학습).
 
-### 2. brief
-`node engine/generate.mjs --brief <topic>` → `out/brief_NN.json`.
+### 2. brief (+ 승인 도시어 자동 주입)
+먼저 `node engine/story.mjs --check <topicId>` — **승인된 작가·기자 도시어**가 있으면 경로가 출력된다.
+- 있으면: `node engine/generate.mjs --brief <topic> --dossier out/final_article_NN.json` → 원천 원고의 thesis·비트·pullQuote가 brief에 주입돼 5채널이 도시어에서 파생된다.
+- 없으면: `node engine/generate.mjs --brief <topic>` (기존 그대로).
+→ `out/brief_NN.json`.
 
 ### 3. copywriter 디스패치 (핵심)
 `melanoir-copywriter` 서브에이전트를 Task 도구로 실행 — `out/brief_NN.json` 읽고 `out/spec_NN.json` 작성. **Anthropic API 아님, 구독.**
@@ -30,7 +33,7 @@ description: 멜라누아 하루 사이클 — 피드백 pull→distill → 토�
 `node engine/render.mjs out/final_NN.json --out out` → `out/carousel_NN/s*.png`. 골드 카드 대비 육안 확인.
 
 ### 5b. 채널 카피 (LinkedIn·Threads·naver-blog) — 같은 thesis 파생
-1. `node engine/channels.mjs --brief <topic>` → `out/chbrief_NN.json`.
+1. `node engine/channels.mjs --brief <topic>` (도시어 있으면 `--dossier out/final_article_NN.json` 동일 주입) → `out/chbrief_NN.json`.
 2. **`melanoir-channel-copywriter` 서브에이전트를 Task로 디스패치** — chbrief 읽고 `out/channels_NN.json` 작성(채널 최적화, 구독 LLM).
 3. `node engine/channels.mjs --finalize out/channels_NN.json` → 채널별 guard. **BLOCKED → 재작성(최대 1회).**
 > IG 캐러셀 + 자사몰 인사이트 + LinkedIn + Threads + naver-blog = **5 산출물**. 5채널 모두 골드·guard 통과 필수.

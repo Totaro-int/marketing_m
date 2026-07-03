@@ -22,9 +22,18 @@ function igCaption(id) {
   return '';
 }
 
-export function buildChannelBrief(topicArg) {
+export function buildChannelBrief(topicArg, { dossierPath } = {}) {
   const topic = resolveTopic(topicArg);
   const facts = (topic.factIds || []).map(id => DNA.facts.find(f => f.id === id)).filter(Boolean);
+  let dossier = null; // 승인된 작가·기자 원천 원고 파생 재료 (명시 주입만 — JOURNALIST-PLAN §7)
+  if (dossierPath && fs.existsSync(dossierPath)) {
+    try {
+      const d = JSON.parse(fs.readFileSync(dossierPath, 'utf-8'));
+      dossier = { style: d.style, title: d.title, thesis: d.thesis, keyLines: d.derivatives?.keyLines || [],
+        sections: (d.sections || []).map(x => ({ h: x.h, pullQuote: x.pullQuote })), conclusion: d.conclusion,
+        _rule: '이 도시어(승인 원천)의 thesis·비트·pullQuote에서 파생하라. 새로 발명하지 말 것.' };
+    } catch { }
+  }
   return {
     _agent: 'melanoir-channel-copywriter',
     _instructions: 'brief를 읽고 textChannels 각 채널의 카피를 outputPath에 JSON으로 Write. 같은 thesis에서 파생하되 채널 포맷·톤. 브랜드락 전부 준수. JSON 외 텍스트 금지.',
@@ -34,6 +43,7 @@ export function buildChannelBrief(topicArg) {
     locks: DNA.locks,
     tone: { byLayer: DNA.tone.byLayer, lexicon: DNA.tone.lexicon },
     learnings: readLearnings().slice(0, 3000),
+    ...(dossier ? { dossier } : {}),
     igCaptionRef: igCaption(topic.id),
     textChannels: TEXT_CHANNELS,
     channelStrategy: Object.fromEntries(TEXT_CHANNELS.map(c => [c, CH.channels[c]])),
@@ -81,7 +91,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const val = args.find(a => !a.startsWith('--')) ?? '1';
   fs.mkdirSync(OUT, { recursive: true });
   if (flag === '--brief') {
-    const b = buildChannelBrief(val);
+    const di = args.indexOf('--dossier');
+    const b = buildChannelBrief(val, { dossierPath: di >= 0 ? args[di + 1] : undefined });
     const p = path.join(OUT, `chbrief_${String(b.topic.id).padStart(2, '0')}.json`);
     fs.writeFileSync(p, JSON.stringify(b, null, 2));
     console.log(`channel brief → ${path.relative(ROOT, p)}  (채널: ${b.textChannels.join(', ')})`);

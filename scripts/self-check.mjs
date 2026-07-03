@@ -13,9 +13,9 @@ const SKIP = /node_modules|[\\/]\.git[\\/]|reference[\\/]/;
 const TEXT_EXT = /\.(json|js|mjs|html|css|md|txt|yaml|yml)$/;
 
 const BANNED = ['28종', '28-FREE', '28종 N.D.', '28종 불검출', '@melanoir.official'];
-// 금지어를 '금지 목록'으로 정의하는 파일은 스캔 제외: brand-dna.json(SSoT) + brief_*.json(에이전트 입력, 락 목록 포함).
+// 금지어를 '금지 목록'으로 정의하는 파일은 스캔 제외: brand-dna.json(SSoT) + brief/chbrief/sbrief_*.json(에이전트 입력, 락 목록 포함).
 // (생성 산출물 final_*/spec_* 는 계속 스캔 — 실제 금지어 회귀 탐지.)
-const BANNED_SKIP = (f) => { const b = path.basename(f); return b === 'brand-dna.json' || /^(brief|chbrief)_.*\.json$/.test(b); };
+const BANNED_SKIP = (f) => { const b = path.basename(f); return b === 'brand-dna.json' || /^(brief|chbrief|sbrief)_.*\.json$/.test(b) || b === 'pbrief.json'; };
 // config.js(=anon 키, RLS 안전, gitignore)는 시크릿 스캔 제외. service_role은 .env.local(미스캔)에만.
 const SECRET_SKIP = (f) => path.basename(f) === 'config.js';
 // 실제 비밀'값'만 탐지 ('service_role'이라는 단어가 경고 주석에 있는 건 정상).

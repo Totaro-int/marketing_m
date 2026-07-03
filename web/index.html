@@ -239,6 +239,7 @@
     <div class="brand"><i class="ti ti-broadcast"></i><span>마케팅 콘솔</span></div>
     <div class="nav on" data-s="today"><i class="ti ti-clipboard-check"></i><span>오늘 발행</span></div>
     <div class="nav" data-s="channels"><i class="ti ti-layout-grid"></i><span>채널별 뷰</span></div>
+    <div class="nav" data-s="facts"><i class="ti ti-checklist"></i><span>사실 검증</span></div>
     <div class="nav" data-s="sources"><i class="ti ti-photo"></i><span>소스</span></div>
     <div class="nav" data-s="brand"><i class="ti ti-fingerprint"></i><span>브랜드 DNA</span></div>
     <div class="nav" data-s="learning"><i class="ti ti-bulb"></i><span>학습 · 업그레이드</span></div>
@@ -261,6 +262,7 @@ const CH = {
   'naver-blog':{ label:'네이버 블로그', icon:'ti-notebook',        url:'https://blog.naver.com' },
   tistory:     { label:'티스토리',     icon:'ti-notebook',        url:'https://www.tistory.com/manage' },
   insight:     { label:'자사몰 인사이트', icon:'ti-article',         url:'https://melanoir.co.kr/insights' },
+  article:     { label:'스토리(장문)',   icon:'ti-news',            url:'#' },
 };
 const TONE = { 'relate-kr':'공감형(한국)', b2b:'B2B', informational:'정보형', friendly:'친근형', sales:'세일즈' };
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -350,7 +352,7 @@ function diffHtml(orig, cur){
 function renderToday(){
   const c=DATA.campaign||{}; const ds0=DATA.drafts||[];
   // 캠페인별로 묶어 최신순 — IG가 쭉 나열되지 않게(채널은 instagram→linkedin→threads→naver-blog 순)
-  const chOrder={instagram:0,linkedin:1,threads:2,'naver-blog':3,insight:4};
+  const chOrder={instagram:0,linkedin:1,threads:2,'naver-blog':3,insight:4,article:5};
   const keyOf=d=>d.campaign_slug||String(d.id);
   const latestOf={}; for(const d of ds0){const t=Date.parse(d.created_at)||0,k=keyOf(d); if(!(k in latestOf)||t>latestOf[k])latestOf[k]=t;}
   const grpCount={}; for(const d of ds0){const k=keyOf(d); grpCount[k]=(grpCount[k]||0)+1;}
@@ -365,7 +367,7 @@ function renderToday(){
       || '<div class="thumb ph"><i class="ti ti-photo"></i></div>';
     return header + `<div class="card" data-id="${esc(d.id)}">
       <div class="ch"><div class="l"><i class="ti ${m.icon}"></i><span class="name">${esc(m.label)}</span>${stPill(d.status)}</div>
-        <span style="display:flex;gap:6px">${(d.channel==='instagram'&&d.spec&&d.spec.slides)?`<a class="pill" href="cards.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-photo-edit" style="font-size:12px"></i> 카드 편집</a>`:''}${d.channel==='naver-blog'?`<a class="pill" href="blog.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-article" style="font-size:12px"></i> 블로그 미리보기</a>`:''}${d.channel==='insight'?`<a class="pill" href="insight.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-article" style="font-size:12px"></i> 자사몰 카드 미리보기</a>`:''}<a class="pill" href="${esc(m.url)}" target="_blank" style="text-decoration:none">플랫폼 열기 <i class="ti ti-external-link" style="font-size:12px"></i></a></span></div>
+        <span style="display:flex;gap:6px">${(d.channel==='instagram'&&d.spec&&d.spec.slides)?`<a class="pill" href="cards.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-photo-edit" style="font-size:12px"></i> 카드 편집</a>`:''}${d.channel==='naver-blog'?`<a class="pill" href="blog.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-article" style="font-size:12px"></i> 블로그 미리보기</a>`:''}${d.channel==='insight'?`<a class="pill" href="insight.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-article" style="font-size:12px"></i> 자사몰 카드 미리보기</a>`:''}${d.channel==='article'?`<a class="pill" href="article.html?slug=${encodeURIComponent(d.campaign_slug||'')}" style="text-decoration:none;border-color:var(--gold);color:var(--gold)"><i class="ti ti-news" style="font-size:12px"></i> 아티클 미리보기</a>`:''}<a class="pill" href="${esc(m.url)}" target="_blank" style="text-decoration:none">플랫폼 열기 <i class="ti ti-external-link" style="font-size:12px"></i></a></span></div>
       <div class="lab">본문 (직접 수정 가능)</div>
       <textarea class="body">${esc(d.body||'')}</textarea>
       ${tags.length?`<div class="tags">${esc(tags.join(' '))}</div>`:''}
@@ -440,7 +442,7 @@ function renderToday(){
 // ── 채널별 뷰 ────────────────────────────────────────────────────────────────
 // 발행 결과를 채널 화면처럼 확인: IG=갤러리→캐러셀, LinkedIn/Threads=텍스트 피드,
 // naver-blog/insight=갤러리→블로그식 읽기뷰. 열람 전용(쓰기 없음).
-const CHV_ORDER=['instagram','linkedin','threads','naver-blog','insight'];
+const CHV_ORDER=['instagram','linkedin','threads','naver-blog','insight','article'];
 let chv={ ch:null, status:'active' };
 const isPublished = d => d.status==='approved' || d.status==='published';
 const isFinal = d => d.status==='approved' || d.status==='published';
@@ -530,7 +532,7 @@ function chvBody(ch,rows){
   if(!rows.length) return '';
   if(ch==='instagram') return igGallery(rows);
   if(ch==='linkedin'||ch==='threads') return textFeed(ch,rows);
-  if(ch==='naver-blog'||ch==='insight') return blogGallery(rows);
+  if(ch==='naver-blog'||ch==='insight'||ch==='article') return blogGallery(rows);
   // 알 수 없는 채널: 이미지 있으면 갤러리, 아니면 텍스트
   return rows.some(d=>(d.image_urls||[]).length) ? blogGallery(rows) : textFeed(ch,rows);
 }
@@ -571,7 +573,7 @@ function chvBind(ch,rows){
   const v=$('view');
   if(ch==='instagram'){
     v.querySelectorAll('.igcell[data-i]').forEach(c=>c.onclick=()=>openCarousel(rows[+c.dataset.i]));
-  } else if(ch==='linkedin'||ch==='threads'||(!rows.some(d=>(d.image_urls||[]).length) && ch!=='naver-blog' && ch!=='insight')){
+  } else if(ch==='linkedin'||ch==='threads'||(!rows.some(d=>(d.image_urls||[]).length) && ch!=='naver-blog' && ch!=='insight' && ch!=='article')){
     v.querySelectorAll('.txcard').forEach(card=>{
       const d=rows[+card.dataset.i], body=card.querySelector('.tx-body');
       card.querySelector('.tx-copy').onclick=async b=>{
@@ -652,7 +654,8 @@ function openReader(d,ch){
     return `<p>${esc(t)}</p>`;
   }).join('');
   const prevHref = ch==='naver-blog'?`blog.html?slug=${encodeURIComponent(d.campaign_slug||'')}`
-                 : ch==='insight'?`insight.html?slug=${encodeURIComponent(d.campaign_slug||'')}`:'';
+                 : ch==='insight'?`insight.html?slug=${encodeURIComponent(d.campaign_slug||'')}`
+                 : ch==='article'?`article.html?slug=${encodeURIComponent(d.campaign_slug||'')}`:'';
   const src=chvSourceIG(d);
   const el=document.createElement('div'); el.className='lb readlb'; el.id='lb';
   el.innerHTML=`<button class="x" title="닫기(Esc)">✕</button>
@@ -845,7 +848,77 @@ function renderSettings(){
   $('view').querySelectorAll('.toggle').forEach(t=>t.onclick=()=>{t.classList.toggle('on');toast(DEMO?'데모 모드':'채널 설정 저장됨')});
 }
 
-const VIEWS={today:renderToday,channels:renderChannels,sources:renderSources,brand:renderBrand,learning:renderLearning,calendar:renderCalendar,settings:renderSettings};
+// ── 사실 검증 (작가·기자 레이어) ─────────────────────────────────────────────
+// fact_candidates 는 loadAll 4테이블과 분리해 자체 조회 — 테이블이 없어도 콘솔 전체는 안 깨짐.
+// anon 은 SELECT + UPDATE(status, note)만 가능. merged 는 로컬 병합 스크립트만 세팅.
+const REL={'peer-reviewed':{l:'피어리뷰',c:'ok'},institution:{l:'기관',c:'info'},industry:{l:'업계',c:'warn'},media:{l:'미디어',c:''}};
+const relPill=r=>{const m=REL[r]||{l:r||'출처 미상',c:''};return `<span class="pill ${m.c}">${esc(m.l)}</span>`;};
+const factMeta=f=>[f.publisher,f.published_at?String(f.published_at).slice(0,10):null,f.source_title,f.dossier_ref?'도시어 '+f.dossier_ref:null].filter(Boolean).map(esc).join(' · ');
+async function patchFact(id,fields){
+  if(DEMO){ toast('데모 모드 — 저장 안 됨'); return false; }
+  const { error } = await sb.from('fact_candidates').update(fields).eq('id',id);
+  if(error){ toast('저장 오류: '+error.message); return false; } return true;
+}
+function factCard(f,pending){
+  const done = f.status==='approved'
+    ? (f.merged?'<span class="pill ok">✅ 병합 완료</span>':'<span class="pill info">승인됨 · 로컬 --pull 대기</span>')
+    : f.status==='rejected'?'<span class="pill" style="background:var(--dangerbg);color:var(--danger);border-color:transparent">반려됨</span>':'';
+  return `<div class="card" data-fid="${esc(f.id)}">
+    <div class="ch"><div class="l"><i class="ti ti-checklist"></i><span class="name">${esc(f.claim||'(claim 없음)')}</span></div>
+      <span style="display:flex;gap:6px;align-items:center">${relPill(f.reliability)}${done}</span></div>
+    ${f.value?`<div style="font-size:15px;font-weight:600;margin:2px 0 4px">${esc(f.value)}</div>`:''}
+    <div class="note">${factMeta(f)||'출처 정보 없음'}</div>
+    ${f.quote?`<div style="border-left:3px solid var(--line2);padding:6px 12px;margin:10px 0 2px;color:var(--dim);font-size:13px;line-height:1.6">“${esc(f.quote)}”</div>`:''}
+    ${f.url?`<div style="margin-top:8px"><a class="pill" href="${esc(f.url)}" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;gap:5px"><i class="ti ti-external-link" style="font-size:12px"></i> 원문 보기</a></div>`:''}
+    ${pending?`<div class="lab">메모 (선택 — 승인/반려와 함께 저장)</div>
+    <input type="text" class="fnote" placeholder="예: 수치는 초록 기준 — 병합 전 본문 재확인" value="${esc(f.note||'')}">
+    <div class="row"><button class="pri f-appr"><i class="ti ti-check"></i> 승인</button>
+      <button class="f-rej"><i class="ti ti-ban"></i> 반려</button></div>`
+    :(f.note?`<div class="note" style="margin-top:8px"><i class="ti ti-note"></i> ${esc(f.note)}</div>`:'')}
+  </div>`;
+}
+async function renderFacts(){
+  const head=`<div class="head"><div><h1>사실 검증</h1>
+    <div class="sub">아티클 도시어의 사실 후보 검토 — 승인분은 로컬 <code>--pull</code> 시 verified-sources 로 병합됩니다.</div></div></div>`;
+  $('view').innerHTML=head+'<div class="note">불러오는 중…</div>';
+  let rows=null, err=null;
+  if(DEMO){ err='demo'; }
+  else{
+    try{
+      const r=await sb.from('fact_candidates').select('*').order('created_at',{ascending:false});
+      if(r.error) err=r.error.message; else rows=r.data||[];
+    }catch(e){ err=(e&&e.message)||String(e); }
+  }
+  const nav=document.querySelector('.nav.on'); if(!nav||nav.dataset.s!=='facts') return; // 로딩 중 뷰 전환 시 덮어쓰기 방지
+  if(err==='demo'){ $('view').innerHTML=head+'<div class="note">데모 모드 — Supabase 연결 시 fact_candidates 후보가 표시됩니다.</div>'; return; }
+  if(err){
+    const missing=/relation|does not exist|not found|schema cache|fact_candidates/i.test(err);
+    $('view').innerHTML=head+(missing
+      ?'<div class="note"><code>fact_candidates</code> 테이블 없음 — 로컬에서 <code>node scripts/apply-schema.mjs</code> 실행 후 사용 가능합니다.</div>'
+      :'<div class="note">조회 오류: '+esc(err)+'</div>');
+    return;
+  }
+  const pending=rows.filter(f=>f.status==='pending'||!f.status);
+  const doneRows=rows.filter(f=>f.status==='approved'||f.status==='rejected');
+  $('view').innerHTML=head
+    +`<h2 class="sec">검토 대기 <span class="note">(${pending.length})</span></h2>`
+    +(pending.map(f=>factCard(f,true)).join('')||'<div class="note">대기 중인 사실 후보가 없습니다.</div>')
+    +`<h2 class="sec" style="margin-top:26px">처리됨 <span class="note">(${doneRows.length})</span></h2>`
+    +(doneRows.map(f=>factCard(f,false)).join('')||'<div class="note">처리된 후보 없음</div>');
+  pending.forEach(f=>{
+    const el=$('view').querySelector(`[data-fid="${CSS.escape(String(f.id))}"]`); if(!el) return;
+    const note=el.querySelector('.fnote');
+    const act=async st=>{
+      const fields={status:st}; const nv=note.value.trim();
+      if(nv!==(f.note||'')) fields.note=nv||null;
+      if(await patchFact(f.id,fields)){ toast(st==='approved'?'승인됨 — 로컬 --pull 시 병합':'반려됨'); renderFacts(); }
+    };
+    el.querySelector('.f-appr').onclick=()=>act('approved');
+    el.querySelector('.f-rej').onclick=()=>act('rejected');
+  });
+}
+
+const VIEWS={today:renderToday,channels:renderChannels,facts:renderFacts,sources:renderSources,brand:renderBrand,learning:renderLearning,calendar:renderCalendar,settings:renderSettings};
 function go(s){ document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('on',n.dataset.s===s)); (VIEWS[s]||renderToday)(); window.scrollTo(0,0); }
 document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>go(n.dataset.s));
 
@@ -854,6 +927,8 @@ document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>go(n.dataset.s));
   f.className='foot'+(DEMO?' demo':''); f.querySelector('span').textContent=DEMO?'데모 모드 (fixture)':'Supabase 연결됨';
   await loadAll(); go('today');
   if(!DEMO) sb.channel('live').on('postgres_changes',{event:'*',schema:'public',table:'marketing_drafts'},async()=>{await loadAll();go(document.querySelector('.nav.on').dataset.s)}).subscribe();
+  // fact_candidates 라이브 — 사실 검증 뷰를 보고 있을 때만 다시 그림(테이블 없으면 이벤트가 없을 뿐, 무해)
+  if(!DEMO) sb.channel('live-facts').on('postgres_changes',{event:'*',schema:'public',table:'fact_candidates'},()=>{const n=document.querySelector('.nav.on');if(n&&n.dataset.s==='facts')renderFacts();}).subscribe();
 })();
 </script>
 </body>

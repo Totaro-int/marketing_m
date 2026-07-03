@@ -61,7 +61,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     try {
       const counts = await liveCounts(env);
       console.log('토픽 발행 빈도 (instagram):');
-      [...counts.entries()].sort((a, b) => a[1] - b[1] || a[0] - b[0]).forEach(([id, c]) => console.log(`  #${id} ${titleOf(id)} — ${c}회`));
+      const hasDossier = id => fs.existsSync(path.join(ROOT, 'out', `final_article_${String(id).padStart(2, '0')}.json`));
+      [...counts.entries()].sort((a, b) => a[1] - b[1] || a[0] - b[0]).forEach(([id, c]) => console.log(`  #${id} ${titleOf(id)} — ${c}회${hasDossier(id) ? ' · 📄 도시어 있음(승인은 콘솔 확인 — story.mjs --check ' + id + ')' : ''}`));
     } catch (e) { console.log('라이브 집계 실패:', e.message); }
   }
   const next = await pickNextTopic();

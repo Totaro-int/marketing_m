@@ -20,6 +20,14 @@ description: 멜라누아 5채널(IG·LinkedIn·Threads·네이버블로그·자
 - **오류 시 자가수정 루프**: 설치/실행 오류가 나면 **`docs/RUNBOOK.md`** 에서 출력의 `[CODE]`·증상을 찾아 지침대로 고치고 재시도하라(doctor → ✗ → RUNBOOK → 수정 → 재실행, 전부 ✓ 까지 반복). 2회 시도 후에도 안 풀리면 사람에게 보고.
 - `canvas`(서버 렌더)는 선택 — 없으면 IG 카드는 **웹 카드 편집기**가 렌더(생성·발행엔 지장 없음).
 
+## 스토리 발굴 (기획) — "다음에 뭘 쓸까" / `/melanoir 피칭`
+기존 고정 토픽 10개를 넘어 **새 앵글을 발굴**하는 상류 기획. `/melanoir-pitch [N]`(상세 = commands/melanoir-pitch.md):
+1. `node engine/pitch.mjs --brief --n 5` → pbrief(기존 토픽 포함 — 중복 회피). 2. **melanoir-journalist** 디스패치 → `out/pitches.json`(앵글 5개, WebSearch로 시의성 탐색). 3. `node engine/pitch.mjs --score out/pitches.json` — 중복·브랜드락·근거실현성 자동 채점. 4. 사람이 `node scripts/pitch-review.mjs --list`로 보고 `--approve <n>`로 토픽 큐 편입 → `/melanoir-story <새id>`로 집필. 취재 성능은 `node scripts/research-scorecard.mjs`(승인율·원출처 도달률·인용 완결성)로 상시 추적.
+
+## 원천 콘텐츠 (장문) — "브랜드 스토리 써줘" / "과학 기사 써줘" / `/melanoir 스토리`
+5채널 상류의 **작가·기자 레이어**. `/melanoir-story <토픽|주제> [essay|feature|column|press]` 실행(상세 = commands/melanoir-story.md):
+1. `node engine/story.mjs --brief <topic> [--style s]` → sbrief. 2. 출력의 `agent=` 대로 **melanoir-storyteller**(essay·campaign) 또는 **melanoir-journalist**(feature·column·press) 서브에이전트 디스패치 → `out/dossier_NN.json`. 3. `node engine/story.mjs --finalize out/dossier_NN.json` — 브랜드락+**인용락**(근거 없는 수치 차단)+도식(figure.mjs SVG). PENDING이면 `node scripts/fact-candidates.mjs --submit` → 사람 승인 → `--pull` → 재작성·재finalize. 4. `node scripts/push-article.mjs out/final_article_NN.json` → 콘솔 검토·승인. 승인된 도시어는 하루 사이클 2단계가 자동 주입(`--dossier`)해 5채널의 원천이 된다.
+
 ## 하루 사이클 ("멜라누아 카드 만들어" / "오늘 콘텐츠")
 1. `node scripts/pull-supabase.mjs` → 피드백 있으면 `node scripts/distill.mjs` (학습 반영).
 2. 토픽: `node scripts/topic-queue.mjs`(자동) 또는 사용자 지정.

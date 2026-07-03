@@ -1,0 +1,23 @@
+{
+  "_doc": "외부 이미지 스크랩 정책 (작가·기자 레이어). 원칙: '이미지를 긁지 말고 데이터를 긁어 자체 도식으로(engine/figure.mjs).' 외부 이미지는 아래 화이트리스트 라이선스만, 메타 기록 + 콘솔 승인 필수.",
+  "priority": [
+    "1) 자체 자산 — brand/image-stock.json",
+    "2) 자체 생성 도식 — engine/figure.mjs (SVG, 브랜드 스타일)",
+    "3) 외부 이미지 — 아래 allowedLicenses 만"
+  ],
+  "allowedLicenses": [
+    { "license": "public-domain", "credit": false, "note": "퍼블릭 도메인 (PD-old, CC0 포함)" },
+    { "license": "CC0", "credit": false, "note": "Wikimedia Commons·Openverse 등에서 CC0 명시분" },
+    { "license": "CC-BY", "credit": true, "note": "크레딧 표기 조건부 허용 — credit 필드 필수" },
+    { "license": "unsplash", "credit": true, "note": "Unsplash License — 출처 표기 권장" },
+    { "license": "pexels", "credit": true, "note": "Pexels License — 출처 표기 권장" }
+  ],
+  "forbidden": [
+    "라이선스 불명 이미지 (사용 금지 — 확인 불가 = 없다고 간주)",
+    "논문·보고서의 그림/차트 직접 삽입 (저작권) → 데이터만 추출해 figure.mjs로 재시각화",
+    "타 브랜드·인물 사진 (퍼블리시티권)",
+    "CC-BY-NC / CC-BY-ND / CC-BY-SA (상업 이용·개작 제한)"
+  ],
+  "requiredMeta": { "url": "원본 URL", "license": "위 화이트리스트 값", "source": "출처 사이트/기관", "credit": "저작자 표기 문자열 (CC-BY 필수)" },
+  "review": "모든 외부 이미지는 dossier.images[]에 메타와 함께 기록 → 콘솔 검토·승인 대상. 메타 불완전 시 finalize가 차단."
+}

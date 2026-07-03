@@ -1,0 +1,17 @@
+{
+  "_doc": "승인된 외부 출처·사실 레지스트리 (작가·기자 레이어의 인용락 SSoT). brand-dna.json facts(제품·브랜드 사실)의 확장 — 여기는 '취재로 얻은 외부 사실'만. 항목 추가 경로는 2개뿐: ① 기자 에이전트가 fact_candidates(Supabase)로 제출 → 콘솔/로컬 승인 → scripts/fact-candidates.mjs --pull 이 여기로 병합. ② 사람이 직접 추가(출처 확인 후). 에이전트가 이 파일을 직접 수정하는 것은 금지.",
+  "_schema": {
+    "id": "VS-### (병합 시 자동 부여)",
+    "claim": "본문에 쓸 수 있는 사실 진술(한국어, 검증된 표현)",
+    "value": "핵심 수치·값 (인용락 대조용 — 본문의 숫자는 여기 값과 일치해야 함)",
+    "quote": "출처 원문 인용(발췌)",
+    "sourceTitle": "논문·문서 제목",
+    "publisher": "발행처(저널·기관)",
+    "publishedAt": "발행연도/일자",
+    "url": "출처 URL 또는 DOI",
+    "reliability": "peer-reviewed | institution | industry | media",
+    "approvedAt": "승인일 (YYYY-MM-DD)",
+    "active": true
+  },
+  "sources": []
+}

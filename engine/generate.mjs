@@ -38,10 +38,27 @@ export function resolveTopic(arg) {
   return { id: 99, title: String(arg), thesis: String(arg), layer: 'declaration', length: 7, free: true };
 }
 
+// ---- dossier 주입: 승인된 작가·기자 원천 원고 → brief 파생 재료 (JOURNALIST-PLAN §7) ----
+function dossierDigest(dossierPath) {
+  if (!dossierPath || !fs.existsSync(dossierPath)) return null;
+  try {
+    const d = JSON.parse(fs.readFileSync(dossierPath, 'utf-8'));
+    const first = s => { s = String(s || '').trim(); const m = s.match(/^[\s\S]*?[.。!?](?=\s|$)/); return (m ? m[0] : s).trim(); };
+    return {
+      style: d.style, title: d.title, thesis: d.thesis,
+      keyLines: d.derivatives?.keyLines || [], beats: d.derivatives?.beats || [],
+      sections: (d.sections || []).map(s => ({ h: s.h, summary: first(s.body), pullQuote: s.pullQuote })),
+      conclusion: d.conclusion, factRefs: d.factRefs || [],
+      _rule: '이 도시어(승인된 원천 원고)의 thesis·서사 비트·핵심 문장에서 파생하라. 카피를 새로 발명하지 말고 원천의 문장과 흐름을 채널 포맷으로 옮겨라. pullQuote·keyLines = 커버·후킹 후보.',
+    };
+  } catch { return null; }
+}
+
 // ---- brief: copywriter 에이전트가 읽는 구조화 입력 (LLM 호출 없음) ----
-export function buildBrief(topicArg) {
+export function buildBrief(topicArg, { dossierPath } = {}) {
   const topic = resolveTopic(topicArg);
   const facts = (topic.factIds || []).map(id => DNA.facts.find(f => f.id === id)).filter(Boolean);
+  const dossier = dossierDigest(dossierPath); // 승인 게이트: 명시 주입만 (자동 감지 없음 — 승인 확인은 story.mjs --check)
   return {
     _agent: 'melanoir-copywriter',
     _instructions: '이 brief를 읽고 캐러셀 스펙 JSON을 outputPath에 Write로 저장하라. 스펙 스키마·콘텐츠모델·브랜드락을 엄격히 지킬 것. JSON 외 텍스트 금지.',
@@ -52,6 +69,7 @@ export function buildBrief(topicArg) {
     tone: { byLayer: DNA.tone.byLayer, principles: DNA.tone.principles, lexicon: DNA.tone.lexicon },
     contentModel: DNA.contentModel,
     learnings: readLearnings().slice(0, 4000),
+    ...(dossier ? { dossier } : {}),
     fewShot: fewShot(topic.layer),
     specSchema: {
       id: topic.id, topic: 'string', thesis: 'string', layer: topic.layer,
@@ -107,10 +125,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   fs.mkdirSync(OUT, { recursive: true });
 
   if (flag === '--brief') {
-    const brief = buildBrief(val);
+    const di = args.indexOf('--dossier');
+    const brief = buildBrief(val, { dossierPath: di >= 0 ? args[di + 1] : undefined });
     const p = outOverride || path.join(OUT, `brief_${String(brief.topic.id).padStart(2, '0')}.json`);
     fs.writeFileSync(p, JSON.stringify(brief, null, 2));
-    console.log(`brief → ${path.relative(ROOT, p)}`);
+    console.log(`brief → ${path.relative(ROOT, p)}${brief.dossier ? '  (도시어 주입: ' + brief.dossier.title + ')' : ''}`);
     console.log(`다음: melanoir-copywriter 에이전트가 이 brief를 읽고 ${path.relative(ROOT, brief.outputPath)} 작성 → generate.mjs --finalize`);
   } else if (flag === '--finalize') {
     const { spec, guard } = finalizeSpec(val);
