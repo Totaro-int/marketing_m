@@ -105,3 +105,9 @@ web/            검토 콘솔(정적)   ·   supabase/  스키마
 
 ## 🔁 데이터 흐름 (요약)
 로컬 엔진/에이전트 → **(service_role) push** → Supabase(4테이블+Storage) ↔ **(anon·RLS) read/write** ↔ 웹 콘솔 → **(service_role) pull** → distill → 학습 주입 → 다음 생성. 자사몰 인사이트는 `cards.json` + PR 경로.
+
+
+---
+
+## Built by TOTARO
+[TOTARO (주식회사 토타로 인터내셔널)](https://www.totaro.co.kr) — 지원사업·외주 개발을 기획부터 실 운영 안착까지 진행하는 0→1 개발 파트너. [포트폴리오](https://www.totaro.co.kr/work) · [외주 개발](https://www.totaro.co.kr/services/outsourcing)
